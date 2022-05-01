@@ -159,4 +159,4 @@ export function getAllAttributes(tag) {
     }
     return GlobalAttributes.slice();
 }
-//# attributes.js.map
+//# sourceMappingURL=attributes.js.map

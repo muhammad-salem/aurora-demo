@@ -1,13 +1,13 @@
 import { __values } from "../../../../../tslib/tslib.es6.js";
 import { EMPTY } from '../observable/empty.js';
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 export function takeLast(count) {
     return count <= 0
         ? function () { return EMPTY; }
         : operate(function (source, subscriber) {
             var buffer = [];
-            source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+            source.subscribe(createOperatorSubscriber(subscriber, function (value) {
                 buffer.push(value);
                 count < buffer.length && buffer.shift();
             }, function () {
@@ -31,4 +31,4 @@ export function takeLast(count) {
             }));
         });
 }
-//# takeLast.js.map
+//# sourceMappingURL=takeLast.js.map

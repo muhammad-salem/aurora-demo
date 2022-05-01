@@ -3,4 +3,4 @@ import { isFunction } from '../util/isFunction.js';
 export function concatMapTo(innerObservable, resultSelector) {
     return isFunction(resultSelector) ? concatMap(function () { return innerObservable; }, resultSelector) : concatMap(function () { return innerObservable; });
 }
-//# concatMapTo.js.map
+//# sourceMappingURL=concatMapTo.js.map

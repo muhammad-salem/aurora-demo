@@ -14,7 +14,7 @@ let PipelineExpression = PipelineExpression_1 = class PipelineExpression extends
     static fromJSON(node, deserializer) {
         return new PipelineExpression_1(deserializer(node.left), deserializer(node.right), node.arguments.map(arg => typeof arg === 'string' ? arg : deserializer(arg)));
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.left);
         visitNode(node.right);
         node.arguments.forEach(arg => typeof arg == 'object' && visitNode(arg));
@@ -98,4 +98,4 @@ PipelineExpression = PipelineExpression_1 = __decorate([
     __metadata("design:paramtypes", [Object, Object, Array])
 ], PipelineExpression);
 export { PipelineExpression };
-//# pipeline.js.map
+//# sourceMappingURL=pipeline.js.map

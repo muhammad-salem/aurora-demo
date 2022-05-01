@@ -77,4 +77,4 @@ function handleReset(reset, on) {
     return on.apply(void 0, __spreadArray([], __read(args))).pipe(take(1))
         .subscribe(function () { return reset(); });
 }
-//# share.js.map
+//# sourceMappingURL=share.js.map

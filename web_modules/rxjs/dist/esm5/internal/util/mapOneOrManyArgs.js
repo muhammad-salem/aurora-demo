@@ -7,4 +7,4 @@ function callOrApply(fn, args) {
 export function mapOneOrManyArgs(fn) {
     return map(function (args) { return callOrApply(fn, args); });
 }
-//# mapOneOrManyArgs.js.map
+//# sourceMappingURL=mapOneOrManyArgs.js.map

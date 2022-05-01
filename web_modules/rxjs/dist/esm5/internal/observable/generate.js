@@ -46,4 +46,4 @@ export function generate(initialStateOrOptions, condition, iterate, resultSelect
         :
             gen));
 }
-//# generate.js.map
+//# sourceMappingURL=generate.js.map

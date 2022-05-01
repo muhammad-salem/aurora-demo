@@ -25,4 +25,4 @@ export function captureError(err) {
         context.error = err;
     }
 }
-//# errorContext.js.map
+//# sourceMappingURL=errorContext.js.map

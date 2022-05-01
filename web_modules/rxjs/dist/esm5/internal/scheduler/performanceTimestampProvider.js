@@ -4,4 +4,4 @@ export var performanceTimestampProvider = {
     },
     delegate: undefined,
 };
-//# performanceTimestampProvider.js.map
+//# sourceMappingURL=performanceTimestampProvider.js.map

@@ -2,7 +2,7 @@ import { __read, __spreadArray } from "../../../../../tslib/tslib.es6.js";
 import { operate } from '../util/lift.js';
 import { innerFrom } from '../observable/innerFrom.js';
 import { argsOrArgArray } from '../util/argsOrArgArray.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 import { noop } from '../util/noop.js';
 export function onErrorResumeNext() {
     var sources = [];
@@ -23,8 +23,8 @@ export function onErrorResumeNext() {
                         subscribeNext();
                         return;
                     }
-                    var innerSub = new OperatorSubscriber(subscriber, undefined, noop, noop);
-                    subscriber.add(nextSource.subscribe(innerSub));
+                    var innerSub = createOperatorSubscriber(subscriber, undefined, noop, noop);
+                    nextSource.subscribe(innerSub);
                     innerSub.add(subscribeNext);
                 }
                 else {
@@ -35,4 +35,4 @@ export function onErrorResumeNext() {
         subscribeNext();
     });
 }
-//# onErrorResumeNext.js.map
+//# sourceMappingURL=onErrorResumeNext.js.map

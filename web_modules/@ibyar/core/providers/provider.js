@@ -38,6 +38,7 @@ export class ClassRegistry {
                 return componentRef;
             }
         }
+        return;
     }
     getComponent(selector) {
         for (const modelClass of this.componentSet) {
@@ -46,6 +47,7 @@ export class ClassRegistry {
                 return modelClass;
             }
         }
+        return;
     }
     getComponentView(selector) {
         return this.getComponentRef(selector)?.viewClass;
@@ -126,4 +128,4 @@ export class ClassRegistry {
     }
 }
 export const ClassRegistryProvider = new ClassRegistry();
-//# provider.js.map
+//# sourceMappingURL=provider.js.map

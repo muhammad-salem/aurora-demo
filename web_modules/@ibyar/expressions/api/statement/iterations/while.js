@@ -12,7 +12,7 @@ let WhileNode = WhileNode_1 = class WhileNode extends AbstractExpressionNode {
     static fromJSON(node, deserializer) {
         return new WhileNode_1(deserializer(node.test), deserializer(node.body));
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.body);
         visitNode(node.test);
     }
@@ -78,7 +78,7 @@ let DoWhileNode = DoWhileNode_1 = class DoWhileNode extends AbstractExpressionNo
     static fromJSON(node, deserializer) {
         return new DoWhileNode_1(deserializer(node.test), deserializer(node.body));
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.test);
         visitNode(node.body);
     }
@@ -134,4 +134,4 @@ DoWhileNode = DoWhileNode_1 = __decorate([
     __metadata("design:paramtypes", [Object, Object])
 ], DoWhileNode);
 export { DoWhileNode };
-//# while.js.map
+//# sourceMappingURL=while.js.map

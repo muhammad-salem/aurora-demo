@@ -4,4 +4,4 @@ export var EmptyError = createErrorClass(function (_super) { return function Emp
     this.name = 'EmptyError';
     this.message = 'no elements in sequence';
 }; });
-//# EmptyError.js.map
+//# sourceMappingURL=EmptyError.js.map

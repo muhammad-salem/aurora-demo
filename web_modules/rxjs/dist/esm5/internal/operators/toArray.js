@@ -6,4 +6,4 @@ export function toArray() {
         reduce(arrReducer, [])(source).subscribe(subscriber);
     });
 }
-//# toArray.js.map
+//# sourceMappingURL=toArray.js.map

@@ -6,4 +6,4 @@ export var NotFoundError = createErrorClass(function (_super) {
         this.message = message;
     };
 });
-//# NotFoundError.js.map
+//# sourceMappingURL=NotFoundError.js.map

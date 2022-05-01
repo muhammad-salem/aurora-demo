@@ -10,6 +10,9 @@ let RestElement = RestElement_1 = class RestElement extends AbstractExpressionNo
     static fromJSON(node, deserializer) {
         return new RestElement_1(deserializer(node.argument));
     }
+    static visit(node, visitNode) {
+        visitNode(node.argument);
+    }
     getArgument() {
         return this.argument;
     }
@@ -22,8 +25,8 @@ let RestElement = RestElement_1 = class RestElement extends AbstractExpressionNo
     get(stack) {
         throw new Error('RestElement#get() Method has no implementation.');
     }
-    declareVariable(stack, scopeType, propertyValue) {
-        this.argument.declareVariable(stack, scopeType, propertyValue);
+    declareVariable(stack, propertyValue) {
+        this.argument.declareVariable(stack, propertyValue);
     }
     dependency(computed) {
         return this.argument.dependency(computed);
@@ -43,4 +46,4 @@ RestElement = RestElement_1 = __decorate([
     __metadata("design:paramtypes", [Object])
 ], RestElement);
 export { RestElement };
-//# rest.js.map
+//# sourceMappingURL=rest.js.map

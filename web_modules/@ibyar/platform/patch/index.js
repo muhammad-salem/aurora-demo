@@ -1,2 +1,2 @@
 export * from './diff.js';
-//# index.js.map
+//# sourceMappingURL=index.js.map

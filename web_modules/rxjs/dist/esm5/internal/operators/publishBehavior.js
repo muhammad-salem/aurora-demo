@@ -6,4 +6,4 @@ export function publishBehavior(initialValue) {
         return new ConnectableObservable(source, function () { return subject; });
     };
 }
-//# publishBehavior.js.map
+//# sourceMappingURL=publishBehavior.js.map

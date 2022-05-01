@@ -12,7 +12,7 @@ let UpdateExpression = UpdateExpression_1 = class UpdateExpression extends Abstr
     static fromJSON(node, deserializer) {
         return new UpdateExpression_1(node.operator, deserializer(node.argument), node.prefix);
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.argument);
     }
     getOperator() {
@@ -68,4 +68,4 @@ UpdateExpression = UpdateExpression_1 = __decorate([
     __metadata("design:paramtypes", [String, Object, Boolean])
 ], UpdateExpression);
 export { UpdateExpression };
-//# update.js.map
+//# sourceMappingURL=update.js.map

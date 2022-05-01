@@ -22,4 +22,4 @@ export function pluck() {
         return currentProp;
     });
 }
-//# pluck.js.map
+//# sourceMappingURL=pluck.js.map

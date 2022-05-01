@@ -17,4 +17,4 @@ export function fromEventPattern(addHandler, removeHandler, resultSelector) {
         return isFunction(removeHandler) ? function () { return removeHandler(handler, retValue); } : undefined;
     });
 }
-//# fromEventPattern.js.map
+//# sourceMappingURL=fromEventPattern.js.map

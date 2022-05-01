@@ -33,4 +33,4 @@ EditorApp = __decorate([
     })
 ], EditorApp);
 export { EditorApp };
-//# shared-model.js.map
+//# sourceMappingURL=shared-model.js.map

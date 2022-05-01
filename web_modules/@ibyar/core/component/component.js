@@ -142,15 +142,15 @@ export class Components {
             else {
             }
         }
-        componentRef.inputs ||= [];
-        componentRef.outputs ||= [];
-        componentRef.viewChild ||= [];
-        componentRef.ViewChildren ||= [];
-        componentRef.hostBindings ||= [];
-        componentRef.hostListeners ||= [];
-        componentRef.encapsulation ||= 'custom';
+        componentRef.inputs || (componentRef.inputs = []);
+        componentRef.outputs || (componentRef.outputs = []);
+        componentRef.viewChild || (componentRef.viewChild = []);
+        componentRef.ViewChildren || (componentRef.ViewChildren = []);
+        componentRef.hostBindings || (componentRef.hostBindings = []);
+        componentRef.hostListeners || (componentRef.hostListeners = []);
+        componentRef.encapsulation || (componentRef.encapsulation = 'custom');
         componentRef.isShadowDom = /shadow-dom/g.test(componentRef.encapsulation);
-        componentRef.shadowDomMode ||= 'open';
+        componentRef.shadowDomMode || (componentRef.shadowDomMode = 'open');
         componentRef.shadowDomDelegatesFocus = componentRef.shadowDomDelegatesFocus === true || false;
         if (componentRef.isShadowDom && componentRef.extend.name) {
             componentRef.isShadowDom = canAttachShadow(componentRef.extend.name);
@@ -171,4 +171,4 @@ export class Components {
         customElements.define(componentRef.selector, componentRef.viewClass, options);
     }
 }
-//# component.js.map
+//# sourceMappingURL=component.js.map

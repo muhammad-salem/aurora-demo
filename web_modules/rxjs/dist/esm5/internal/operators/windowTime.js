@@ -2,7 +2,7 @@ import { Subject } from '../Subject.js';
 import { asyncScheduler } from '../scheduler/async.js';
 import { Subscription } from '../Subscription.js';
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 import { arrRemove } from '../util/arrRemove.js';
 import { popScheduler } from '../util/args.js';
 import { executeSchedule } from '../util/executeSchedule.js';
@@ -56,7 +56,7 @@ export function windowTime(windowTimeSpan) {
             cb(subscriber);
             subscriber.unsubscribe();
         };
-        source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+        source.subscribe(createOperatorSubscriber(subscriber, function (value) {
             loop(function (record) {
                 record.window.next(value);
                 maxWindowSize <= ++record.seen && closeWindow(record);
@@ -67,4 +67,4 @@ export function windowTime(windowTimeSpan) {
         };
     });
 }
-//# windowTime.js.map
+//# sourceMappingURL=windowTime.js.map

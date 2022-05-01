@@ -2,7 +2,7 @@ import { __extends } from "../../../../../tslib/tslib.es6.js";
 import { Observable } from '../Observable.js';
 import { Subscription } from '../Subscription.js';
 import { refCount as higherOrderRefCount } from '../operators/refCount.js';
-import { OperatorSubscriber } from '../operators/OperatorSubscriber.js';
+import { createOperatorSubscriber } from '../operators/OperatorSubscriber.js';
 import { hasLift } from '../util/lift.js';
 var ConnectableObservable = (function (_super) {
     __extends(ConnectableObservable, _super);
@@ -40,7 +40,7 @@ var ConnectableObservable = (function (_super) {
         if (!connection) {
             connection = this._connection = new Subscription();
             var subject_1 = this.getSubject();
-            connection.add(this.source.subscribe(new OperatorSubscriber(subject_1, undefined, function () {
+            connection.add(this.source.subscribe(createOperatorSubscriber(subject_1, undefined, function () {
                 _this._teardown();
                 subject_1.complete();
             }, function (err) {
@@ -60,4 +60,4 @@ var ConnectableObservable = (function (_super) {
     return ConnectableObservable;
 }(Observable));
 export { ConnectableObservable };
-//# ConnectableObservable.js.map
+//# sourceMappingURL=ConnectableObservable.js.map

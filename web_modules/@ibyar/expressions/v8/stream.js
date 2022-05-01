@@ -1239,4 +1239,4 @@ export class TokenStreamImpl extends TokenStream {
 TokenStreamImpl.REGEXP_FLAGS = ['g', 'i', 'm', 's', 'u', 'y'];
 TokenStreamImpl.UnicodePattern = /^[0-9a-f]{4}$/i;
 TokenStreamImpl.DecimalPattern = /^[0-9a-f]{2}$/i;
-//# stream.js.map
+//# sourceMappingURL=stream.js.map

@@ -1,13 +1,13 @@
 import { EMPTY } from '../observable/empty.js';
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 export function take(count) {
     return count <= 0
         ?
             function () { return EMPTY; }
         : operate(function (source, subscriber) {
             var seen = 0;
-            source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+            source.subscribe(createOperatorSubscriber(subscriber, function (value) {
                 if (++seen <= count) {
                     subscriber.next(value);
                     if (count <= seen) {
@@ -17,4 +17,4 @@ export function take(count) {
             }));
         });
 }
-//# take.js.map
+//# sourceMappingURL=take.js.map

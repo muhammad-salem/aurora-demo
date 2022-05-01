@@ -1,5 +1,5 @@
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 import { innerFrom } from '../observable/innerFrom.js';
 export var defaultThrottleConfig = {
     leading: true,
@@ -26,7 +26,7 @@ export function throttle(durationSelector, config) {
             isComplete && subscriber.complete();
         };
         var startThrottle = function (value) {
-            return (throttled = innerFrom(durationSelector(value)).subscribe(new OperatorSubscriber(subscriber, endThrottling, cleanupThrottling)));
+            return (throttled = innerFrom(durationSelector(value)).subscribe(createOperatorSubscriber(subscriber, endThrottling, cleanupThrottling)));
         };
         var send = function () {
             if (hasValue) {
@@ -37,7 +37,7 @@ export function throttle(durationSelector, config) {
                 !isComplete && startThrottle(value);
             }
         };
-        source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+        source.subscribe(createOperatorSubscriber(subscriber, function (value) {
             hasValue = true;
             sendValue = value;
             !(throttled && !throttled.closed) && (leading ? send() : startThrottle(value));
@@ -47,4 +47,4 @@ export function throttle(durationSelector, config) {
         }));
     });
 }
-//# throttle.js.map
+//# sourceMappingURL=throttle.js.map

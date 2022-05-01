@@ -17,4 +17,4 @@ export function pipeFromArray(fns) {
         return fns.reduce(function (prev, fn) { return fn(prev); }, input);
     };
 }
-//# pipe.js.map
+//# sourceMappingURL=pipe.js.map

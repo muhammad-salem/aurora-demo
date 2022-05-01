@@ -3,4 +3,4 @@ export function ToCamelCase(str) {
         .replace(/^./, function (str) { return str.toUpperCase(); })
         .replace(/ /g, '');
 }
-//# utils.js.map
+//# sourceMappingURL=utils.js.map

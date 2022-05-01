@@ -31,7 +31,7 @@ export class ViewContainerRefImpl extends ViewContainerRef {
         return this.views[index];
     }
     detach(index) {
-        index ??= this.views.length - 1;
+        index ?? (index = this.views.length - 1);
         const viewRef = this.views[index];
         viewRef.detach();
         this.views.splice(index, 1);
@@ -41,12 +41,12 @@ export class ViewContainerRefImpl extends ViewContainerRef {
         return this.views.indexOf(viewRef);
     }
     remove(index) {
-        index ??= this.views.length - 1;
+        index ?? (index = this.views.length - 1);
         this.views[index].destroy();
         this.views.splice(index, 1);
     }
     insert(viewRef, index) {
-        index = ((index ??= this.views.length) > this.views.length) ? this.views.length : index;
+        index = ((index ?? (index = this.views.length)) > this.views.length) ? this.views.length : index;
         const lastNode = index == 0 ? this.firstComment : this.views[index - 1].last;
         this.views.splice(index, 0, viewRef);
         viewRef.after(lastNode);
@@ -79,4 +79,4 @@ export class ViewContainerRefImpl extends ViewContainerRef {
         return component._proxyModel;
     }
 }
-//# view-container-ref.js.map
+//# sourceMappingURL=view-container-ref.js.map

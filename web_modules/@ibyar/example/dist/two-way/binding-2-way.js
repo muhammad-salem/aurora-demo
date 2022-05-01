@@ -45,4 +45,4 @@ Binding2Way = __decorate([
     })
 ], Binding2Way);
 export { Binding2Way };
-//# binding-2-way.js.map
+//# sourceMappingURL=binding-2-way.js.map

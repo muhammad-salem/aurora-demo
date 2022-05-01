@@ -3,4 +3,4 @@ import { operate } from '../util/lift.js';
 export function reduce(accumulator, seed) {
     return operate(scanInternals(accumulator, seed, arguments.length >= 2, false, true));
 }
-//# reduce.js.map
+//# sourceMappingURL=reduce.js.map

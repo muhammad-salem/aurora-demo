@@ -1,2 +1,2 @@
 export var isArrayLike = (function (x) { return x && typeof x.length === 'number' && typeof x !== 'function'; });
-//# isArrayLike.js.map
+//# sourceMappingURL=isArrayLike.js.map

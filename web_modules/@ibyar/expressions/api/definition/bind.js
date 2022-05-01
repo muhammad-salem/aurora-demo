@@ -13,7 +13,7 @@ let BindExpression = BindExpression_1 = class BindExpression extends AbstractExp
     static fromJSON(node, deserializer) {
         return new BindExpression_1(deserializer(node.object), deserializer(node.property), node.computed, node.optional);
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.object);
         visitNode(node.property);
     }
@@ -79,4 +79,4 @@ BindExpression = BindExpression_1 = __decorate([
     __metadata("design:paramtypes", [Object, Object, Boolean, Boolean])
 ], BindExpression);
 export { BindExpression };
-//# bind.js.map
+//# sourceMappingURL=bind.js.map

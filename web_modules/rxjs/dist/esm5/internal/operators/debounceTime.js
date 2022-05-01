@@ -1,6 +1,6 @@
 import { asyncScheduler } from '../scheduler/async.js';
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 export function debounceTime(dueTime, scheduler) {
     if (scheduler === void 0) { scheduler = asyncScheduler; }
     return operate(function (source, subscriber) {
@@ -26,7 +26,7 @@ export function debounceTime(dueTime, scheduler) {
             }
             emit();
         }
-        source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+        source.subscribe(createOperatorSubscriber(subscriber, function (value) {
             lastValue = value;
             lastTime = scheduler.now();
             if (!activeTask) {
@@ -41,4 +41,4 @@ export function debounceTime(dueTime, scheduler) {
         }));
     });
 }
-//# debounceTime.js.map
+//# sourceMappingURL=debounceTime.js.map

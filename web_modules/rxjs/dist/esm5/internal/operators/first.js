@@ -10,4 +10,4 @@ export function first(predicate, defaultValue) {
         return source.pipe(predicate ? filter(function (v, i) { return predicate(v, i, source); }) : identity, take(1), hasDefaultValue ? defaultIfEmpty(defaultValue) : throwIfEmpty(function () { return new EmptyError(); }));
     };
 }
-//# first.js.map
+//# sourceMappingURL=first.js.map

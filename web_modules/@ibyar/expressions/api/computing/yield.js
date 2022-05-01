@@ -11,6 +11,9 @@ let YieldExpression = YieldExpression_1 = class YieldExpression extends Abstract
     static fromJSON(node, deserializer) {
         return new YieldExpression_1(node.delegate, node.argument ? deserializer(node.argument) : void 0);
     }
+    static visit(node, visitNode) {
+        node.argument && visitNode(node.argument);
+    }
     getArgument() {
         return this.argument;
     }
@@ -48,4 +51,4 @@ YieldExpression = YieldExpression_1 = __decorate([
     __metadata("design:paramtypes", [Boolean, Object])
 ], YieldExpression);
 export { YieldExpression };
-//# yield.js.map
+//# sourceMappingURL=yield.js.map

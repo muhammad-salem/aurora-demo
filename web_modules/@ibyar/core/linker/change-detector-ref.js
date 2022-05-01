@@ -29,4 +29,4 @@ export function createChangeDetectorRef(scope, propertyKey) {
     };
     return new ChangeDetectorRefImpl(changeDetectorRef);
 }
-//# change-detector-ref.js.map
+//# sourceMappingURL=change-detector-ref.js.map

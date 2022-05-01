@@ -5,4 +5,4 @@ export function throwError(errorOrErrorFactory, scheduler) {
     var init = function (subscriber) { return subscriber.error(errorFactory()); };
     return new Observable(scheduler ? function (subscriber) { return scheduler.schedule(init, 0, subscriber); } : init);
 }
-//# throwError.js.map
+//# sourceMappingURL=throwError.js.map

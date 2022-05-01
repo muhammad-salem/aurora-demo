@@ -1,10 +1,10 @@
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 export function scanInternals(accumulator, seed, hasSeed, emitOnNext, emitBeforeComplete) {
     return function (source, subscriber) {
         var hasState = hasSeed;
         var state = seed;
         var index = 0;
-        source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+        source.subscribe(createOperatorSubscriber(subscriber, function (value) {
             var i = index++;
             state = hasState
                 ?
@@ -19,4 +19,4 @@ export function scanInternals(accumulator, seed, hasSeed, emitOnNext, emitBefore
             })));
     };
 }
-//# scanInternals.js.map
+//# sourceMappingURL=scanInternals.js.map

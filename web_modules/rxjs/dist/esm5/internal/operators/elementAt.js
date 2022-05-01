@@ -12,4 +12,4 @@ export function elementAt(index, defaultValue) {
         return source.pipe(filter(function (v, i) { return i === index; }), take(1), hasDefaultValue ? defaultIfEmpty(defaultValue) : throwIfEmpty(function () { return new ArgumentOutOfRangeError(); }));
     };
 }
-//# elementAt.js.map
+//# sourceMappingURL=elementAt.js.map

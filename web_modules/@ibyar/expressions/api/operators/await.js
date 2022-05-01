@@ -10,7 +10,7 @@ let AwaitExpression = AwaitExpression_1 = class AwaitExpression extends Abstract
     static fromJSON(node, serializer) {
         return new AwaitExpression_1(serializer(node.argument));
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.argument);
     }
     getArgument() {
@@ -46,4 +46,4 @@ AwaitExpression = AwaitExpression_1 = __decorate([
     __metadata("design:paramtypes", [Object])
 ], AwaitExpression);
 export { AwaitExpression };
-//# await.js.map
+//# sourceMappingURL=await.js.map

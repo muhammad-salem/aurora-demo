@@ -25,10 +25,10 @@ export function baseFactoryView(htmlElementType) {
             }
             const model = new modelClass();
             this._model = model;
-            const modelScope = ElementModelReactiveScope.blockScopeFor(model);
+            const modelScope = ElementModelReactiveScope.for(model);
             this._proxyModel = modelScope.getContextProxy();
             this._modelScope = modelScope;
-            this._viewScope = ReactiveScope.blockScopeFor({ 'this': this });
+            this._viewScope = ReactiveScope.for({ 'this': this });
             const elementScope = this._viewScope.getScopeOrCreat('this');
             componentRef.inputs.forEach(input => {
                 elementScope.subscribe(input.viewAttribute, (newValue, oldValue) => {
@@ -108,6 +108,7 @@ export function baseFactoryView(htmlElementType) {
             if (outputRef) {
                 return this._model[outputRef.modelProperty];
             }
+            return;
         }
         hasProp(propName) {
             return Reflect.has(this._model, propName);
@@ -138,9 +139,6 @@ export function baseFactoryView(htmlElementType) {
         attributeChangedCallback(name, oldValue, newValue) {
             if (newValue === oldValue) {
                 return;
-            }
-            const inputRef = this.getInput(name);
-            if (inputRef) {
             }
             if (isOnChanges(this._model)) {
                 this._model.onChanges.call(this._proxyModel);
@@ -256,9 +254,6 @@ export function baseFactoryView(htmlElementType) {
                     listener(data);
                 });
             }
-            else {
-                this._model.subscribeModel(eventName, listener);
-            }
         }
         triggerOutput(eventName, value) {
             const modelEvent = this.getEventEmitter(eventName);
@@ -272,4 +267,4 @@ export function baseFactoryView(htmlElementType) {
     FACTORY_CACHE.set(htmlElementType, CustomView);
     return CustomView;
 }
-//# base-view.js.map
+//# sourceMappingURL=base-view.js.map

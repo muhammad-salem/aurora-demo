@@ -6,4 +6,4 @@ export function delay(due, scheduler) {
     var duration = timer(due, scheduler);
     return delayWhen(function () { return duration; });
 }
-//# delay.js.map
+//# sourceMappingURL=delay.js.map

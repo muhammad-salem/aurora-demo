@@ -4,4 +4,4 @@ import { innerFrom } from './innerFrom.js';
 export function partition(source, predicate, thisArg) {
     return [filter(predicate, thisArg)(innerFrom(source)), filter(not(predicate, thisArg))(innerFrom(source))];
 }
-//# partition.js.map
+//# sourceMappingURL=partition.js.map

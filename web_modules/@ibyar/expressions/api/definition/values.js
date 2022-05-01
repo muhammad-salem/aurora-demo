@@ -30,8 +30,11 @@ let Identifier = Identifier_1 = class Identifier extends AbstractExpressionNode 
         scope = stack.findScope(this.name);
         return scope.getScope(this.name);
     }
-    declareVariable(stack, scopeType, propertyValue) {
-        return stack.declareVariable(scopeType, this.name, propertyValue);
+    declareVariable(stack, propertyValue) {
+        return stack.declareVariable(this.name, propertyValue);
+    }
+    getDeclarationName() {
+        return this.toString();
     }
     dependency(computed) {
         return [this];
@@ -149,9 +152,9 @@ export class TemplateLiteralExpressionNode extends AbstractExpressionNode {
     static fromJSON(node, deserializer) {
         return new TemplateLiteralExpressionNode(node.quasis, node.expressions.map(deserializer), node.tag ? deserializer(node.tag) : void 0);
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         node.tag && visitNode(node.tag);
-        visitNodeList(node.expressions);
+        node.expressions.forEach(visitNode);
     }
     getTag() {
         return this.tag;
@@ -345,4 +348,4 @@ export const ConstructorIdentifier = Object.freeze(new Identifier('constructor')
 export const NameIdentifier = Object.freeze(new Identifier('name'));
 export const EvalIdentifier = Object.freeze(new Identifier('eval'));
 export const ArgumentsIdentifier = Object.freeze(new Identifier('arguments'));
-//# values.js.map
+//# sourceMappingURL=values.js.map

@@ -1,2 +1,2 @@
 export function noop() { }
-//# noop.js.map
+//# sourceMappingURL=noop.js.map

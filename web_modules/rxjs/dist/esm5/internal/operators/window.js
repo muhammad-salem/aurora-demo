@@ -1,6 +1,6 @@
 import { Subject } from '../Subject.js';
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 import { noop } from '../util/noop.js';
 export function window(windowBoundaries) {
     return operate(function (source, subscriber) {
@@ -10,11 +10,11 @@ export function window(windowBoundaries) {
             windowSubject.error(err);
             subscriber.error(err);
         };
-        source.subscribe(new OperatorSubscriber(subscriber, function (value) { return windowSubject === null || windowSubject === void 0 ? void 0 : windowSubject.next(value); }, function () {
+        source.subscribe(createOperatorSubscriber(subscriber, function (value) { return windowSubject === null || windowSubject === void 0 ? void 0 : windowSubject.next(value); }, function () {
             windowSubject.complete();
             subscriber.complete();
         }, errorHandler));
-        windowBoundaries.subscribe(new OperatorSubscriber(subscriber, function () {
+        windowBoundaries.subscribe(createOperatorSubscriber(subscriber, function () {
             windowSubject.complete();
             subscriber.next((windowSubject = new Subject()));
         }, noop, errorHandler));
@@ -24,4 +24,4 @@ export function window(windowBoundaries) {
         };
     });
 }
-//# window.js.map
+//# sourceMappingURL=window.js.map

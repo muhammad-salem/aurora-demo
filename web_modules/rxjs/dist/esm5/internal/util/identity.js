@@ -1,4 +1,4 @@
 export function identity(x) {
     return x;
 }
-//# identity.js.map
+//# sourceMappingURL=identity.js.map

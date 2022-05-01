@@ -10,8 +10,8 @@ let ExpressionStatement = ExpressionStatement_1 = class ExpressionStatement exte
     static fromJSON(node, deserializer) {
         return new ExpressionStatement_1(node.body.map(line => deserializer(line)));
     }
-    static visit(node, visitNode, visitNodeList) {
-        visitNodeList(node.body);
+    static visit(node, visitNode) {
+        node.body.forEach(visitNode);
     }
     getBody() {
         return this.body;
@@ -45,4 +45,4 @@ ExpressionStatement = ExpressionStatement_1 = __decorate([
     __metadata("design:paramtypes", [Array])
 ], ExpressionStatement);
 export { ExpressionStatement };
-//# statement.js.map
+//# sourceMappingURL=statement.js.map

@@ -1,9 +1,9 @@
 import { Notification } from '../Notification.js';
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 export function materialize() {
     return operate(function (source, subscriber) {
-        source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+        source.subscribe(createOperatorSubscriber(subscriber, function (value) {
             subscriber.next(Notification.createNext(value));
         }, function () {
             subscriber.next(Notification.createComplete());
@@ -14,4 +14,4 @@ export function materialize() {
         }));
     });
 }
-//# materialize.js.map
+//# sourceMappingURL=materialize.js.map

@@ -5,7 +5,7 @@ import { identity } from '../util/identity.js';
 import { mapOneOrManyArgs } from '../util/mapOneOrManyArgs.js';
 import { popResultSelector, popScheduler } from '../util/args.js';
 import { createObject } from '../util/createObject.js';
-import { OperatorSubscriber } from '../operators/OperatorSubscriber.js';
+import { createOperatorSubscriber } from '../operators/OperatorSubscriber.js';
 import { executeSchedule } from '../util/executeSchedule.js';
 export function combineLatest() {
     var args = [];
@@ -37,7 +37,7 @@ export function combineLatestInit(observables, scheduler, valueTransform) {
                 maybeSchedule(scheduler, function () {
                     var source = from(observables[i], scheduler);
                     var hasFirstValue = false;
-                    source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+                    source.subscribe(createOperatorSubscriber(subscriber, function (value) {
                         values[i] = value;
                         if (!hasFirstValue) {
                             hasFirstValue = true;
@@ -67,4 +67,4 @@ function maybeSchedule(scheduler, execute, subscription) {
         execute();
     }
 }
-//# combineLatest.js.map
+//# sourceMappingURL=combineLatest.js.map

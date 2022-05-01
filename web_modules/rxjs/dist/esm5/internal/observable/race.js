@@ -1,7 +1,7 @@
 import { Observable } from '../Observable.js';
 import { innerFrom } from './innerFrom.js';
 import { argsOrArgArray } from '../util/argsOrArgArray.js';
-import { OperatorSubscriber } from '../operators/OperatorSubscriber.js';
+import { createOperatorSubscriber } from '../operators/OperatorSubscriber.js';
 export function race() {
     var sources = [];
     for (var _i = 0; _i < arguments.length; _i++) {
@@ -14,7 +14,7 @@ export function raceInit(sources) {
     return function (subscriber) {
         var subscriptions = [];
         var _loop_1 = function (i) {
-            subscriptions.push(innerFrom(sources[i]).subscribe(new OperatorSubscriber(subscriber, function (value) {
+            subscriptions.push(innerFrom(sources[i]).subscribe(createOperatorSubscriber(subscriber, function (value) {
                 if (subscriptions) {
                     for (var s = 0; s < subscriptions.length; s++) {
                         s !== i && subscriptions[s].unsubscribe();
@@ -29,4 +29,4 @@ export function raceInit(sources) {
         }
     };
 }
-//# race.js.map
+//# sourceMappingURL=race.js.map

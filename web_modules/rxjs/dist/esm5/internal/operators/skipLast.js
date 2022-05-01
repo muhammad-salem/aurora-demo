@@ -1,6 +1,6 @@
 import { identity } from '../util/identity.js';
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 export function skipLast(skipCount) {
     return skipCount <= 0
         ?
@@ -8,7 +8,7 @@ export function skipLast(skipCount) {
         : operate(function (source, subscriber) {
             var ring = new Array(skipCount);
             var seen = 0;
-            source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+            source.subscribe(createOperatorSubscriber(subscriber, function (value) {
                 var valueIndex = seen++;
                 if (valueIndex < skipCount) {
                     ring[valueIndex] = value;
@@ -25,4 +25,4 @@ export function skipLast(skipCount) {
             };
         });
 }
-//# skipLast.js.map
+//# sourceMappingURL=skipLast.js.map

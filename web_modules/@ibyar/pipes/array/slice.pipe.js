@@ -18,4 +18,4 @@ SlicePipe = SlicePipe_1 = __decorate([
     Pipe({ name: 'slice' })
 ], SlicePipe);
 export { SlicePipe };
-//# slice.pipe.js.map
+//# sourceMappingURL=slice.pipe.js.map

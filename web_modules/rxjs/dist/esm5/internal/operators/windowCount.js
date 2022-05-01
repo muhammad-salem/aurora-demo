@@ -1,7 +1,7 @@
 import { __values } from "../../../../../tslib/tslib.es6.js";
 import { Subject } from '../Subject.js';
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 export function windowCount(windowSize, startWindowEvery) {
     if (startWindowEvery === void 0) { startWindowEvery = 0; }
     var startEvery = startWindowEvery > 0 ? startWindowEvery : windowSize;
@@ -10,7 +10,7 @@ export function windowCount(windowSize, startWindowEvery) {
         var starts = [];
         var count = 0;
         subscriber.next(windows[0].asObservable());
-        source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+        source.subscribe(createOperatorSubscriber(subscriber, function (value) {
             var e_1, _a;
             try {
                 for (var windows_1 = __values(windows), windows_1_1 = windows_1.next(); !windows_1_1.done; windows_1_1 = windows_1.next()) {
@@ -50,4 +50,4 @@ export function windowCount(windowSize, startWindowEvery) {
         }));
     });
 }
-//# windowCount.js.map
+//# sourceMappingURL=windowCount.js.map

@@ -10,6 +10,9 @@ let ThrowStatement = ThrowStatement_1 = class ThrowStatement extends AbstractExp
     static fromJSON(node, deserializer) {
         return new ThrowStatement_1(deserializer(node.argument));
     }
+    static visit(node, visitNode) {
+        visitNode(node.argument);
+    }
     getArgument() {
         return this.argument;
     }
@@ -186,4 +189,4 @@ TryCatchNode = TryCatchNode_1 = __decorate([
     __metadata("design:paramtypes", [Object, Object, Object])
 ], TryCatchNode);
 export { TryCatchNode };
-//# throw.js.map
+//# sourceMappingURL=throw.js.map

@@ -1,7 +1,6 @@
 import { __decorate, __metadata } from "../../../tslib/tslib.es6.js";
 import { Directive, Input, StructuralDirective } from '../../core/index.js';
 import { diff, PatchOperation, PatchRoot } from '../../platform/index.js';
-Reflect.set(window, 'diff', diff);
 export class ForContext {
     constructor($implicit, index, count) {
         this.$implicit = $implicit;
@@ -20,18 +19,8 @@ export class ForContext {
     get odd() {
         return !this.even;
     }
-    update(count, index, $implicit) {
-        if (typeof count == 'object') {
-            const forContext = count;
-            this.count = forContext.count;
-            this.index = forContext.index;
-            this.$implicit = forContext.$implicit;
-        }
-        else {
-            this.count = count;
-            index != undefined && (this.index = index);
-            $implicit != undefined && (this.$implicit = $implicit);
-        }
+    update(forContext) {
+        Object.assign(this, forContext);
     }
 }
 export class ForOfContext extends ForContext {
@@ -87,13 +76,17 @@ export class AbstractForDirective extends StructuralDirective {
                     case PatchOperation.ADD:
                         this.viewContainerRef.createEmbeddedView(this.templateRef, { context: action.item, index: action.nextIndex });
                         break;
-                    case PatchOperation.KEEP:
-                        lastContext[action.nextIndex].update(action.item.count);
-                        break;
                     default:
+                    case PatchOperation.KEEP:
                     case PatchOperation.REPLACE:
                     case PatchOperation.MOVE:
-                        lastContext[action.nextIndex].update(action.item);
+                        const last = lastContext[action.nextIndex];
+                        if (last) {
+                            last.update(action.item);
+                        }
+                        else {
+                            this.viewContainerRef.createEmbeddedView(this.templateRef, { context: action.item, index: action.nextIndex });
+                        }
                         break;
                 }
             });
@@ -229,4 +222,4 @@ ForInDirective = __decorate([
     })
 ], ForInDirective);
 export { ForInDirective };
-//# for.js.map
+//# sourceMappingURL=for.js.map

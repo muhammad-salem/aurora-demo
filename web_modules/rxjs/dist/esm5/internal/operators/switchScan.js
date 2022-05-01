@@ -9,4 +9,4 @@ export function switchScan(accumulator, seed) {
         };
     });
 }
-//# switchScan.js.map
+//# sourceMappingURL=switchScan.js.map

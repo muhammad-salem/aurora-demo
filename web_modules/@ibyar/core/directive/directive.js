@@ -15,4 +15,4 @@ export class AttributeOnStructuralDirective {
         this.directive = directive;
     }
 }
-//# directive.js.map
+//# sourceMappingURL=directive.js.map

@@ -8,4 +8,4 @@ export function interval(period, scheduler) {
     }
     return timer(period, period, scheduler);
 }
-//# interval.js.map
+//# sourceMappingURL=interval.js.map

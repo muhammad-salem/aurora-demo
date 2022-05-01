@@ -1,12 +1,12 @@
 import { innerFrom } from '../observable/innerFrom.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 import { operate } from '../util/lift.js';
 export function catchError(selector) {
     return operate(function (source, subscriber) {
         var innerSub = null;
         var syncUnsub = false;
         var handledResult;
-        innerSub = source.subscribe(new OperatorSubscriber(subscriber, undefined, undefined, function (err) {
+        innerSub = source.subscribe(createOperatorSubscriber(subscriber, undefined, undefined, function (err) {
             handledResult = innerFrom(selector(err, catchError(selector)(source)));
             if (innerSub) {
                 innerSub.unsubscribe();
@@ -24,4 +24,4 @@ export function catchError(selector) {
         }
     });
 }
-//# catchError.js.map
+//# sourceMappingURL=catchError.js.map

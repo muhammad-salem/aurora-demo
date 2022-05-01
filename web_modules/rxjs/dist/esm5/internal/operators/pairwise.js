@@ -1,10 +1,10 @@
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 export function pairwise() {
     return operate(function (source, subscriber) {
         var prev;
         var hasPrev = false;
-        source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+        source.subscribe(createOperatorSubscriber(subscriber, function (value) {
             var p = prev;
             prev = value;
             hasPrev && subscriber.next([p, value]);
@@ -12,4 +12,4 @@ export function pairwise() {
         }));
     });
 }
-//# pairwise.js.map
+//# sourceMappingURL=pairwise.js.map

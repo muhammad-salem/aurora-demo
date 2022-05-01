@@ -8,4 +8,4 @@ export function publishReplay(bufferSize, windowTime, selectorOrScheduler, times
     var selector = isFunction(selectorOrScheduler) ? selectorOrScheduler : undefined;
     return function (source) { return multicast(new ReplaySubject(bufferSize, windowTime, timestampProvider), selector)(source); };
 }
-//# publishReplay.js.map
+//# sourceMappingURL=publishReplay.js.map

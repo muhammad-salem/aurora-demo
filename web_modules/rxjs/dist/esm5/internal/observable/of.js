@@ -8,4 +8,4 @@ export function of() {
     var scheduler = popScheduler(args);
     return from(args, scheduler);
 }
-//# of.js.map
+//# sourceMappingURL=of.js.map

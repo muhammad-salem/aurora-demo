@@ -16,4 +16,4 @@ export var immediateProvider = {
     },
     delegate: undefined,
 };
-//# immediateProvider.js.map
+//# sourceMappingURL=immediateProvider.js.map

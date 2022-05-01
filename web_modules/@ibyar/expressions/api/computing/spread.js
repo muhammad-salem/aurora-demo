@@ -10,6 +10,9 @@ let SpreadElement = SpreadElement_1 = class SpreadElement extends AbstractExpres
     static fromJSON(node, deserializer) {
         return new SpreadElement_1(deserializer(node.argument));
     }
+    static visit(node, visitNode) {
+        visitNode(node.argument);
+    }
     getArgument() {
         return this.argument;
     }
@@ -30,7 +33,7 @@ let SpreadElement = SpreadElement_1 = class SpreadElement extends AbstractExpres
     }
     spreadFromArray(stack, array) {
         let length = stack.get('length');
-        array.forEach(value => stack.declareVariable('block', length++, value));
+        array.forEach(value => stack.declareVariable(length++, value));
     }
     spreadFromIterator(stack, iterator) {
         let length = stack.get('length');
@@ -39,7 +42,7 @@ let SpreadElement = SpreadElement_1 = class SpreadElement extends AbstractExpres
             if (iteratorResult.done) {
                 break;
             }
-            stack.declareVariable('block', length++, iteratorResult.value);
+            stack.declareVariable(length++, iteratorResult.value);
         }
     }
     dependency(computed) {
@@ -60,4 +63,4 @@ SpreadElement = SpreadElement_1 = __decorate([
     __metadata("design:paramtypes", [Object])
 ], SpreadElement);
 export { SpreadElement };
-//# spread.js.map
+//# sourceMappingURL=spread.js.map

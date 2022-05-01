@@ -10,6 +10,9 @@ let ReturnStatement = ReturnStatement_1 = class ReturnStatement extends Abstract
     static fromJSON(node, deserializer) {
         return new ReturnStatement_1(node.argument ? deserializer(node.argument) : void 0);
     }
+    static visit(node, visitNode) {
+        node.argument && visitNode(node.argument);
+    }
     getArgument() {
         return this.argument;
     }
@@ -40,4 +43,4 @@ ReturnStatement = ReturnStatement_1 = __decorate([
     __metadata("design:paramtypes", [Object])
 ], ReturnStatement);
 export { ReturnStatement };
-//# return.js.map
+//# sourceMappingURL=return.js.map

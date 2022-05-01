@@ -3,4 +3,4 @@ export * from './attribute/class.js';
 export * from './structural/for.js';
 export * from './structural/if.js';
 export * from './structural/switch.js';
-//# index.js.map
+//# sourceMappingURL=index.js.map

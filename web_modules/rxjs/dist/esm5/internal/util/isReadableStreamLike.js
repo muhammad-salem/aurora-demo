@@ -36,4 +36,4 @@ export function readableStreamLikeToAsyncGenerator(readableStream) {
 export function isReadableStreamLike(obj) {
     return isFunction(obj === null || obj === void 0 ? void 0 : obj.getReader);
 }
-//# isReadableStreamLike.js.map
+//# sourceMappingURL=isReadableStreamLike.js.map

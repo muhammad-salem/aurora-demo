@@ -5,4 +5,4 @@ export function getSymbolIterator() {
     return Symbol.iterator;
 }
 export var iterator = getSymbolIterator();
-//# iterator.js.map
+//# sourceMappingURL=iterator.js.map

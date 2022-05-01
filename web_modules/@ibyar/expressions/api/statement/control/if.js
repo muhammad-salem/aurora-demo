@@ -12,7 +12,7 @@ let IfStatement = IfStatement_1 = class IfStatement extends AbstractExpressionNo
     static fromJSON(node, deserializer) {
         return new IfStatement_1(deserializer(node.test), deserializer(node.consequent), node.alternate ? deserializer(node.alternate) : void 0);
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.test);
         visitNode(node.consequent);
         node.alternate && visitNode(node.alternate);
@@ -73,4 +73,4 @@ IfStatement = IfStatement_1 = __decorate([
     __metadata("design:paramtypes", [Object, Object, Object])
 ], IfStatement);
 export { IfStatement };
-//# if.js.map
+//# sourceMappingURL=if.js.map

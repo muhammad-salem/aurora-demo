@@ -12,7 +12,7 @@ let ConditionalExpression = ConditionalExpression_1 = class ConditionalExpressio
     static fromJSON(node, deserializer) {
         return new ConditionalExpression_1(deserializer(node.test), deserializer(node.alternate), deserializer(node.consequent));
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.test);
         visitNode(node.alternate);
         visitNode(node.consequent);
@@ -61,4 +61,4 @@ ConditionalExpression = ConditionalExpression_1 = __decorate([
     __metadata("design:paramtypes", [Object, Object, Object])
 ], ConditionalExpression);
 export { ConditionalExpression };
-//# ternary.js.map
+//# sourceMappingURL=ternary.js.map

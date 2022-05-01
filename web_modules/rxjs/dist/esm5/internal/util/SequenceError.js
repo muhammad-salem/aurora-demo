@@ -6,4 +6,4 @@ export var SequenceError = createErrorClass(function (_super) {
         this.message = message;
     };
 });
-//# SequenceError.js.map
+//# sourceMappingURL=SequenceError.js.map

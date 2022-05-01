@@ -10,4 +10,4 @@ export function multicast(subjectOrSubjectFactory, selector) {
     }
     return function (source) { return new ConnectableObservable(source, subjectFactory); };
 }
-//# multicast.js.map
+//# sourceMappingURL=multicast.js.map

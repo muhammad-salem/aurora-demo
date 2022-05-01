@@ -1,6 +1,6 @@
 import { __values } from "../../../../../tslib/tslib.es6.js";
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 import { arrRemove } from '../util/arrRemove.js';
 export function bufferCount(bufferSize, startBufferEvery) {
     if (startBufferEvery === void 0) { startBufferEvery = null; }
@@ -8,7 +8,7 @@ export function bufferCount(bufferSize, startBufferEvery) {
     return operate(function (source, subscriber) {
         var buffers = [];
         var count = 0;
-        source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+        source.subscribe(createOperatorSubscriber(subscriber, function (value) {
             var e_1, _a, e_2, _b;
             var toEmit = null;
             if (count++ % startBufferEvery === 0) {
@@ -68,4 +68,4 @@ export function bufferCount(bufferSize, startBufferEvery) {
         }));
     });
 }
-//# bufferCount.js.map
+//# sourceMappingURL=bufferCount.js.map

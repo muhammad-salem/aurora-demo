@@ -1,13 +1,13 @@
 import { operate } from '../util/lift.js';
 import { innerFrom } from '../observable/innerFrom.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 export function exhaustAll() {
     return operate(function (source, subscriber) {
         var isComplete = false;
         var innerSub = null;
-        source.subscribe(new OperatorSubscriber(subscriber, function (inner) {
+        source.subscribe(createOperatorSubscriber(subscriber, function (inner) {
             if (!innerSub) {
-                innerSub = innerFrom(inner).subscribe(new OperatorSubscriber(subscriber, undefined, function () {
+                innerSub = innerFrom(inner).subscribe(createOperatorSubscriber(subscriber, undefined, function () {
                     innerSub = null;
                     isComplete && subscriber.complete();
                 }));
@@ -18,4 +18,4 @@ export function exhaustAll() {
         }));
     });
 }
-//# exhaustAll.js.map
+//# sourceMappingURL=exhaustAll.js.map

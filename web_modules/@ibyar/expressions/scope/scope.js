@@ -1,41 +1,19 @@
 export class Scope {
-    constructor(context, type) {
+    constructor(context, propertyKeys) {
         this.context = context;
-        this.type = type;
         this.scopeMap = new Map();
+        this.propertyKeys = propertyKeys;
+        if (Array.isArray(this.propertyKeys)) {
+            this.has = (propertyKey) => {
+                return this.propertyKeys.includes(propertyKey);
+            };
+        }
     }
-    static for(context, type) {
-        return new Scope(context, type);
+    static for(context, propertyKeys) {
+        return new Scope(context, propertyKeys);
     }
-    static blockScopeFor(context) {
-        return new Scope(context, 'block');
-    }
-    static functionScopeFor(context) {
-        return new Scope(context, 'function');
-    }
-    static classScopeFor(context) {
-        return new Scope(context, 'class');
-    }
-    static moduleScopeFor(context) {
-        return new Scope(context, 'module');
-    }
-    static globalScopeFor(context) {
-        return new Scope(context, 'global');
-    }
-    static blockScope() {
-        return new Scope({}, 'block');
-    }
-    static functionScope() {
-        return new Scope({}, 'function');
-    }
-    static classScope() {
-        return new Scope({}, 'class');
-    }
-    static moduleScope() {
-        return new Scope({}, 'module');
-    }
-    static globalScope() {
-        return new Scope({}, 'global');
+    static blockScope(propertyKeys) {
+        return new Scope({}, propertyKeys);
     }
     get(propertyKey) {
         return Reflect.get(this.context, propertyKey);
@@ -62,7 +40,7 @@ export class Scope {
         if (typeof scopeContext !== 'object') {
             return;
         }
-        scope = new Scope(scopeContext, 'block');
+        scope = new (this.getClass())(scopeContext);
         this.scopeMap.set(propertyKey, scope);
         return scope;
     }
@@ -73,50 +51,29 @@ export class Scope {
             scope.context = scopeContext;
             return scope;
         }
-        scope = new Scope(scopeContext, 'block');
+        scope = new (this.getClass())(scopeContext);
         this.scopeMap.set(propertyKey, scope);
         return scope;
     }
+    getClass() {
+        return Scope;
+    }
 }
 export class ReadOnlyScope extends Scope {
-    static for(context, type) {
-        return new ReadOnlyScope(context, type);
+    static for(context, propertyKeys) {
+        return new ReadOnlyScope(context, propertyKeys);
     }
-    static blockScopeFor(context) {
-        return new ReadOnlyScope(context, 'block');
-    }
-    static functionScopeFor(context) {
-        return new ReadOnlyScope(context, 'function');
-    }
-    static classScopeFor(context) {
-        return new ReadOnlyScope(context, 'class');
-    }
-    static moduleScopeFor(context) {
-        return new ReadOnlyScope(context, 'module');
-    }
-    static globalScopeFor(context) {
-        return new ReadOnlyScope(context, 'global');
-    }
-    static blockScope() {
-        return new ReadOnlyScope({}, 'block');
-    }
-    static functionScope() {
-        return new ReadOnlyScope({}, 'function');
-    }
-    static classScope() {
-        return new ReadOnlyScope({}, 'class');
-    }
-    static moduleScope() {
-        return new ReadOnlyScope({}, 'module');
-    }
-    static globalScope() {
-        return new ReadOnlyScope({}, 'global');
+    static blockScope(propertyKeys) {
+        return new ReadOnlyScope({}, propertyKeys);
     }
     set(propertyKey, value, receiver) {
         return false;
     }
     delete(propertyKey) {
         return false;
+    }
+    getClass() {
+        return ReadOnlyScope;
     }
 }
 export class ScopeSubscription {
@@ -195,44 +152,22 @@ export class ValueChangeObserver {
     }
 }
 export class ReactiveScope extends Scope {
-    constructor(context, type, name, parent) {
-        super(context, type);
-        this.name = name;
+    constructor(context, name, parent, propertyKeys) {
+        super(context, Array.isArray(name) ? name : propertyKeys);
         this.parent = parent;
         this.observer = new ValueChangeObserver();
+        if (typeof name == 'string') {
+            this.name = name;
+        }
+        if (Array.isArray(name)) {
+            this.propertyKeys = name;
+        }
     }
-    static for(context, type) {
-        return new ReactiveScope(context, type);
+    static for(context, propertyKeys) {
+        return new ReactiveScope(context, propertyKeys);
     }
-    static blockScopeFor(context) {
-        return new ReactiveScope(context, 'block');
-    }
-    static functionScopeFor(context) {
-        return new ReactiveScope(context, 'function');
-    }
-    static classScopeFor(context) {
-        return new ReactiveScope(context, 'class');
-    }
-    static moduleScopeFor(context) {
-        return new ReactiveScope(context, 'module');
-    }
-    static globalScopeFor(context) {
-        return new ReactiveScope(context, 'global');
-    }
-    static blockScope() {
-        return new ReactiveScope({}, 'block');
-    }
-    static functionScope() {
-        return new ReactiveScope({}, 'function');
-    }
-    static classScope() {
-        return new ReactiveScope({}, 'class');
-    }
-    static moduleScope() {
-        return new ReactiveScope({}, 'module');
-    }
-    static globalScope() {
-        return new ReactiveScope({}, 'global');
+    static blockScope(propertyKeys) {
+        return new ReactiveScope({}, propertyKeys);
     }
     set(propertyKey, newValue, receiver) {
         const oldValue = Reflect.get(this.context, propertyKey);
@@ -260,7 +195,7 @@ export class ReactiveScope extends Scope {
         if (typeof scopeContext !== 'object') {
             return;
         }
-        scope = new ReactiveScope(scopeContext, 'block', propertyKey, this);
+        scope = new ReactiveScope(scopeContext, propertyKey, this);
         this.scopeMap.set(propertyKey, scope);
         return scope;
     }
@@ -271,7 +206,7 @@ export class ReactiveScope extends Scope {
             scope.context = scopeContext;
             return scope;
         }
-        scope = new ReactiveScope(scopeContext, 'block', propertyKey, this);
+        scope = new ReactiveScope(scopeContext, propertyKey, this);
         this.scopeMap.set(propertyKey, scope);
         return scope;
     }
@@ -293,6 +228,9 @@ export class ReactiveScope extends Scope {
             this.observer.destroy();
         }
     }
+    getClass() {
+        return ReactiveScope;
+    }
 }
 export class ReactiveScopeControl extends ReactiveScope {
     constructor() {
@@ -300,38 +238,11 @@ export class ReactiveScopeControl extends ReactiveScope {
         this.attached = true;
         this.marked = {};
     }
-    static for(context, type) {
-        return new ReactiveScopeControl(context, type);
+    static for(context, propertyKeys) {
+        return new ReactiveScopeControl(context, propertyKeys);
     }
-    static blockScopeFor(context) {
-        return new ReactiveScopeControl(context, 'block');
-    }
-    static functionScopeFor(context) {
-        return new ReactiveScopeControl(context, 'function');
-    }
-    static classScopeFor(context) {
-        return new ReactiveScopeControl(context, 'class');
-    }
-    static moduleScopeFor(context) {
-        return new ReactiveScopeControl(context, 'module');
-    }
-    static globalScopeFor(context) {
-        return new ReactiveScopeControl(context, 'global');
-    }
-    static blockScope() {
-        return new ReactiveScopeControl({}, 'block');
-    }
-    static functionScope() {
-        return new ReactiveScopeControl({}, 'function');
-    }
-    static classScope() {
-        return new ReactiveScopeControl({}, 'class');
-    }
-    static moduleScope() {
-        return new ReactiveScopeControl({}, 'module');
-    }
-    static globalScope() {
-        return new ReactiveScopeControl({}, 'global');
+    static blockScope(propertyKeys) {
+        return new ReactiveScopeControl({}, propertyKeys);
     }
     emit(propertyKey, newValue, oldValue) {
         if (this.attached) {
@@ -363,5 +274,24 @@ export class ReactiveScopeControl extends ReactiveScope {
             super.emit(propertyKey, latestChanges[propertyKey]);
         });
     }
+    getClass() {
+        return ReactiveScopeControl;
+    }
 }
-//# scope.js.map
+export class ModuleScope extends ReactiveScope {
+    constructor(context, propertyKeys) {
+        super(context, propertyKeys);
+    }
+    importModule(propertyKey, scope) {
+        this.scopeMap.set(propertyKey, scope);
+    }
+}
+export class WebModuleScope extends ModuleScope {
+    constructor() {
+        super({});
+    }
+    updateContext(context) {
+        this.context = context;
+    }
+}
+//# sourceMappingURL=scope.js.map

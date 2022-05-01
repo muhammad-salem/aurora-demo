@@ -22,4 +22,4 @@ export function isAfterViewChecked(object) {
 export function isOnDestroy(object) {
     return 'onDestroy' in object;
 }
-//# lifecycle.js.map
+//# sourceMappingURL=lifecycle.js.map

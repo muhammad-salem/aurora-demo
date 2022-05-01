@@ -35,7 +35,7 @@ let Param = Param_1 = class Param extends AbstractExpressionNode {
     static fromJSON(node, deserializer) {
         return new Param_1(deserializer(node.identifier), node.defaultValue ? deserializer(node.defaultValue) : void 0);
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.identifier);
         node.defaultValue && visitNode(node.defaultValue);
     }
@@ -49,7 +49,7 @@ let Param = Param_1 = class Param extends AbstractExpressionNode {
         this.defaultValue?.shareVariables(scopeList);
     }
     set(stack, value) {
-        this.identifier.declareVariable?.(stack, 'function', value);
+        this.identifier.declareVariable?.(stack, value);
     }
     get(stack) {
         throw new Error('Param#get() has no implementation.');
@@ -81,7 +81,7 @@ export class FunctionBaseExpression extends AbstractExpressionNode {
         this.sharedVariables = scopeList;
     }
     initFunctionScope(stack) {
-        const scope = Scope.functionScope();
+        const scope = Scope.blockScope();
         const innerScopes = this.sharedVariables ? this.sharedVariables.slice() : [];
         innerScopes.push(scope);
         innerScopes.forEach(variableScope => stack.pushScope(variableScope));
@@ -104,10 +104,10 @@ let FunctionExpression = FunctionExpression_1 = class FunctionExpression extends
     static fromJSON(node, deserializer) {
         return new FunctionExpression_1(node.params.map(deserializer), node.body.map(deserializer), FunctionKind[node.kind], node.id ? deserializer(node.id) : void 0, node.rest, node.generator);
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         node.id && visitNode(node.id);
-        visitNodeList(node.params);
-        visitNodeList(node.body);
+        node.params.forEach(visitNode);
+        node.body.forEach(visitNode);
     }
     getParams() {
         return this.params;
@@ -143,7 +143,7 @@ let FunctionExpression = FunctionExpression_1 = class FunctionExpression extends
             case FunctionKind.ASYNC:
                 func = async function (...args) {
                     const innerScopes = self.initFunctionScope(stack);
-                    stack.declareVariable('function', 'this', this);
+                    stack.declareVariable('this', this);
                     self.setParameter(stack, args);
                     let returnValue;
                     for (const statement of self.body) {
@@ -153,7 +153,7 @@ let FunctionExpression = FunctionExpression_1 = class FunctionExpression extends
                             for (const awaitRef of stack.awaitPromise) {
                                 const awaitValue = await awaitRef.promise;
                                 if (awaitRef.declareVariable) {
-                                    awaitRef.node.declareVariable(stack, awaitRef.scopeType, awaitValue);
+                                    awaitRef.node.declareVariable(stack, awaitValue);
                                 }
                                 else {
                                     awaitRef.node.set(stack, awaitValue);
@@ -192,7 +192,7 @@ let FunctionExpression = FunctionExpression_1 = class FunctionExpression extends
             case FunctionKind.GENERATOR:
                 func = function* (...args) {
                     const innerScopes = self.initFunctionScope(stack);
-                    stack.declareVariable('function', 'this', this);
+                    stack.declareVariable('this', this);
                     self.setParameter(stack, args);
                     let returnValue;
                     for (const statement of self.body) {
@@ -215,7 +215,7 @@ let FunctionExpression = FunctionExpression_1 = class FunctionExpression extends
             case FunctionKind.ASYNC_GENERATOR:
                 func = async function* (...args) {
                     const innerScopes = self.initFunctionScope(stack);
-                    stack.declareVariable('function', 'this', this);
+                    stack.declareVariable('this', this);
                     self.setParameter(stack, args);
                     let returnValue;
                     for (const statement of self.body) {
@@ -225,7 +225,7 @@ let FunctionExpression = FunctionExpression_1 = class FunctionExpression extends
                             for (const awaitRef of stack.awaitPromise) {
                                 const awaitValue = await awaitRef.promise;
                                 if (awaitRef.declareVariable) {
-                                    awaitRef.node.declareVariable(stack, awaitRef.scopeType, awaitValue);
+                                    awaitRef.node.declareVariable(stack, awaitValue);
                                 }
                                 else {
                                     awaitRef.node.set(stack, awaitValue);
@@ -274,7 +274,7 @@ let FunctionExpression = FunctionExpression_1 = class FunctionExpression extends
             case FunctionKind.NORMAL:
                 func = function (...args) {
                     const innerScopes = self.initFunctionScope(stack);
-                    stack.declareVariable('function', 'this', this);
+                    stack.declareVariable('this', this);
                     self.setParameter(stack, args);
                     let returnValue;
                     for (const statement of self.body) {
@@ -289,7 +289,7 @@ let FunctionExpression = FunctionExpression_1 = class FunctionExpression extends
                 };
                 break;
         }
-        this.id?.declareVariable(stack, 'block', func);
+        this.id?.declareVariable(stack, func);
         return func;
     }
     dependency(computed) {
@@ -341,16 +341,16 @@ FunctionExpression = FunctionExpression_1 = __decorate([
 ], FunctionExpression);
 export { FunctionExpression };
 let FunctionDeclaration = FunctionDeclaration_1 = class FunctionDeclaration extends FunctionExpression {
+    static fromJSON(node, deserializer) {
+        return new FunctionDeclaration_1(node.params.map(deserializer), node.body.map(deserializer), FunctionKind[node.kind], node.id ? deserializer(node.id) : void 0, node.rest, node.generator);
+    }
+    static visit(node, visitNode) {
+        node.id && visitNode(node.id);
+        node.params.forEach(visitNode);
+        node.body.forEach(visitNode);
+    }
     constructor(params, body, kind, id, rest, generator) {
         super(params, body, kind, id, rest, generator);
-    }
-    static fromJSON(node, deserializer) {
-        return new FunctionDeclaration_1(node.params.map(deserializer), node.body.map(deserializer), FunctionKind[node.kind], deserializer(node.id), node.rest, node.generator);
-    }
-    static visit(node, visitNode, visitNodeList) {
-        visitNode(node.id);
-        visitNodeList(node.params);
-        visitNodeList(node.body);
     }
 };
 FunctionDeclaration = FunctionDeclaration_1 = __decorate([
@@ -372,10 +372,10 @@ let ArrowFunctionExpression = ArrowFunctionExpression_1 = class ArrowFunctionExp
             ? node.body.map(deserializer)
             : deserializer(node.body), ArrowFunctionType[node.kind], node.rest, node.generator);
     }
-    static visit(node, visitNode, visitNodeList) {
-        visitNodeList(node.params);
+    static visit(node, visitNode) {
+        node.params.forEach(visitNode);
         Array.isArray(node.body)
-            ? visitNodeList(node.body)
+            ? node.body.forEach(visitNode)
             : visitNode(node.body);
     }
     getParams() {
@@ -415,7 +415,7 @@ let ArrowFunctionExpression = ArrowFunctionExpression_1 = class ArrowFunctionExp
                             for (const awaitRef of stack.awaitPromise) {
                                 const awaitValue = await awaitRef.promise;
                                 if (awaitRef.declareVariable) {
-                                    awaitRef.node.declareVariable(stack, awaitRef.scopeType, awaitValue);
+                                    awaitRef.node.declareVariable(stack, awaitValue);
                                 }
                                 else {
                                     awaitRef.node.set(stack, awaitValue);
@@ -523,4 +523,4 @@ ArrowFunctionExpression = ArrowFunctionExpression_1 = __decorate([
     __metadata("design:paramtypes", [Array, Object, String, Boolean, Boolean])
 ], ArrowFunctionExpression);
 export { ArrowFunctionExpression };
-//# function.js.map
+//# sourceMappingURL=function.js.map

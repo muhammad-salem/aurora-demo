@@ -94,4 +94,4 @@ export class DirectiveRegistry {
     }
 }
 export const directiveRegistry = new DirectiveRegistry();
-//# register-directive.js.map
+//# sourceMappingURL=register-directive.js.map

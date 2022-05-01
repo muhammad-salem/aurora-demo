@@ -13,7 +13,7 @@ let SwitchCase = SwitchCase_1 = class SwitchCase extends AbstractExpressionNode 
     static fromJSON(node, deserializer) {
         return new SwitchCase_1(deserializer(node.test), deserializer(node.consequent));
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.test);
         visitNode(node.consequent);
     }
@@ -61,7 +61,7 @@ let DefaultExpression = DefaultExpression_1 = class DefaultExpression extends Sw
     static fromJSON(node, deserializer) {
         return new DefaultExpression_1(deserializer(node.consequent));
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.consequent);
     }
     dependency(computed) {
@@ -79,8 +79,7 @@ let DefaultExpression = DefaultExpression_1 = class DefaultExpression extends Sw
         };
     }
 };
-DefaultExpression.DEFAULT_KEYWORD = 'default';
-DefaultExpression.DefaultNode = Object.freeze(new Identifier(DefaultExpression_1.DEFAULT_KEYWORD));
+DefaultExpression.DefaultNode = Object.freeze(new Identifier('default'));
 DefaultExpression = DefaultExpression_1 = __decorate([
     Deserializer('default'),
     __metadata("design:paramtypes", [Object])
@@ -95,9 +94,9 @@ let SwitchStatement = SwitchStatement_1 = class SwitchStatement extends Abstract
     static fromJSON(node, deserializer) {
         return new SwitchStatement_1(deserializer(node.discriminant), node.cases.map(deserializer));
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.discriminant);
-        visitNodeList(node.cases);
+        node.cases.forEach(visitNode);
     }
     getDiscriminant() {
         return this.discriminant;
@@ -153,4 +152,4 @@ SwitchStatement = SwitchStatement_1 = __decorate([
     __metadata("design:paramtypes", [Object, Array])
 ], SwitchStatement);
 export { SwitchStatement };
-//# switch.js.map
+//# sourceMappingURL=switch.js.map

@@ -49,4 +49,4 @@ VideoPlayList = __decorate([
     })
 ], VideoPlayList);
 export { VideoPlayList };
-//# video.js.map
+//# sourceMappingURL=video.js.map

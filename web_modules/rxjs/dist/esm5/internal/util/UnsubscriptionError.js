@@ -9,4 +9,4 @@ export var UnsubscriptionError = createErrorClass(function (_super) {
         this.errors = errors;
     };
 });
-//# UnsubscriptionError.js.map
+//# sourceMappingURL=UnsubscriptionError.js.map

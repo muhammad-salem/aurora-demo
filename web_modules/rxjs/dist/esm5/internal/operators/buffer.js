@@ -1,14 +1,14 @@
 import { operate } from '../util/lift.js';
 import { noop } from '../util/noop.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 export function buffer(closingNotifier) {
     return operate(function (source, subscriber) {
         var currentBuffer = [];
-        source.subscribe(new OperatorSubscriber(subscriber, function (value) { return currentBuffer.push(value); }, function () {
+        source.subscribe(createOperatorSubscriber(subscriber, function (value) { return currentBuffer.push(value); }, function () {
             subscriber.next(currentBuffer);
             subscriber.complete();
         }));
-        closingNotifier.subscribe(new OperatorSubscriber(subscriber, function () {
+        closingNotifier.subscribe(createOperatorSubscriber(subscriber, function () {
             var b = currentBuffer;
             currentBuffer = [];
             subscriber.next(b);
@@ -18,4 +18,4 @@ export function buffer(closingNotifier) {
         };
     });
 }
-//# buffer.js.map
+//# sourceMappingURL=buffer.js.map

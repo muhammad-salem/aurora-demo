@@ -1,2 +1,2 @@
 export {};
-//# typeof.js.map
+//# sourceMappingURL=typeof.js.map

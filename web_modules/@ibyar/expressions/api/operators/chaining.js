@@ -10,7 +10,7 @@ let ChainExpression = ChainExpression_1 = class ChainExpression extends Abstract
     static fromJSON(node, deserializer) {
         return new ChainExpression_1(deserializer(node.expression));
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.expression);
     }
     getExpression() {
@@ -46,4 +46,4 @@ ChainExpression = ChainExpression_1 = __decorate([
     __metadata("design:paramtypes", [Object])
 ], ChainExpression);
 export { ChainExpression };
-//# chaining.js.map
+//# sourceMappingURL=chaining.js.map

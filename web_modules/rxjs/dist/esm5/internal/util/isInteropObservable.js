@@ -3,4 +3,4 @@ import { isFunction } from './isFunction.js';
 export function isInteropObservable(input) {
     return isFunction(input[Symbol_observable]);
 }
-//# isInteropObservable.js.map
+//# sourceMappingURL=isInteropObservable.js.map

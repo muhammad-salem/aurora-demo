@@ -4,4 +4,4 @@ export var NEVER = new Observable(noop);
 export function never() {
     return NEVER;
 }
-//# never.js.map
+//# sourceMappingURL=never.js.map

@@ -4,4 +4,4 @@ export function mergeAll(concurrent) {
     if (concurrent === void 0) { concurrent = Infinity; }
     return mergeMap(identity, concurrent);
 }
-//# mergeAll.js.map
+//# sourceMappingURL=mergeAll.js.map

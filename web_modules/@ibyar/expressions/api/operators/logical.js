@@ -6,7 +6,7 @@ let LogicalExpression = LogicalExpression_1 = class LogicalExpression extends In
     static fromJSON(node, deserializer) {
         return new LogicalExpression_1(node.operator, deserializer(node.left), deserializer(node.right));
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.left);
         visitNode(node.right);
     }
@@ -41,4 +41,4 @@ LogicalExpression = LogicalExpression_1 = __decorate([
     Deserializer('LogicalExpression')
 ], LogicalExpression);
 export { LogicalExpression };
-//# logical.js.map
+//# sourceMappingURL=logical.js.map

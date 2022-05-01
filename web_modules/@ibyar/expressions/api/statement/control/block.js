@@ -12,8 +12,8 @@ let BlockStatement = BlockStatement_1 = class BlockStatement extends AbstractExp
     static fromJSON(node, deserializer) {
         return new BlockStatement_1(node.body.map(line => deserializer(line)), node.isStatement);
     }
-    static visit(node, visitNode, visitNodeList) {
-        visitNodeList(node.body);
+    static visit(node, visitNode) {
+        node.body.forEach(visitNode);
     }
     getBody() {
         return this.body;
@@ -64,4 +64,4 @@ BlockStatement = BlockStatement_1 = __decorate([
     __metadata("design:paramtypes", [Array, Boolean])
 ], BlockStatement);
 export { BlockStatement };
-//# block.js.map
+//# sourceMappingURL=block.js.map

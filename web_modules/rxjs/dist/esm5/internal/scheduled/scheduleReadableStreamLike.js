@@ -3,4 +3,4 @@ import { readableStreamLikeToAsyncGenerator } from '../util/isReadableStreamLike
 export function scheduleReadableStreamLike(input, scheduler) {
     return scheduleAsyncIterable(readableStreamLikeToAsyncGenerator(input), scheduler);
 }
-//# scheduleReadableStreamLike.js.map
+//# sourceMappingURL=scheduleReadableStreamLike.js.map

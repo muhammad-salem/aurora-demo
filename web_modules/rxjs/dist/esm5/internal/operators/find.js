@@ -1,5 +1,5 @@
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 export function find(predicate, thisArg) {
     return operate(createFind(predicate, thisArg, 'value'));
 }
@@ -7,7 +7,7 @@ export function createFind(predicate, thisArg, emit) {
     var findIndex = emit === 'index';
     return function (source, subscriber) {
         var index = 0;
-        source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+        source.subscribe(createOperatorSubscriber(subscriber, function (value) {
             var i = index++;
             if (predicate.call(thisArg, value, i, source)) {
                 subscriber.next(findIndex ? i : value);
@@ -19,4 +19,4 @@ export function createFind(predicate, thisArg, emit) {
         }));
     };
 }
-//# find.js.map
+//# sourceMappingURL=find.js.map

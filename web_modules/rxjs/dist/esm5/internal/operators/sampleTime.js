@@ -5,4 +5,4 @@ export function sampleTime(period, scheduler) {
     if (scheduler === void 0) { scheduler = asyncScheduler; }
     return sample(interval(period, scheduler));
 }
-//# sampleTime.js.map
+//# sourceMappingURL=sampleTime.js.map

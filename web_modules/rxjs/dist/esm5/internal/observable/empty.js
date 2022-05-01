@@ -6,4 +6,4 @@ export function empty(scheduler) {
 function emptyScheduled(scheduler) {
     return new Observable(function (subscriber) { return scheduler.schedule(function () { return subscriber.complete(); }); });
 }
-//# empty.js.map
+//# sourceMappingURL=empty.js.map

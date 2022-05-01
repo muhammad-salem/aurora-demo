@@ -6,4 +6,4 @@ export var ArgumentOutOfRangeError = createErrorClass(function (_super) {
         this.message = 'argument out of range';
     };
 });
-//# ArgumentOutOfRangeError.js.map
+//# sourceMappingURL=ArgumentOutOfRangeError.js.map

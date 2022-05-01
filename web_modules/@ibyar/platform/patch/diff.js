@@ -91,4 +91,4 @@ const jsonPatch = new JSONPatch();
 export function diff(input, output, options) {
     return jsonPatch.diff(input, output, options);
 }
-//# diff.js.map
+//# sourceMappingURL=diff.js.map

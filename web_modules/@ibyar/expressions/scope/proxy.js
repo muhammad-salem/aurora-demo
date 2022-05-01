@@ -77,4 +77,4 @@ export function createRevocableProxyForContext(context, scope) {
 export function createProxyForContext(scope) {
     return new Proxy(scope.getContext(), new ScopeProxyHandler(scope));
 }
-//# proxy.js.map
+//# sourceMappingURL=proxy.js.map

@@ -14,14 +14,11 @@ export class ExpressionVisitor {
         };
         const visitNode = (expression) => {
             visitorCallback(expression, this.getType(expression), control);
-            this.visitExpressionNode(expression, visitNode, visitNodeList);
-        };
-        const visitNodeList = (expressions) => {
-            expressions.forEach(visitNode);
+            this.visitExpressionNode(expression, visitNode);
         };
         try {
             visitorCallback(node, this.getType(node), control);
-            this.visitExpressionNode(node, visitNode, visitNodeList);
+            this.visitExpressionNode(node, visitNode);
         }
         catch (abort) {
             if (!(abort instanceof AbortException)) {
@@ -29,14 +26,14 @@ export class ExpressionVisitor {
             }
         }
     }
-    visitExpressionNode(node, visitNode, visitNodeList) {
+    visitExpressionNode(node, visitNode) {
         const classType = expressionTypes.get(this.getType(node));
         const visit = classType.visit;
         if (!visit) {
             return;
         }
-        visit(node, visitNode, visitNodeList);
+        visit(node, visitNode);
     }
 }
 export const expressionVisitor = new ExpressionVisitor();
-//# visitor.js.map
+//# sourceMappingURL=visitor.js.map

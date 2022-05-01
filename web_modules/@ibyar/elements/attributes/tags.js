@@ -355,4 +355,4 @@ export function isEmptyElement(tagName) {
 }
 export const VoidElements = EmptyElements;
 export const isVoidElement = isEmptyElement;
-//# tags.js.map
+//# sourceMappingURL=tags.js.map

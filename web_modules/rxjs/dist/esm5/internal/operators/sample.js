@@ -1,23 +1,22 @@
 import { operate } from '../util/lift.js';
 import { noop } from '../util/noop.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 export function sample(notifier) {
     return operate(function (source, subscriber) {
         var hasValue = false;
         var lastValue = null;
-        source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+        source.subscribe(createOperatorSubscriber(subscriber, function (value) {
             hasValue = true;
             lastValue = value;
         }));
-        var emit = function () {
+        notifier.subscribe(createOperatorSubscriber(subscriber, function () {
             if (hasValue) {
                 hasValue = false;
                 var value = lastValue;
                 lastValue = null;
                 subscriber.next(value);
             }
-        };
-        notifier.subscribe(new OperatorSubscriber(subscriber, emit, noop));
+        }, noop));
     });
 }
-//# sample.js.map
+//# sourceMappingURL=sample.js.map

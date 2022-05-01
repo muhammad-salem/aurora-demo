@@ -1,9 +1,9 @@
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 export function every(predicate, thisArg) {
     return operate(function (source, subscriber) {
         var index = 0;
-        source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+        source.subscribe(createOperatorSubscriber(subscriber, function (value) {
             if (!predicate.call(thisArg, value, index++, source)) {
                 subscriber.next(false);
                 subscriber.complete();
@@ -14,4 +14,4 @@ export function every(predicate, thisArg) {
         }));
     });
 }
-//# every.js.map
+//# sourceMappingURL=every.js.map

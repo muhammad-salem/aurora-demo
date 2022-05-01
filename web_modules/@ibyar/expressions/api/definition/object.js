@@ -13,7 +13,7 @@ let Property = Property_1 = class Property extends AbstractExpressionNode {
     static fromJSON(node, deserializer) {
         return new Property_1(deserializer(node.key), deserializer(node.value), node.kind);
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.key);
         visitNode(node.value);
     }
@@ -51,10 +51,10 @@ let Property = Property_1 = class Property extends AbstractExpressionNode {
         }
         return value;
     }
-    declareVariable(stack, scopeType, objectValue) {
+    declareVariable(stack, objectValue) {
         const propertyName = this.key.get(stack);
         const propertyValue = objectValue[propertyName];
-        this.value.declareVariable(stack, scopeType, propertyValue);
+        this.value.declareVariable(stack, propertyValue);
     }
     dependency(computed) {
         return this.key.dependency(computed).concat(this.value.dependency(computed));
@@ -86,8 +86,8 @@ let ObjectExpression = ObjectExpression_1 = class ObjectExpression extends Abstr
     static fromJSON(node, deserializer) {
         return new ObjectExpression_1(node.properties.map(deserializer));
     }
-    static visit(node, visitNode, visitNodeList) {
-        visitNodeList(node.properties);
+    static visit(node, visitNode) {
+        node.properties.forEach(visitNode);
     }
     getProperties() {
         return this.properties;
@@ -133,8 +133,8 @@ let ObjectPattern = ObjectPattern_1 = class ObjectPattern extends AbstractExpres
     static fromJSON(node, deserializer) {
         return new ObjectPattern_1(node.properties.map(deserializer));
     }
-    static visit(node, visitNode, visitNodeList) {
-        visitNodeList(node.properties);
+    static visit(node, visitNode) {
+        node.properties.forEach(visitNode);
     }
     getProperties() {
         return this.properties;
@@ -146,12 +146,12 @@ let ObjectPattern = ObjectPattern_1 = class ObjectPattern extends AbstractExpres
     get(scopeProvider) {
         throw new Error('ObjectPattern#get() has no implementation.');
     }
-    declareVariable(stack, scopeType, objectValue) {
+    declareVariable(stack, objectValue) {
         for (const property of this.properties) {
             if (property instanceof RestElement) {
                 objectValue = this.getFromObject(stack, objectValue);
             }
-            property.declareVariable(stack, scopeType, objectValue);
+            property.declareVariable(stack, objectValue);
         }
     }
     getFromObject(stack, objectValue) {
@@ -187,4 +187,4 @@ ObjectPattern = ObjectPattern_1 = __decorate([
     __metadata("design:paramtypes", [Array])
 ], ObjectPattern);
 export { ObjectPattern };
-//# object.js.map
+//# sourceMappingURL=object.js.map

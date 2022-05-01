@@ -1,6 +1,6 @@
 import { EMPTY } from '../observable/empty.js';
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 import { innerFrom } from '../observable/innerFrom.js';
 import { timer } from '../observable/timer.js';
 export function repeat(countOrConfig) {
@@ -25,7 +25,7 @@ export function repeat(countOrConfig) {
                 sourceSub = null;
                 if (delay != null) {
                     var notifier = typeof delay === 'number' ? timer(delay) : innerFrom(delay(soFar));
-                    var notifierSubscriber_1 = new OperatorSubscriber(subscriber, function () {
+                    var notifierSubscriber_1 = createOperatorSubscriber(subscriber, function () {
                         notifierSubscriber_1.unsubscribe();
                         subscribeToSource();
                     });
@@ -37,7 +37,7 @@ export function repeat(countOrConfig) {
             };
             var subscribeToSource = function () {
                 var syncUnsub = false;
-                sourceSub = source.subscribe(new OperatorSubscriber(subscriber, undefined, function () {
+                sourceSub = source.subscribe(createOperatorSubscriber(subscriber, undefined, function () {
                     if (++soFar < count) {
                         if (sourceSub) {
                             resubscribe();
@@ -57,4 +57,4 @@ export function repeat(countOrConfig) {
             subscribeToSource();
         });
 }
-//# repeat.js.map
+//# sourceMappingURL=repeat.js.map

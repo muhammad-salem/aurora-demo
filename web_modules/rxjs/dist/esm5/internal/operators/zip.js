@@ -10,4 +10,4 @@ export function zip() {
         zipStatic.apply(void 0, __spreadArray([source], __read(sources))).subscribe(subscriber);
     });
 }
-//# zip.js.map
+//# sourceMappingURL=zip.js.map

@@ -6,7 +6,7 @@ let BinaryExpression = BinaryExpression_1 = class BinaryExpression extends Infix
     static fromJSON(node, deserializer) {
         return new BinaryExpression_1(node.operator, deserializer(node.left), deserializer(node.right));
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.left);
         visitNode(node.right);
     }
@@ -69,4 +69,4 @@ BinaryExpression = BinaryExpression_1 = __decorate([
     Deserializer('BinaryExpression')
 ], BinaryExpression);
 export { BinaryExpression };
-//# binary.js.map
+//# sourceMappingURL=binary.js.map

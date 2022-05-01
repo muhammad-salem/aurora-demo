@@ -3,4 +3,4 @@ import { identity } from '../util/identity.js';
 export function switchAll() {
     return switchMap(identity);
 }
-//# switchAll.js.map
+//# sourceMappingURL=switchAll.js.map

@@ -114,5 +114,6 @@ export function getComponentView(modelClass, selector) {
         }
         return Reflect.get(modelClass, viewClassName);
     }
+    return;
 }
-//# view.js.map
+//# sourceMappingURL=view.js.map

@@ -32,4 +32,4 @@ export function findReactiveScopeByEventMap(events, stack) {
     const allScopes = findScopeByEventMap(events, stack);
     return allScopes.filter(tuple => tuple[1] instanceof ReactiveScope);
 }
-//# event.js.map
+//# sourceMappingURL=event.js.map

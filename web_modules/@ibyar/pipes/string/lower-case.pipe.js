@@ -17,4 +17,4 @@ LowerCasePipe = LowerCasePipe_1 = __decorate([
     })
 ], LowerCasePipe);
 export { LowerCasePipe };
-//# lower-case.pipe.js.map
+//# sourceMappingURL=lower-case.pipe.js.map

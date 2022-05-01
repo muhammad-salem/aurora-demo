@@ -14,4 +14,4 @@ export * from './fetch/fetch-app.js';
 export * from './route/component-outlet.js';
 export * from './route/router-outlet.js';
 export * from './app-root.js';
-//# index.js.map
+//# sourceMappingURL=index.js.map

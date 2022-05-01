@@ -10,7 +10,7 @@ let GroupingExpression = GroupingExpression_1 = class GroupingExpression extends
     static fromJSON(node, deserializer) {
         return new GroupingExpression_1(deserializer(node.node));
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.node);
     }
     getNode() {
@@ -43,4 +43,4 @@ GroupingExpression = GroupingExpression_1 = __decorate([
     __metadata("design:paramtypes", [Object])
 ], GroupingExpression);
 export { GroupingExpression };
-//# grouping.js.map
+//# sourceMappingURL=grouping.js.map

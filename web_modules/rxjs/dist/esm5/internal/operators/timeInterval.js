@@ -1,24 +1,17 @@
 import { asyncScheduler } from '../scheduler/async.js';
-import { scan } from './scan.js';
-import { defer } from '../observable/defer.js';
-import { map } from './map.js';
+import { operate } from '../util/lift.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 export function timeInterval(scheduler) {
     if (scheduler === void 0) { scheduler = asyncScheduler; }
-    return function (source) {
-        return defer(function () {
-            return source.pipe(scan(function (_a, value) {
-                var current = _a.current;
-                return ({ value: value, current: scheduler.now(), last: current });
-            }, {
-                current: scheduler.now(),
-                value: undefined,
-                last: undefined,
-            }), map(function (_a) {
-                var current = _a.current, last = _a.last, value = _a.value;
-                return new TimeInterval(value, current - last);
-            }));
-        });
-    };
+    return operate(function (source, subscriber) {
+        var last = scheduler.now();
+        source.subscribe(createOperatorSubscriber(subscriber, function (value) {
+            var now = scheduler.now();
+            var interval = now - last;
+            last = now;
+            subscriber.next(new TimeInterval(value, interval));
+        }));
+    });
 }
 var TimeInterval = (function () {
     function TimeInterval(value, interval) {
@@ -28,4 +21,4 @@ var TimeInterval = (function () {
     return TimeInterval;
 }());
 export { TimeInterval };
-//# timeInterval.js.map
+//# sourceMappingURL=timeInterval.js.map

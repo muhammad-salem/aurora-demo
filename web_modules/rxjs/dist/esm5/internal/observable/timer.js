@@ -33,4 +33,4 @@ export function timer(dueTime, intervalOrScheduler, scheduler) {
         }, due);
     });
 }
-//# timer.js.map
+//# sourceMappingURL=timer.js.map

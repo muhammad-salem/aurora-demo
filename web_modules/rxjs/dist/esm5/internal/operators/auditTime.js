@@ -5,4 +5,4 @@ export function auditTime(duration, scheduler) {
     if (scheduler === void 0) { scheduler = asyncScheduler; }
     return audit(function () { return timer(duration, scheduler); });
 }
-//# auditTime.js.map
+//# sourceMappingURL=auditTime.js.map

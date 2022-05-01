@@ -3,7 +3,7 @@ import { Observable } from '../Observable.js';
 import { innerFrom } from './innerFrom.js';
 import { argsOrArgArray } from '../util/argsOrArgArray.js';
 import { EMPTY } from './empty.js';
-import { OperatorSubscriber } from '../operators/OperatorSubscriber.js';
+import { createOperatorSubscriber } from '../operators/OperatorSubscriber.js';
 import { popResultSelector } from '../util/args.js';
 export function zip() {
     var args = [];
@@ -20,7 +20,7 @@ export function zip() {
                 buffers = completed = null;
             });
             var _loop_1 = function (sourceIndex) {
-                innerFrom(sources[sourceIndex]).subscribe(new OperatorSubscriber(subscriber, function (value) {
+                innerFrom(sources[sourceIndex]).subscribe(createOperatorSubscriber(subscriber, function (value) {
                     buffers[sourceIndex].push(value);
                     if (buffers.every(function (buffer) { return buffer.length; })) {
                         var result = buffers.map(function (buffer) { return buffer.shift(); });
@@ -43,4 +43,4 @@ export function zip() {
         })
         : EMPTY;
 }
-//# zip.js.map
+//# sourceMappingURL=zip.js.map

@@ -6,4 +6,4 @@ export function publishLast() {
         return new ConnectableObservable(source, function () { return subject; });
     };
 }
-//# publishLast.js.map
+//# sourceMappingURL=publishLast.js.map

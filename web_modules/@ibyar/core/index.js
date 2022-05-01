@@ -19,4 +19,4 @@ export * from './utils/utils.js';
 export * from './view/mutation.js';
 export * from './view/render.js';
 export * from './view/view.js';
-//# index.js.map
+//# sourceMappingURL=index.js.map

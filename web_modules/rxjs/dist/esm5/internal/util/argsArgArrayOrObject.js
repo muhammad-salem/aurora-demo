@@ -19,4 +19,4 @@ export function argsArgArrayOrObject(args) {
 function isPOJO(obj) {
     return obj && typeof obj === 'object' && getPrototypeOf(obj) === objectProto;
 }
-//# argsArgArrayOrObject.js.map
+//# sourceMappingURL=argsArgArrayOrObject.js.map

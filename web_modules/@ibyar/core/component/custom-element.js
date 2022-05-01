@@ -12,4 +12,4 @@ export function isHTMLElement(element) {
 export function isHTMLUnknownElement(element) {
     return element && element instanceof HTMLUnknownElement && !element.tagName?.includes('-');
 }
-//# custom-element.js.map
+//# sourceMappingURL=custom-element.js.map

@@ -1,10 +1,10 @@
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 export function refCount() {
     return operate(function (source, subscriber) {
         var connection = null;
         source._refCount++;
-        var refCounter = new OperatorSubscriber(subscriber, undefined, undefined, undefined, function () {
+        var refCounter = createOperatorSubscriber(subscriber, undefined, undefined, undefined, function () {
             if (!source || source._refCount <= 0 || 0 < --source._refCount) {
                 connection = null;
                 return;
@@ -23,4 +23,4 @@ export function refCount() {
         }
     });
 }
-//# refCount.js.map
+//# sourceMappingURL=refCount.js.map

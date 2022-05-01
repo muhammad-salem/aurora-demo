@@ -2,7 +2,7 @@ import { Observable } from '../Observable.js';
 import { argsArgArrayOrObject } from '../util/argsArgArrayOrObject.js';
 import { innerFrom } from './innerFrom.js';
 import { popResultSelector } from '../util/args.js';
-import { OperatorSubscriber } from '../operators/OperatorSubscriber.js';
+import { createOperatorSubscriber } from '../operators/OperatorSubscriber.js';
 import { mapOneOrManyArgs } from '../util/mapOneOrManyArgs.js';
 import { createObject } from '../util/createObject.js';
 export function forkJoin() {
@@ -23,7 +23,7 @@ export function forkJoin() {
         var remainingEmissions = length;
         var _loop_1 = function (sourceIndex) {
             var hasValue = false;
-            innerFrom(sources[sourceIndex]).subscribe(new OperatorSubscriber(subscriber, function (value) {
+            innerFrom(sources[sourceIndex]).subscribe(createOperatorSubscriber(subscriber, function (value) {
                 if (!hasValue) {
                     hasValue = true;
                     remainingEmissions--;
@@ -44,4 +44,4 @@ export function forkJoin() {
     });
     return resultSelector ? result.pipe(mapOneOrManyArgs(resultSelector)) : result;
 }
-//# forkJoin.js.map
+//# sourceMappingURL=forkJoin.js.map

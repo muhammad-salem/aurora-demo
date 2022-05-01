@@ -34,4 +34,4 @@ ClassDirective = __decorate([
     })
 ], ClassDirective);
 export { ClassDirective };
-//# class.js.map
+//# sourceMappingURL=class.js.map

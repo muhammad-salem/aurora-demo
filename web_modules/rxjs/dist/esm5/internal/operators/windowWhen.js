@@ -1,6 +1,6 @@
 import { Subject } from '../Subject.js';
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 import { innerFrom } from '../observable/innerFrom.js';
 export function windowWhen(closingSelector) {
     return operate(function (source, subscriber) {
@@ -23,10 +23,10 @@ export function windowWhen(closingSelector) {
                 handleError(err);
                 return;
             }
-            closingNotifier.subscribe((closingSubscriber = new OperatorSubscriber(subscriber, openWindow, openWindow, handleError)));
+            closingNotifier.subscribe((closingSubscriber = createOperatorSubscriber(subscriber, openWindow, openWindow, handleError)));
         };
         openWindow();
-        source.subscribe(new OperatorSubscriber(subscriber, function (value) { return window.next(value); }, function () {
+        source.subscribe(createOperatorSubscriber(subscriber, function (value) { return window.next(value); }, function () {
             window.complete();
             subscriber.complete();
         }, handleError, function () {
@@ -35,4 +35,4 @@ export function windowWhen(closingSelector) {
         }));
     });
 }
-//# windowWhen.js.map
+//# sourceMappingURL=windowWhen.js.map

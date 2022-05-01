@@ -56,4 +56,4 @@ function isJQueryStyleEventEmitter(target) {
 function isEventTarget(target) {
     return isFunction(target.addEventListener) && isFunction(target.removeEventListener);
 }
-//# fromEvent.js.map
+//# sourceMappingURL=fromEvent.js.map

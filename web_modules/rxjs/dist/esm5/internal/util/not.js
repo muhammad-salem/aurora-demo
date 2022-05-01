@@ -1,4 +1,4 @@
 export function not(pred, thisArg) {
     return function (value, index) { return !pred.call(thisArg, value, index); };
 }
-//# not.js.map
+//# sourceMappingURL=not.js.map

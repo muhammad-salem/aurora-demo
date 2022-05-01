@@ -3,7 +3,7 @@ import { isValidDate } from '../util/isDate.js';
 import { operate } from '../util/lift.js';
 import { innerFrom } from '../observable/innerFrom.js';
 import { createErrorClass } from '../util/createErrorClass.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 import { executeSchedule } from '../util/executeSchedule.js';
 export var TimeoutError = createErrorClass(function (_super) {
     return function TimeoutErrorImpl(info) {
@@ -15,11 +15,7 @@ export var TimeoutError = createErrorClass(function (_super) {
     };
 });
 export function timeout(config, schedulerArg) {
-    var _a = (isValidDate(config)
-        ? { first: config }
-        : typeof config === 'number'
-            ? { each: config }
-            : config), first = _a.first, each = _a.each, _b = _a.with, _with = _b === void 0 ? timeoutErrorFactory : _b, _c = _a.scheduler, scheduler = _c === void 0 ? schedulerArg !== null && schedulerArg !== void 0 ? schedulerArg : asyncScheduler : _c, _d = _a.meta, meta = _d === void 0 ? null : _d;
+    var _a = (isValidDate(config) ? { first: config } : typeof config === 'number' ? { each: config } : config), first = _a.first, each = _a.each, _b = _a.with, _with = _b === void 0 ? timeoutErrorFactory : _b, _c = _a.scheduler, scheduler = _c === void 0 ? schedulerArg !== null && schedulerArg !== void 0 ? schedulerArg : asyncScheduler : _c, _d = _a.meta, meta = _d === void 0 ? null : _d;
     if (first == null && each == null) {
         throw new TypeError('No timeout provided.');
     }
@@ -43,7 +39,7 @@ export function timeout(config, schedulerArg) {
                 }
             }, delay);
         };
-        originalSourceSubscription = source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+        originalSourceSubscription = source.subscribe(createOperatorSubscriber(subscriber, function (value) {
             timerSubscription === null || timerSubscription === void 0 ? void 0 : timerSubscription.unsubscribe();
             seen++;
             subscriber.next((lastValue = value));
@@ -54,10 +50,10 @@ export function timeout(config, schedulerArg) {
             }
             lastValue = null;
         }));
-        startTimer(first != null ? (typeof first === 'number' ? first : +first - scheduler.now()) : each);
+        !seen && startTimer(first != null ? (typeof first === 'number' ? first : +first - scheduler.now()) : each);
     });
 }
 function timeoutErrorFactory(info) {
     throw new TimeoutError(info);
 }
-//# timeout.js.map
+//# sourceMappingURL=timeout.js.map

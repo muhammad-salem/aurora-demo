@@ -6,4 +6,4 @@ export var ObjectUnsubscribedError = createErrorClass(function (_super) {
         this.message = 'object unsubscribed';
     };
 });
-//# ObjectUnsubscribedError.js.map
+//# sourceMappingURL=ObjectUnsubscribedError.js.map

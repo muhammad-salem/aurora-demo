@@ -19,4 +19,4 @@ export function hasAttrCustomElement(element, attr) {
 export function hasAttr(element, attr) {
     return hasNativeAttr(element, attr) || hasAttrCustomElement(element, attr) || hasComponentAttr(element, attr);
 }
-//# elements-util.js.map
+//# sourceMappingURL=elements-util.js.map

@@ -13,7 +13,7 @@ let UnaryExpression = UnaryExpression_1 = class UnaryExpression extends Abstract
     static fromJSON(node, deserializer) {
         return new UnaryExpression_1(node.operator, deserializer(node.argument));
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.argument);
     }
     getOperator() {
@@ -30,13 +30,13 @@ let UnaryExpression = UnaryExpression_1 = class UnaryExpression extends Abstract
     }
     get(stack, thisContext) {
         switch (this.operator) {
-            case 'delete': return this.getDelete(stack, thisContext);
+            case 'delete': return this.executeDelete(stack, thisContext);
             default:
                 const value = this.argument.get(stack);
                 return UnaryExpression_1.Evaluations[this.operator](value);
         }
     }
-    getDelete(stack, thisContext) {
+    executeDelete(stack, thisContext) {
         if (this.argument instanceof MemberExpression) {
             const scope = this.argument.findScope(stack);
             let propertyKey;
@@ -52,6 +52,7 @@ let UnaryExpression = UnaryExpression_1 = class UnaryExpression extends Abstract
             }
             return scope.delete(propertyKey);
         }
+        return false;
     }
     dependency(computed) {
         return this.argument.dependency(computed);
@@ -90,4 +91,4 @@ UnaryExpression = UnaryExpression_1 = __decorate([
     __metadata("design:paramtypes", [String, Object])
 ], UnaryExpression);
 export { UnaryExpression };
-//# unary.js.map
+//# sourceMappingURL=unary.js.map

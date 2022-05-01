@@ -15,6 +15,10 @@ let CallExpression = CallExpression_1 = class CallExpression extends AbstractExp
     static fromJSON(node, deserializer) {
         return new CallExpression_1(deserializer(node.callee), node.arguments.map(param => deserializer(param)), node.optional);
     }
+    static visit(node, visitNode) {
+        visitNode(node.callee);
+        node.arguments.forEach(visitNode);
+    }
     getCallee() {
         return this.callee;
     }
@@ -32,6 +36,16 @@ let CallExpression = CallExpression_1 = class CallExpression extends AbstractExp
         if (this.optional && (funCallBack === null || funCallBack === undefined)) {
             return;
         }
+        const parameters = this.getCallParameters(stack);
+        if (!thisContext && this.callee instanceof MemberExpression) {
+            thisContext = this.callee.getObject().get(stack);
+        }
+        else if (!thisContext && this.callee instanceof Identifier) {
+            thisContext = stack.findScope(this.callee.getName()).getContextProxy?.();
+        }
+        return funCallBack.apply(thisContext, parameters);
+    }
+    getCallParameters(stack) {
         const parameters = [];
         for (const arg of this.arguments) {
             if (arg instanceof SpreadElement) {
@@ -44,13 +58,7 @@ let CallExpression = CallExpression_1 = class CallExpression extends AbstractExp
                 parameters.push(arg.get(stack));
             }
         }
-        if (!thisContext && this.callee instanceof MemberExpression) {
-            thisContext = this.callee.getObject().get(stack);
-        }
-        else if (!thisContext && this.callee instanceof Identifier) {
-            thisContext = stack.findScope(this.callee.getName()).getContextProxy?.();
-        }
-        return funCallBack.apply(thisContext, parameters);
+        return parameters;
     }
     dependency(computed) {
         return this.callee.dependency(computed).concat(this.arguments.flatMap(param => param.dependency(computed)));
@@ -74,4 +82,4 @@ CallExpression = CallExpression_1 = __decorate([
     __metadata("design:paramtypes", [Object, Array, Boolean])
 ], CallExpression);
 export { CallExpression };
-//# call.js.map
+//# sourceMappingURL=call.js.map

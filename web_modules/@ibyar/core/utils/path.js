@@ -37,4 +37,4 @@ export function fetchHtml(fileNameResolver) {
     }
     throw new Error('no url provided');
 }
-//# path.js.map
+//# sourceMappingURL=path.js.map

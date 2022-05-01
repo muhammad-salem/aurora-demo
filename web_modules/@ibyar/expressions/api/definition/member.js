@@ -13,7 +13,7 @@ let MemberExpression = MemberExpression_1 = class MemberExpression extends Abstr
     static fromJSON(node, deserializer) {
         return new MemberExpression_1(deserializer(node.object), deserializer(node.property), node.computed, node.optional);
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.object);
         visitNode(node.property);
     }
@@ -98,4 +98,4 @@ MemberExpression = MemberExpression_1 = __decorate([
     __metadata("design:paramtypes", [Object, Object, Boolean, Boolean])
 ], MemberExpression);
 export { MemberExpression };
-//# member.js.map
+//# sourceMappingURL=member.js.map

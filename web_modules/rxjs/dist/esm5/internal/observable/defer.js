@@ -5,4 +5,4 @@ export function defer(observableFactory) {
         innerFrom(observableFactory()).subscribe(subscriber);
     });
 }
-//# defer.js.map
+//# sourceMappingURL=defer.js.map

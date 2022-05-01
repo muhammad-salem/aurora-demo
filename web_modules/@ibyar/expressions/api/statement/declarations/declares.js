@@ -1,17 +1,17 @@
-var VariableNode_1, VariableDeclarationNode_1;
+var VariableDeclarator_1, VariableDeclarationNode_1;
 import { __decorate, __metadata } from "../../../../../tslib/tslib.es6.js";
 import { AbstractExpressionNode, AwaitPromise } from '../../abstract.js';
 import { Deserializer } from '../../deserialize/deserialize.js';
-let VariableNode = VariableNode_1 = class VariableNode extends AbstractExpressionNode {
+let VariableDeclarator = VariableDeclarator_1 = class VariableDeclarator extends AbstractExpressionNode {
     constructor(id, init) {
         super();
         this.id = id;
         this.init = init;
     }
     static fromJSON(node, deserializer) {
-        return new VariableNode_1(deserializer(node.id), node.init ? deserializer(node.init) : void 0);
+        return new VariableDeclarator_1(deserializer(node.id), node.init ? deserializer(node.init) : void 0);
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.id);
         node.init && visitNode(node.init);
     }
@@ -28,24 +28,26 @@ let VariableNode = VariableNode_1 = class VariableNode extends AbstractExpressio
         throw new Error(`VariableNode#set() has no implementation.`);
     }
     get(stack) {
-        this.declareVariable(stack, 'block');
+        this.declareVariable(stack);
     }
-    declareVariable(stack, scopeType, propertyValue) {
+    declareVariable(stack, propertyValue) {
         if (propertyValue !== undefined) {
-            this.id.declareVariable(stack, scopeType, propertyValue);
+            this.id.declareVariable(stack, propertyValue);
             return;
         }
         const value = this.init?.get(stack);
         if (value instanceof AwaitPromise) {
             value.node = this.id;
             value.declareVariable = true;
-            value.scopeType = scopeType;
-            value.node.declareVariable(stack, scopeType);
+            value.node.declareVariable(stack);
             stack.resolveAwait(value);
         }
         else {
-            this.id.declareVariable(stack, scopeType, value);
+            this.id.declareVariable(stack, value);
         }
+    }
+    getDeclarationName() {
+        return this.id.getDeclarationName();
     }
     dependency(computed) {
         return this.init?.dependency() || [];
@@ -63,11 +65,11 @@ let VariableNode = VariableNode_1 = class VariableNode extends AbstractExpressio
         };
     }
 };
-VariableNode = VariableNode_1 = __decorate([
+VariableDeclarator = VariableDeclarator_1 = __decorate([
     Deserializer('VariableDeclarator'),
     __metadata("design:paramtypes", [Object, Object])
-], VariableNode);
-export { VariableNode };
+], VariableDeclarator);
+export { VariableDeclarator };
 let VariableDeclarationNode = VariableDeclarationNode_1 = class VariableDeclarationNode extends AbstractExpressionNode {
     constructor(declarations, kind) {
         super();
@@ -77,8 +79,8 @@ let VariableDeclarationNode = VariableDeclarationNode_1 = class VariableDeclarat
     static fromJSON(node, deserializer) {
         return new VariableDeclarationNode_1(node.declarations.map(deserializer), node.kind);
     }
-    static visit(node, visitNode, visitNodeList) {
-        visitNodeList(node.declarations);
+    static visit(node, visitNode) {
+        node.declarations.forEach(visitNode);
     }
     getDeclarations() {
         return this.declarations;
@@ -97,11 +99,14 @@ let VariableDeclarationNode = VariableDeclarationNode_1 = class VariableDeclarat
     }
     get(stack) {
         for (const item of this.declarations) {
-            item.declareVariable(stack, 'block');
+            item.declareVariable(stack);
         }
     }
-    declareVariable(stack, scopeType, propertyValue) {
-        this.declarations[0].declareVariable(stack, scopeType, propertyValue);
+    getDeclarationName() {
+        return this.declarations[0].getDeclarationName();
+    }
+    declareVariable(stack, propertyValue) {
+        this.declarations[0].declareVariable(stack, propertyValue);
     }
     dependency(computed) {
         return this.declarations.flatMap(declareVariable => declareVariable.dependency(computed));
@@ -124,4 +129,4 @@ VariableDeclarationNode = VariableDeclarationNode_1 = __decorate([
     __metadata("design:paramtypes", [Array, String])
 ], VariableDeclarationNode);
 export { VariableDeclarationNode };
-//# declares.js.map
+//# sourceMappingURL=declares.js.map

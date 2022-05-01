@@ -9,4 +9,4 @@ export function mergeScan(accumulator, seed, concurrent) {
         }, false, undefined, function () { return (state = null); });
     });
 }
-//# mergeScan.js.map
+//# sourceMappingURL=mergeScan.js.map

@@ -37,9 +37,8 @@ let PersonModel = class PersonModel {
     onResize(e) {
         console.log(this, e);
     }
-    onClick(event) {
-        event.preventDefault();
-        console.log('button', event, 'number of clicks:');
+    onClick(target) {
+        console.log('target', target);
         this._select.emit(this.person);
     }
     onClose(data) {
@@ -106,7 +105,7 @@ __decorate([
 __decorate([
     HostListener('click', ['$event.target']),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Event]),
+    __metadata("design:paramtypes", [HTMLElement]),
     __metadata("design:returntype", void 0)
 ], PersonModel.prototype, "onClick", null);
 __decorate([
@@ -206,4 +205,4 @@ ProgressBar = __decorate([
     })
 ], ProgressBar);
 export { ProgressBar };
-//# person.js.map
+//# sourceMappingURL=person.js.map

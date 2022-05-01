@@ -7,4 +7,4 @@ export function throttleTime(duration, scheduler, config) {
     var duration$ = timer(duration, scheduler);
     return throttle(function () { return duration$; }, config);
 }
-//# throttleTime.js.map
+//# sourceMappingURL=throttleTime.js.map

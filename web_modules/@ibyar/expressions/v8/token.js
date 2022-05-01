@@ -482,4 +482,4 @@ export class TokenExpression {
         return JSON.stringify(this);
     }
 }
-//# token.js.map
+//# sourceMappingURL=token.js.map

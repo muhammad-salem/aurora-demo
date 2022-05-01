@@ -1,6 +1,6 @@
 import { operate } from '../util/lift.js';
 import { innerFrom } from '../observable/innerFrom.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 export function audit(durationSelector) {
     return operate(function (source, subscriber) {
         var hasValue = false;
@@ -22,11 +22,11 @@ export function audit(durationSelector) {
             durationSubscriber = null;
             isComplete && subscriber.complete();
         };
-        source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+        source.subscribe(createOperatorSubscriber(subscriber, function (value) {
             hasValue = true;
             lastValue = value;
             if (!durationSubscriber) {
-                innerFrom(durationSelector(value)).subscribe((durationSubscriber = new OperatorSubscriber(subscriber, endDuration, cleanupDuration)));
+                innerFrom(durationSelector(value)).subscribe((durationSubscriber = createOperatorSubscriber(subscriber, endDuration, cleanupDuration)));
             }
         }, function () {
             isComplete = true;
@@ -34,4 +34,4 @@ export function audit(durationSelector) {
         }));
     });
 }
-//# audit.js.map
+//# sourceMappingURL=audit.js.map

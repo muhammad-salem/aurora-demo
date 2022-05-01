@@ -12,4 +12,4 @@ export function popScheduler(args) {
 export function popNumber(args, defaultValue) {
     return typeof last(args) === 'number' ? args.pop() : defaultValue;
 }
-//# args.js.map
+//# sourceMappingURL=args.js.map

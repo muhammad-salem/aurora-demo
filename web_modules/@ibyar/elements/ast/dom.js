@@ -94,7 +94,7 @@ export class DomParentNode extends BaseNode {
         }
     }
     addTextChild(text) {
-        const children = (this.children ??= []);
+        const children = (this.children ?? (this.children = []));
         parseTextChild(text).forEach(childText => children.push(childText));
     }
 }
@@ -163,4 +163,4 @@ export function parseStringTemplate(text) {
     const map = node.map(str => (str instanceof LiveTextContent ? '${' + str.value + '}' : str.value)).join('');
     return '`' + map + '`';
 }
-//# dom.js.map
+//# sourceMappingURL=dom.js.map

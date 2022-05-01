@@ -41,4 +41,4 @@ export function baseFormFactoryView(htmlElementType) {
     BaseFormView.formAssociated = true;
     return BaseFormView;
 }
-//# form-view.js.map
+//# sourceMappingURL=form-view.js.map

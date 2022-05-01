@@ -14,4 +14,4 @@ export function using(resourceFactory, observableFactory) {
         };
     });
 }
-//# using.js.map
+//# sourceMappingURL=using.js.map

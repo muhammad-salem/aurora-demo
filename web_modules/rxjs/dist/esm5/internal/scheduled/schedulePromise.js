@@ -4,4 +4,4 @@ import { subscribeOn } from '../operators/subscribeOn.js';
 export function schedulePromise(input, scheduler) {
     return innerFrom(input).pipe(subscribeOn(scheduler), observeOn(scheduler));
 }
-//# schedulePromise.js.map
+//# sourceMappingURL=schedulePromise.js.map

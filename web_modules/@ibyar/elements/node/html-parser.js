@@ -146,6 +146,7 @@ export class NodeParser {
             this.propType = 'attr';
             return this.parsePropertyName;
         }
+        throw new SyntaxError('Error while parsing open tag');
     }
     parsePropertyName(token) {
         if (token === '>') {
@@ -517,4 +518,4 @@ export class HTMLParser {
     }
 }
 export const htmlParser = new HTMLParser();
-//# html-parser.js.map
+//# sourceMappingURL=html-parser.js.map

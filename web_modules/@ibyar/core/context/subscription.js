@@ -11,4 +11,4 @@ export function createSubscriptionDestroyer(unsubscribe, pause, resume) {
         },
     };
 }
-//# subscription.js.map
+//# sourceMappingURL=subscription.js.map

@@ -14,4 +14,4 @@ export function connect(selector, config) {
         subscriber.add(source.subscribe(subject));
     });
 }
-//# connect.js.map
+//# sourceMappingURL=connect.js.map

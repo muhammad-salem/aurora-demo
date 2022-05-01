@@ -16,4 +16,4 @@ TitleCasePipe = TitleCasePipe_1 = __decorate([
     Pipe({ name: 'titlecase' })
 ], TitleCasePipe);
 export { TitleCasePipe };
-//# title-case.pipe.js.map
+//# sourceMappingURL=title-case.pipe.js.map

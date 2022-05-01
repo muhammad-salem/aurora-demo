@@ -2,4 +2,4 @@ import { AnimationFrameAction } from './AnimationFrameAction.js';
 import { AnimationFrameScheduler } from './AnimationFrameScheduler.js';
 export var animationFrameScheduler = new AnimationFrameScheduler(AnimationFrameAction);
 export var animationFrame = animationFrameScheduler;
-//# animationFrame.js.map
+//# sourceMappingURL=animationFrame.js.map

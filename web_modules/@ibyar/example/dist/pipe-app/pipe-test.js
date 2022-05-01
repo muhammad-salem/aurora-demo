@@ -175,4 +175,4 @@ PipeAppComponent = __decorate([
     })
 ], PipeAppComponent);
 export { PipeAppComponent };
-//# pipe-test.js.map
+//# sourceMappingURL=pipe-test.js.map

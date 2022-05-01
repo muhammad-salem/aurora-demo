@@ -1,16 +1,16 @@
 import { Subject } from '../Subject.js';
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 export function retryWhen(notifier) {
     return operate(function (source, subscriber) {
         var innerSub;
         var syncResub = false;
         var errors$;
         var subscribeForRetryWhen = function () {
-            innerSub = source.subscribe(new OperatorSubscriber(subscriber, undefined, undefined, function (err) {
+            innerSub = source.subscribe(createOperatorSubscriber(subscriber, undefined, undefined, function (err) {
                 if (!errors$) {
                     errors$ = new Subject();
-                    notifier(errors$).subscribe(new OperatorSubscriber(subscriber, function () {
+                    notifier(errors$).subscribe(createOperatorSubscriber(subscriber, function () {
                         return innerSub ? subscribeForRetryWhen() : (syncResub = true);
                     }));
                 }
@@ -28,4 +28,4 @@ export function retryWhen(notifier) {
         subscribeForRetryWhen();
     });
 }
-//# retryWhen.js.map
+//# sourceMappingURL=retryWhen.js.map

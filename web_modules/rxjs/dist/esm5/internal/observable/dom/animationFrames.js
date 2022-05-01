@@ -26,4 +26,4 @@ function animationFramesFactory(timestampProvider) {
     });
 }
 var DEFAULT_ANIMATION_FRAMES = animationFramesFactory();
-//# animationFrames.js.map
+//# sourceMappingURL=animationFrames.js.map

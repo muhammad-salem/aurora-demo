@@ -60,10 +60,10 @@ const Constant = {
     String,
     Number,
 };
-const CONSTANT_SCOPE = new ReadOnlyScope(Constant, 'block');
+const CONSTANT_SCOPE = new ReadOnlyScope(Constant);
 export const documentStack = new Stack([
     CONSTANT_SCOPE,
     new PipeProvider(),
     new AsyncPipeProvider()
 ]);
-//# stack.js.map
+//# sourceMappingURL=stack.js.map

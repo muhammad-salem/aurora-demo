@@ -14,7 +14,7 @@ let ForNode = ForNode_1 = class ForNode extends AbstractExpressionNode {
     static fromJSON(node, deserializer) {
         return new ForNode_1(deserializer(node.body), node.init && deserializer(node.init), node.test && deserializer(node.test), node.update && deserializer(node.update));
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.body);
         node.init && visitNode(node.init);
         node.test && visitNode(node.test);
@@ -100,7 +100,7 @@ let ForOfNode = ForOfNode_1 = class ForOfNode extends AbstractExpressionNode {
     static fromJSON(node, deserializer) {
         return new ForOfNode_1(deserializer(node.left), deserializer(node.right), deserializer(node.body));
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.left);
         visitNode(node.right);
         visitNode(node.body);
@@ -125,7 +125,7 @@ let ForOfNode = ForOfNode_1 = class ForOfNode extends AbstractExpressionNode {
         const iterable = this.right.get(stack);
         for (const iterator of iterable) {
             const forBlock = stack.pushBlockScope();
-            this.left.declareVariable(stack, 'block', iterator);
+            this.left.declareVariable(stack, iterator);
             const result = this.body.get(stack);
             if (ContinueStatement.ContinueSymbol === result) {
                 continue;
@@ -173,7 +173,7 @@ let ForInNode = ForInNode_1 = class ForInNode extends AbstractExpressionNode {
     static fromJSON(node, deserializer) {
         return new ForInNode_1(deserializer(node.left), deserializer(node.right), deserializer(node.body));
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.left);
         visitNode(node.right);
         visitNode(node.body);
@@ -198,7 +198,7 @@ let ForInNode = ForInNode_1 = class ForInNode extends AbstractExpressionNode {
         const iterable = this.right.get(stack);
         for (const iterator in iterable) {
             const forBlock = stack.pushBlockScope();
-            this.left.declareVariable(stack, 'block', iterator);
+            this.left.declareVariable(stack, iterator);
             const result = this.body.get(stack);
             if (ContinueStatement.ContinueSymbol === result) {
                 continue;
@@ -246,7 +246,7 @@ let ForAwaitOfNode = ForAwaitOfNode_1 = class ForAwaitOfNode extends AbstractExp
     static fromJSON(node, deserializer) {
         return new ForAwaitOfNode_1(deserializer(node.left), deserializer(node.right), deserializer(node.body));
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.left);
         visitNode(node.right);
         visitNode(node.body);
@@ -271,7 +271,7 @@ let ForAwaitOfNode = ForAwaitOfNode_1 = class ForAwaitOfNode extends AbstractExp
         const iterable = this.right.get(stack);
         const forAwaitBody = (iterator) => {
             const forBlock = stack.pushBlockScope();
-            this.left.declareVariable(stack, 'block', iterator);
+            this.left.declareVariable(stack, iterator);
             const result = this.body.get(stack);
             stack.clearTo(forBlock);
             return result;
@@ -300,4 +300,4 @@ ForAwaitOfNode = ForAwaitOfNode_1 = __decorate([
     __metadata("design:paramtypes", [Object, Object, Object])
 ], ForAwaitOfNode);
 export { ForAwaitOfNode };
-//# for.js.map
+//# sourceMappingURL=for.js.map

@@ -1,6 +1,6 @@
 import { isFunction } from '../util/isFunction.js';
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 import { identity } from '../util/identity.js';
 export function tap(observerOrNext, error, complete) {
     var tapObserver = isFunction(observerOrNext) || error || complete
@@ -12,7 +12,7 @@ export function tap(observerOrNext, error, complete) {
             var _a;
             (_a = tapObserver.subscribe) === null || _a === void 0 ? void 0 : _a.call(tapObserver);
             var isUnsub = true;
-            source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+            source.subscribe(createOperatorSubscriber(subscriber, function (value) {
                 var _a;
                 (_a = tapObserver.next) === null || _a === void 0 ? void 0 : _a.call(tapObserver, value);
                 subscriber.next(value);
@@ -37,4 +37,4 @@ export function tap(observerOrNext, error, complete) {
         :
             identity;
 }
-//# tap.js.map
+//# sourceMappingURL=tap.js.map

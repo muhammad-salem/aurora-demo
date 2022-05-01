@@ -1,7 +1,7 @@
 import { __values } from "../../../../../tslib/tslib.es6.js";
 import { Subscription } from '../Subscription.js';
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 import { arrRemove } from '../util/arrRemove.js';
 import { asyncScheduler } from '../scheduler/async.js';
 import { popScheduler } from '../util/args.js';
@@ -45,7 +45,7 @@ export function bufferTime(bufferTimeSpan) {
             restartOnEmit = true;
         }
         startBuffer();
-        var bufferTimeSubscriber = new OperatorSubscriber(subscriber, function (value) {
+        var bufferTimeSubscriber = createOperatorSubscriber(subscriber, function (value) {
             var e_1, _a;
             var recordsCopy = bufferRecords.slice();
             try {
@@ -74,4 +74,4 @@ export function bufferTime(bufferTimeSpan) {
         source.subscribe(bufferTimeSubscriber);
     });
 }
-//# bufferTime.js.map
+//# sourceMappingURL=bufferTime.js.map

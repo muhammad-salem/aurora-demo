@@ -2,13 +2,13 @@ import { __values } from "../../../../../tslib/tslib.es6.js";
 import { Subscription } from '../Subscription.js';
 import { operate } from '../util/lift.js';
 import { innerFrom } from '../observable/innerFrom.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 import { noop } from '../util/noop.js';
 import { arrRemove } from '../util/arrRemove.js';
 export function bufferToggle(openings, closingSelector) {
     return operate(function (source, subscriber) {
         var buffers = [];
-        innerFrom(openings).subscribe(new OperatorSubscriber(subscriber, function (openValue) {
+        innerFrom(openings).subscribe(createOperatorSubscriber(subscriber, function (openValue) {
             var buffer = [];
             buffers.push(buffer);
             var closingSubscription = new Subscription();
@@ -17,9 +17,9 @@ export function bufferToggle(openings, closingSelector) {
                 subscriber.next(buffer);
                 closingSubscription.unsubscribe();
             };
-            closingSubscription.add(innerFrom(closingSelector(openValue)).subscribe(new OperatorSubscriber(subscriber, emitBuffer, noop)));
+            closingSubscription.add(innerFrom(closingSelector(openValue)).subscribe(createOperatorSubscriber(subscriber, emitBuffer, noop)));
         }, noop));
-        source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+        source.subscribe(createOperatorSubscriber(subscriber, function (value) {
             var e_1, _a;
             try {
                 for (var buffers_1 = __values(buffers), buffers_1_1 = buffers_1.next(); !buffers_1_1.done; buffers_1_1 = buffers_1.next()) {
@@ -42,4 +42,4 @@ export function bufferToggle(openings, closingSelector) {
         }));
     });
 }
-//# bufferToggle.js.map
+//# sourceMappingURL=bufferToggle.js.map

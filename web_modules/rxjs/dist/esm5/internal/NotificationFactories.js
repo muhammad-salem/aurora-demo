@@ -12,4 +12,4 @@ export function createNotification(kind, value, error) {
         error: error,
     };
 }
-//# NotificationFactories.js.map
+//# sourceMappingURL=NotificationFactories.js.map

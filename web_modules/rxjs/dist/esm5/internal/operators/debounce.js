@@ -1,6 +1,6 @@
 import { operate } from '../util/lift.js';
 import { noop } from '../util/noop.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 import { innerFrom } from '../observable/innerFrom.js';
 export function debounce(durationSelector) {
     return operate(function (source, subscriber) {
@@ -17,11 +17,11 @@ export function debounce(durationSelector) {
                 subscriber.next(value);
             }
         };
-        source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+        source.subscribe(createOperatorSubscriber(subscriber, function (value) {
             durationSubscriber === null || durationSubscriber === void 0 ? void 0 : durationSubscriber.unsubscribe();
             hasValue = true;
             lastValue = value;
-            durationSubscriber = new OperatorSubscriber(subscriber, emit, noop);
+            durationSubscriber = createOperatorSubscriber(subscriber, emit, noop);
             innerFrom(durationSelector(value)).subscribe(durationSubscriber);
         }, function () {
             emit();
@@ -31,4 +31,4 @@ export function debounce(durationSelector) {
         }));
     });
 }
-//# debounce.js.map
+//# sourceMappingURL=debounce.js.map

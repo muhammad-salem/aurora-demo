@@ -8,4 +8,4 @@ export function endWith() {
     }
     return function (source) { return concat(source, of.apply(void 0, __spreadArray([], __read(values)))); };
 }
-//# endWith.js.map
+//# sourceMappingURL=endWith.js.map

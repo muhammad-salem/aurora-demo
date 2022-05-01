@@ -3,7 +3,7 @@ import { Subject } from '../Subject.js';
 import { Subscription } from '../Subscription.js';
 import { operate } from '../util/lift.js';
 import { innerFrom } from '../observable/innerFrom.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 import { noop } from '../util/noop.js';
 import { arrRemove } from '../util/arrRemove.js';
 export function windowToggle(openings, closingSelector) {
@@ -15,7 +15,7 @@ export function windowToggle(openings, closingSelector) {
             }
             subscriber.error(err);
         };
-        innerFrom(openings).subscribe(new OperatorSubscriber(subscriber, function (openValue) {
+        innerFrom(openings).subscribe(createOperatorSubscriber(subscriber, function (openValue) {
             var window = new Subject();
             windows.push(window);
             var closingSubscription = new Subscription();
@@ -33,9 +33,9 @@ export function windowToggle(openings, closingSelector) {
                 return;
             }
             subscriber.next(window.asObservable());
-            closingSubscription.add(closingNotifier.subscribe(new OperatorSubscriber(subscriber, closeWindow, noop, handleError)));
+            closingSubscription.add(closingNotifier.subscribe(createOperatorSubscriber(subscriber, closeWindow, noop, handleError)));
         }, noop));
-        source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+        source.subscribe(createOperatorSubscriber(subscriber, function (value) {
             var e_1, _a;
             var windowsCopy = windows.slice();
             try {
@@ -63,4 +63,4 @@ export function windowToggle(openings, closingSelector) {
         }));
     });
 }
-//# windowToggle.js.map
+//# sourceMappingURL=windowToggle.js.map

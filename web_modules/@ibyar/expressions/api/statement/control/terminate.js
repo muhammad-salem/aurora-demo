@@ -38,7 +38,7 @@ let BreakStatement = BreakStatement_1 = class BreakStatement extends TerminateSt
     static fromJSON(node) {
         return BreakStatement_1.BREAK_INSTANCE;
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         node.label && visitNode(node.label);
     }
 };
@@ -52,7 +52,7 @@ let ContinueStatement = ContinueStatement_1 = class ContinueStatement extends Te
     static fromJSON(node) {
         return ContinueStatement_1.CONTINUE_INSTANCE;
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         node.label && visitNode(node.label);
     }
 };
@@ -62,4 +62,4 @@ ContinueStatement = ContinueStatement_1 = __decorate([
     Deserializer('ContinueStatement')
 ], ContinueStatement);
 export { ContinueStatement };
-//# terminate.js.map
+//# sourceMappingURL=terminate.js.map

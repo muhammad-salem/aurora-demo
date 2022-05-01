@@ -9,4 +9,4 @@ export * from './object/to-json.pipe.js';
 export * from './string/lower-case.pipe.js';
 export * from './string/upper-case.pipe.js';
 export * from './string/title-case.pipe.js';
-//# index.js.map
+//# sourceMappingURL=index.js.map

@@ -3,4 +3,4 @@ import { innerFrom } from './innerFrom.js';
 export function from(input, scheduler) {
     return scheduler ? scheduled(input, scheduler) : innerFrom(input);
 }
-//# from.js.map
+//# sourceMappingURL=from.js.map

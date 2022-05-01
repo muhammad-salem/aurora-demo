@@ -4,26 +4,14 @@ export class ElementModelReactiveScope extends ReactiveScopeControl {
         super(...arguments);
         this.contextProxy = createProxyForContext(this);
     }
-    static for(context, type) {
-        return new ElementModelReactiveScope(context, type);
-    }
-    static blockScopeFor(context) {
-        return new ElementModelReactiveScope(context, 'block');
-    }
-    static functionScopeFor(context) {
-        return new ElementModelReactiveScope(context, 'function');
-    }
-    static classScopeFor(context) {
-        return new ElementModelReactiveScope(context, 'class');
-    }
-    static moduleScopeFor(context) {
-        return new ElementModelReactiveScope(context, 'module');
-    }
-    static globalScopeFor(context) {
-        return new ElementModelReactiveScope(context, 'global');
+    static for(context, propertyKeys) {
+        return new ElementModelReactiveScope(context, propertyKeys);
     }
     getContextProxy() {
         return this.contextProxy;
     }
+    getClass() {
+        return ElementModelReactiveScope;
+    }
 }
-//# provider.js.map
+//# sourceMappingURL=provider.js.map

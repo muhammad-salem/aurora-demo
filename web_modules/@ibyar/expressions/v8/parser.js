@@ -21,7 +21,7 @@ import { SwitchCase, DefaultExpression, SwitchStatement } from '../api/statement
 import { BreakStatement, ContinueStatement } from '../api/statement/control/terminate.js';
 import { ReturnStatement } from '../api/computing/return.js';
 import { YieldExpression } from '../api/computing/yield.js';
-import { VariableNode, VariableDeclarationNode } from '../api/statement/declarations/declares.js';
+import { VariableDeclarator, VariableDeclarationNode } from '../api/statement/declarations/declares.js';
 import { ForNode, ForOfNode, ForInNode, ForAwaitOfNode } from '../api/statement/iterations/for.js';
 import { ConditionalExpression } from '../api/operators/ternary.js';
 import { PipelineExpression } from '../api/operators/pipeline.js';
@@ -594,7 +594,7 @@ export class JavaScriptParser extends AbstractParser {
                     throw new Error(this.errorMessage(`Declaration Missing Initializer : ${this.position()}`));
                 }
             }
-            variables.push(new VariableNode(name, value));
+            variables.push(new VariableDeclarator(name, value));
         } while (this.check(Token.COMMA));
         return new VariableDeclarationNode(variables, mode);
     }
@@ -1714,4 +1714,4 @@ export class JavaScriptParser extends AbstractParser {
         throw new Error(this.errorMessage('Expression (import) not supported.'));
     }
 }
-//# parser.js.map
+//# sourceMappingURL=parser.js.map

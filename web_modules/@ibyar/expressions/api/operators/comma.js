@@ -10,8 +10,8 @@ let SequenceExpression = SequenceExpression_1 = class SequenceExpression extends
     static fromJSON(node, deserializer) {
         return new SequenceExpression_1(node.expressions.map(expression => deserializer(expression)));
     }
-    static visit(node, visitNode, visitNodeList) {
-        visitNodeList(node.expressions);
+    static visit(node, visitNode) {
+        node.expressions.forEach(visitNode);
     }
     getExpressions() {
         return this.expressions;
@@ -45,4 +45,4 @@ SequenceExpression = SequenceExpression_1 = __decorate([
     __metadata("design:paramtypes", [Array])
 ], SequenceExpression);
 export { SequenceExpression };
-//# comma.js.map
+//# sourceMappingURL=comma.js.map

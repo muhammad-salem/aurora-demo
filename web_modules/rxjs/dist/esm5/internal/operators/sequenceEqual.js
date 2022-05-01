@@ -1,5 +1,5 @@
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 export function sequenceEqual(compareTo, comparator) {
     if (comparator === void 0) { comparator = function (a, b) { return a === b; }; }
     return operate(function (source, subscriber) {
@@ -10,7 +10,7 @@ export function sequenceEqual(compareTo, comparator) {
             subscriber.complete();
         };
         var createSubscriber = function (selfState, otherState) {
-            var sequenceEqualSubscriber = new OperatorSubscriber(subscriber, function (a) {
+            var sequenceEqualSubscriber = createOperatorSubscriber(subscriber, function (a) {
                 var buffer = otherState.buffer, complete = otherState.complete;
                 if (buffer.length === 0) {
                     complete ? emit(false) : selfState.buffer.push(a);
@@ -36,4 +36,4 @@ function createState() {
         complete: false,
     };
 }
-//# sequenceEqual.js.map
+//# sourceMappingURL=sequenceEqual.js.map

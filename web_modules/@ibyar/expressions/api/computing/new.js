@@ -12,6 +12,10 @@ let NewExpression = NewExpression_1 = class NewExpression extends AbstractExpres
     static fromJSON(node, deserializer) {
         return new NewExpression_1(deserializer(node.className), node.arguments?.map(deserializer));
     }
+    static visit(node, visitNode) {
+        visitNode(node.className);
+        node.arguments?.forEach(visitNode);
+    }
     getClassName() {
         return this.className;
     }
@@ -76,4 +80,4 @@ NewExpression = NewExpression_1 = __decorate([
     __metadata("design:paramtypes", [Object, Array])
 ], NewExpression);
 export { NewExpression };
-//# new.js.map
+//# sourceMappingURL=new.js.map

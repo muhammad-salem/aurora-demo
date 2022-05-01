@@ -9,7 +9,7 @@ let AssignmentExpression = AssignmentExpression_1 = class AssignmentExpression e
     static fromJSON(node, deserializer) {
         return new AssignmentExpression_1(node.operator, deserializer(node.left), deserializer(node.right));
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.left);
         visitNode(node.right);
     }
@@ -81,4 +81,4 @@ AssignmentExpression = AssignmentExpression_1 = __decorate([
     __metadata("design:paramtypes", [String, Object, Object])
 ], AssignmentExpression);
 export { AssignmentExpression };
-//# assignment.js.map
+//# sourceMappingURL=assignment.js.map

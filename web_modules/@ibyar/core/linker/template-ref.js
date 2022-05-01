@@ -18,9 +18,9 @@ export class TemplateRefImpl extends TemplateRef {
     }
     createEmbeddedView(context, parentNode) {
         const directiveStack = this.stack.copyStack();
-        const templateScope = directiveStack.pushBlockReactiveScope();
+        const templateScope = directiveStack.pushReactiveScope();
         const sandBox = new Stack();
-        const contextScope = sandBox.pushBlockReactiveScopeFor(context ?? {});
+        const contextScope = sandBox.pushReactiveScopeFor(context ?? {});
         sandBox.pushScope(templateScope);
         const elements = [];
         const contextProxy = createProxyForContext(contextScope);
@@ -54,4 +54,4 @@ export class TemplateRefImpl extends TemplateRef {
         return scopeSubscriptions;
     }
 }
-//# template-ref.js.map
+//# sourceMappingURL=template-ref.js.map

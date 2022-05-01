@@ -25,4 +25,4 @@ export function canAttachShadow(tagName) {
     }
     return ShadowElements.includes(tagName);
 }
-//# shadow.js.map
+//# sourceMappingURL=shadow.js.map

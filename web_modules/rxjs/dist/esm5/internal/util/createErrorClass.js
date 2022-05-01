@@ -8,4 +8,4 @@ export function createErrorClass(createImpl) {
     ctorFunc.prototype.constructor = ctorFunc;
     return ctorFunc;
 }
-//# createErrorClass.js.map
+//# sourceMappingURL=createErrorClass.js.map

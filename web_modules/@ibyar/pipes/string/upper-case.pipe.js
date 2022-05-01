@@ -17,4 +17,4 @@ UpperCasePipe = UpperCasePipe_1 = __decorate([
     })
 ], UpperCasePipe);
 export { UpperCasePipe };
-//# upper-case.pipe.js.map
+//# sourceMappingURL=upper-case.pipe.js.map

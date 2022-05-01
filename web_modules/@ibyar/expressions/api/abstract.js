@@ -42,7 +42,7 @@ export class InfixExpressionNode extends AbstractExpressionNode {
         this.left = left;
         this.right = right;
     }
-    static visit(node, visitNode, visitNodeList) {
+    static visit(node, visitNode) {
         visitNode(node.getLeft());
         visitNode(node.getRight());
     }
@@ -108,4 +108,4 @@ export class AwaitPromise {
         this.promise = promise;
     }
 }
-//# abstract.js.map
+//# sourceMappingURL=abstract.js.map

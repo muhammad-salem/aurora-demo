@@ -2,7 +2,7 @@ import { __decorate, __metadata } from "../../../../tslib/tslib.es6.js";
 import { Component, Input, View, HostListener } from '../../../aurora/index.js';
 let PersonApp = class PersonApp {
     constructor() {
-        this.appVersion = '22.01.08';
+        this.appVersion = '2022.05.01';
         this.title = 'Testing Components';
         this.appName = 'Ibyar Aurora';
         this.name = 'alice';
@@ -41,14 +41,11 @@ let PersonApp = class PersonApp {
             }
         };
     }
-    onClose(data) {
-        console.log('AppRoot => person1:select', data);
+    onPersonEdit(event) {
+        console.log('personEdit:input', event, this.view);
     }
-    onPersonEdit(data) {
-        console.log('personEdit:input', data, this.view);
-    }
-    onPersonAge(data) {
-        console.log('personEdit:person.age', data, this.view);
+    onPerson(person) {
+        console.log('personEdit:person', person, this.view);
     }
     printPerson(person) {
         console.log('printPerson', person);
@@ -71,23 +68,17 @@ __decorate([
     __metadata("design:type", HTMLElement)
 ], PersonApp.prototype, "view", void 0);
 __decorate([
-    HostListener('person1:select'),
+    HostListener('personEdit:input', ['$event']),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], PersonApp.prototype, "onClose", null);
-__decorate([
-    HostListener('personEdit:input'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Event]),
     __metadata("design:returntype", void 0)
 ], PersonApp.prototype, "onPersonEdit", null);
 __decorate([
-    HostListener('personEdit:person.age'),
+    HostListener('personEdit:person', ['$event']),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
-], PersonApp.prototype, "onPersonAge", null);
+], PersonApp.prototype, "onPerson", null);
 PersonApp = __decorate([
     Component({
         selector: 'person-app',
@@ -193,4 +184,4 @@ PersonApp = __decorate([
     })
 ], PersonApp);
 export { PersonApp };
-//# person-app.js.map
+//# sourceMappingURL=person-app.js.map

@@ -24,4 +24,4 @@ export function connectable(source, config) {
     };
     return result;
 }
-//# connectable.js.map
+//# sourceMappingURL=connectable.js.map

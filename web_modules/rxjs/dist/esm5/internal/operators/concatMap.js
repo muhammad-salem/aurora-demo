@@ -3,4 +3,4 @@ import { isFunction } from '../util/isFunction.js';
 export function concatMap(project, resultSelector) {
     return isFunction(resultSelector) ? mergeMap(project, resultSelector, 1) : mergeMap(project, 1);
 }
-//# concatMap.js.map
+//# sourceMappingURL=concatMap.js.map

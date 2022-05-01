@@ -3,4 +3,4 @@ import { joinAllInternals } from './joinAllInternals.js';
 export function zipAll(project) {
     return joinAllInternals(zip, project);
 }
-//# zipAll.js.map
+//# sourceMappingURL=zipAll.js.map

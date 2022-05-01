@@ -11,7 +11,7 @@ export function isPipeTransform(pipe) {
 }
 export class PipeProvider extends ReadOnlyScope {
     constructor() {
-        super({}, 'block');
+        super({});
     }
     has(pipeName) {
         if (pipeName in this.context) {
@@ -34,10 +34,13 @@ export class PipeProvider extends ReadOnlyScope {
         }
         return void 0;
     }
+    getClass() {
+        return PipeProvider;
+    }
 }
 export class AsyncPipeProvider extends ReadOnlyScope {
     constructor() {
-        super({}, 'block');
+        super({});
     }
     has(pipeName) {
         const pipeRef = ClassRegistryProvider.getPipe(pipeName);
@@ -48,11 +51,15 @@ export class AsyncPipeProvider extends ReadOnlyScope {
         if (pipeRef?.asynchronous) {
             return pipeRef.modelClass;
         }
+        return;
+    }
+    getClass() {
+        return AsyncPipeProvider;
     }
 }
 export class AsyncPipeScope extends ReactiveScopeControl {
     constructor() {
-        super({}, 'block');
+        super({});
         this.wrapper = {};
     }
     static blockScope() {
@@ -77,5 +84,8 @@ export class AsyncPipeScope extends ReactiveScopeControl {
         const pipe = this.context[propertyKey];
         pipe.onDestroy();
     }
+    getClass() {
+        return AsyncPipeScope;
+    }
 }
-//# pipe.js.map
+//# sourceMappingURL=pipe.js.map

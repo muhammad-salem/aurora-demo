@@ -1,12 +1,15 @@
 import { __read, __spreadArray } from "../../../../../tslib/tslib.es6.js";
 export var timeoutProvider = {
-    setTimeout: function () {
+    setTimeout: function (handler, timeout) {
         var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            args[_i - 2] = arguments[_i];
         }
         var delegate = timeoutProvider.delegate;
-        return ((delegate === null || delegate === void 0 ? void 0 : delegate.setTimeout) || setTimeout).apply(void 0, __spreadArray([], __read(args)));
+        if (delegate === null || delegate === void 0 ? void 0 : delegate.setTimeout) {
+            return delegate.setTimeout.apply(delegate, __spreadArray([handler, timeout], __read(args)));
+        }
+        return setTimeout.apply(void 0, __spreadArray([handler, timeout], __read(args)));
     },
     clearTimeout: function (handle) {
         var delegate = timeoutProvider.delegate;
@@ -14,4 +17,4 @@ export var timeoutProvider = {
     },
     delegate: undefined,
 };
-//# timeoutProvider.js.map
+//# sourceMappingURL=timeoutProvider.js.map

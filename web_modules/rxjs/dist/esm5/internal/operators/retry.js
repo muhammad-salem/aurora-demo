@@ -1,5 +1,5 @@
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 import { identity } from '../util/identity.js';
 import { timer } from '../observable/timer.js';
 import { innerFrom } from '../observable/innerFrom.js';
@@ -22,7 +22,7 @@ export function retry(configOrCount) {
             var innerSub;
             var subscribeForRetry = function () {
                 var syncUnsub = false;
-                innerSub = source.subscribe(new OperatorSubscriber(subscriber, function (value) {
+                innerSub = source.subscribe(createOperatorSubscriber(subscriber, function (value) {
                     if (resetOnSuccess) {
                         soFar = 0;
                     }
@@ -41,7 +41,7 @@ export function retry(configOrCount) {
                         };
                         if (delay != null) {
                             var notifier = typeof delay === 'number' ? timer(delay) : innerFrom(delay(err, soFar));
-                            var notifierSubscriber_1 = new OperatorSubscriber(subscriber, function () {
+                            var notifierSubscriber_1 = createOperatorSubscriber(subscriber, function () {
                                 notifierSubscriber_1.unsubscribe();
                                 resub_1();
                             }, function () {
@@ -66,4 +66,4 @@ export function retry(configOrCount) {
             subscribeForRetry();
         });
 }
-//# retry.js.map
+//# sourceMappingURL=retry.js.map

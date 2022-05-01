@@ -6,4 +6,4 @@ import { toArray } from './toArray.js';
 export function joinAllInternals(joinFn, project) {
     return pipe(toArray(), mergeMap(function (sources) { return joinFn(sources); }), project ? mapOneOrManyArgs(project) : identity);
 }
-//# joinAllInternals.js.map
+//# sourceMappingURL=joinAllInternals.js.map

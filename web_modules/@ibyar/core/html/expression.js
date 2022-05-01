@@ -91,11 +91,11 @@ function parseChild(child) {
                 if (!ref?.inputs?.length) {
                     return;
                 }
-                child.inputs ??= [];
+                child.inputs ?? (child.inputs = []);
                 info.directiveInputs.forEach((expression, input) => {
                     const modelName = ref?.inputs.find(i => i.viewAttribute === input)?.modelProperty ?? input;
                     const attr = createLiveAttribute(modelName, expression);
-                    (child.inputs ??= []).push(attr);
+                    (child.inputs ?? (child.inputs = [])).push(attr);
                 });
             }
         }
@@ -132,4 +132,4 @@ export function buildExpressionNodes(node) {
         parseChild(node);
     }
 }
-//# expression.js.map
+//# sourceMappingURL=expression.js.map

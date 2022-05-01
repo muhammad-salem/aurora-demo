@@ -8,4 +8,4 @@ var QueueScheduler = (function (_super) {
     return QueueScheduler;
 }(AsyncScheduler));
 export { QueueScheduler };
-//# QueueScheduler.js.map
+//# sourceMappingURL=QueueScheduler.js.map

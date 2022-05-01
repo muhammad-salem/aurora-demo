@@ -5,4 +5,4 @@ export var config = {
     useDeprecatedSynchronousErrorHandling: false,
     useDeprecatedNextContext: false,
 };
-//# config.js.map
+//# sourceMappingURL=config.js.map

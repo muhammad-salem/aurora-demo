@@ -20,4 +20,4 @@ export function merge() {
             :
                 mergeAll(concurrent)(from(sources, scheduler));
 }
-//# merge.js.map
+//# sourceMappingURL=merge.js.map

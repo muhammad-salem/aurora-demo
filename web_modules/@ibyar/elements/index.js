@@ -7,4 +7,4 @@ export * from './ast/factory.js';
 export * from './node/html-parser.js';
 export * from './directives/register-directive.js';
 export * from './template/template-parser.js';
-//# index.js.map
+//# sourceMappingURL=index.js.map

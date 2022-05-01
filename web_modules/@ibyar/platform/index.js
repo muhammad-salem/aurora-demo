@@ -1,2 +1,2 @@
 export * from './patch/index.js';
-//# index.js.map
+//# sourceMappingURL=index.js.map

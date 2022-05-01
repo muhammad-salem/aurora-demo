@@ -1,6 +1,6 @@
 import { Subject } from '../Subject.js';
 import { operate } from '../util/lift.js';
-import { OperatorSubscriber } from './OperatorSubscriber.js';
+import { createOperatorSubscriber } from './OperatorSubscriber.js';
 export function repeatWhen(notifier) {
     return operate(function (source, subscriber) {
         var innerSub;
@@ -12,7 +12,7 @@ export function repeatWhen(notifier) {
         var getCompletionSubject = function () {
             if (!completions$) {
                 completions$ = new Subject();
-                notifier(completions$).subscribe(new OperatorSubscriber(subscriber, function () {
+                notifier(completions$).subscribe(createOperatorSubscriber(subscriber, function () {
                     if (innerSub) {
                         subscribeForRepeatWhen();
                     }
@@ -28,7 +28,7 @@ export function repeatWhen(notifier) {
         };
         var subscribeForRepeatWhen = function () {
             isMainComplete = false;
-            innerSub = source.subscribe(new OperatorSubscriber(subscriber, undefined, function () {
+            innerSub = source.subscribe(createOperatorSubscriber(subscriber, undefined, function () {
                 isMainComplete = true;
                 !checkComplete() && getCompletionSubject().next();
             }));
@@ -42,4 +42,4 @@ export function repeatWhen(notifier) {
         subscribeForRepeatWhen();
     });
 }
-//# repeatWhen.js.map
+//# sourceMappingURL=repeatWhen.js.map

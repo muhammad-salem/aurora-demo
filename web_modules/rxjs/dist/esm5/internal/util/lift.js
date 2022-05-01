@@ -17,4 +17,4 @@ export function operate(init) {
         throw new TypeError('Unable to lift unknown Observable type');
     };
 }
-//# lift.js.map
+//# sourceMappingURL=lift.js.map

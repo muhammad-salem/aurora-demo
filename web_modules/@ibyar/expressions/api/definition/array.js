@@ -11,8 +11,8 @@ let ArrayExpression = ArrayExpression_1 = class ArrayExpression extends Abstract
     static fromJSON(node, deserializer) {
         return new ArrayExpression_1(node.elements.map(expression => deserializer(expression)));
     }
-    static visit(node, visitNode, visitNodeList) {
-        visitNodeList(node.elements);
+    static visit(node, visitNode) {
+        node.elements.forEach(visitNode);
     }
     getElements() {
         return this.elements;
@@ -54,8 +54,8 @@ let ArrayPattern = ArrayPattern_1 = class ArrayPattern extends AbstractExpressio
     static fromJSON(node, deserializer) {
         return new ArrayPattern_1(node.elements.map(expression => deserializer(expression)));
     }
-    static visit(node, visitNode, visitNodeList) {
-        visitNodeList(node.elements);
+    static visit(node, visitNode) {
+        node.elements.forEach(visitNode);
     }
     getElements() {
         return this.elements;
@@ -67,26 +67,26 @@ let ArrayPattern = ArrayPattern_1 = class ArrayPattern extends AbstractExpressio
     get(scopeProvider) {
         throw new Error('ArrayPattern#get() has no implementation.');
     }
-    declareVariable(stack, scopeType, values) {
+    declareVariable(stack, values) {
         if (Array.isArray(values)) {
-            this.declareVariableFromArray(stack, scopeType, values);
+            this.declareVariableFromArray(stack, values);
         }
         else if (Reflect.has(values, Symbol.iterator)) {
-            this.declareVariableFromIterator(stack, scopeType, values);
+            this.declareVariableFromIterator(stack, values);
         }
     }
-    declareVariableFromArray(stack, scopeType, values) {
+    declareVariableFromArray(stack, values) {
         for (let index = 0; index < this.elements.length; index++) {
             const elem = this.elements[index];
             if (elem instanceof RestElement) {
                 const rest = values.slice(index);
-                elem.declareVariable(stack, 'block', rest);
+                elem.declareVariable(stack, rest);
                 break;
             }
-            elem.declareVariable(stack, 'block', values[index]);
+            elem.declareVariable(stack, values[index]);
         }
     }
-    declareVariableFromIterator(stack, scopeType, iterator) {
+    declareVariableFromIterator(stack, iterator) {
         let index = 0;
         while (true) {
             let iteratorResult = iterator.next();
@@ -100,10 +100,10 @@ let ArrayPattern = ArrayPattern_1 = class ArrayPattern extends AbstractExpressio
                     iteratorResult = iterator.next();
                     rest.push(iteratorResult.value);
                 }
-                elem.declareVariable(stack, 'block', rest);
+                elem.declareVariable(stack, rest);
                 break;
             }
-            elem.declareVariable(stack, 'block', iteratorResult.value);
+            elem.declareVariable(stack, iteratorResult.value);
             if (index >= this.elements.length) {
                 break;
             }
@@ -129,4 +129,4 @@ ArrayPattern = ArrayPattern_1 = __decorate([
     __metadata("design:paramtypes", [Array])
 ], ArrayPattern);
 export { ArrayPattern };
-//# array.js.map
+//# sourceMappingURL=array.js.map

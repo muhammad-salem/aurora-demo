@@ -16,4 +16,4 @@ export function merge() {
         mergeAll(concurrent)(from(__spreadArray([source], __read(args)), scheduler)).subscribe(subscriber);
     });
 }
-//# merge.js.map
+//# sourceMappingURL=merge.js.map

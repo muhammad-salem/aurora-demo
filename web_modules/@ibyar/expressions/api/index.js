@@ -36,4 +36,4 @@ export * from './statement/control/terminate.js';
 export * from './statement/declarations/declares.js';
 export * from './statement/iterations/for.js';
 export * from './statement/iterations/while.js';
-//# index.js.map
+//# sourceMappingURL=index.js.map
