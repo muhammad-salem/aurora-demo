@@ -6,7 +6,7 @@ let FetchApp = class FetchApp {
         this.selected = 1;
     }
     onInit() {
-        fetch('/web_modules/@ibyar/example/dist/fetch/data.json')
+        fetch('https://raw.githubusercontent.com/ibyar/aurora/dev/example/src/fetch/data.json')
             .then(response => response.json())
             .then((list) => this.list = list.map(i => +i));
     }

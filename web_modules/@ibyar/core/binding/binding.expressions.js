@@ -1,8 +1,9 @@
-import { InfixExpressionNode, findReactiveScopeByEventMap, Scope } from '../../expressions/index.js';
+import { __decorate, __metadata } from "../../../tslib/tslib.es6.js";
+import { InfixExpressionNode, findReactiveScopeByEventMap, Scope, MemberExpression, Deserializer } from '../../expressions/index.js';
 import { createSubscriptionDestroyer } from '../context/subscription.js';
 import { isOnDestroy } from '../component/lifecycle.js';
 import { AsyncPipeProvider, AsyncPipeScope, PipeProvider } from '../pipe/pipe.js';
-export class OneWayAssignmentExpression extends InfixExpressionNode {
+let OneWayAssignmentExpression = class OneWayAssignmentExpression extends InfixExpressionNode {
     constructor(left, right) {
         super('.=', left, right);
         this.rightEvents = this.right.events();
@@ -51,8 +52,13 @@ export class OneWayAssignmentExpression extends InfixExpressionNode {
         });
         return subscriptions;
     }
-}
-export class TwoWayAssignmentExpression extends InfixExpressionNode {
+};
+OneWayAssignmentExpression = __decorate([
+    Deserializer('OneWayAssignment'),
+    __metadata("design:paramtypes", [MemberExpression, Object])
+], OneWayAssignmentExpression);
+export { OneWayAssignmentExpression };
+let TwoWayAssignmentExpression = class TwoWayAssignmentExpression extends InfixExpressionNode {
     constructor(left, right) {
         super(':=', left, right);
         this.rightEvents = this.right.events();
@@ -111,5 +117,10 @@ export class TwoWayAssignmentExpression extends InfixExpressionNode {
         const ltrSubscriptions = this.subscribeToEvents(stack, leftTuples, ltrAction);
         return rtlSubscriptions.concat(ltrSubscriptions);
     }
-}
+};
+TwoWayAssignmentExpression = __decorate([
+    Deserializer('TwoWayAssignment'),
+    __metadata("design:paramtypes", [MemberExpression, Object])
+], TwoWayAssignmentExpression);
+export { TwoWayAssignmentExpression };
 //# sourceMappingURL=binding.expressions.js.map

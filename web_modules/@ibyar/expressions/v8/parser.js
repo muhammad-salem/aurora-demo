@@ -50,6 +50,9 @@ export var PropertyKind;
     PropertyKind[PropertyKind["Spread"] = 8] = "Spread";
     PropertyKind[PropertyKind["NotSet"] = 9] = "NotSet";
 })(PropertyKind || (PropertyKind = {}));
+export function isAccessor(kind) {
+    return kind === PropertyKind.AccessorGetter || kind === PropertyKind.AccessorSetter;
+}
 export function parsePropertyKindFromToken(token, info) {
     switch (token) {
         case Token.COLON:

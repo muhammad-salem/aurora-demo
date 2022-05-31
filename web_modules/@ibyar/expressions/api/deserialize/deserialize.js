@@ -1,10 +1,13 @@
 import { expressionTypes } from './type-store.js';
 export function Deserializer(type) {
     return (target) => {
-        Reflect.set(target, 'type', type);
+        target.type = type;
         expressionTypes.set(type, target);
         return target;
     };
+}
+export function getDeserializerType(target) {
+    return target.type;
 }
 export function serializeNode(node) {
     return JSON.stringify(node);

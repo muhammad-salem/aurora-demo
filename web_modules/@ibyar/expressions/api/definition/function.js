@@ -20,6 +20,12 @@ export var FunctionKind;
     FunctionKind["STATIC_ASYNC_CONCISE_GENERATOR"] = "STATIC_ASYNC_CONCISE_GENERATOR";
     FunctionKind["DERIVED_CONSTRUCTOR"] = "DERIVED_CONSTRUCTOR";
     FunctionKind["BASE_CONSTRUCTOR"] = "BASE_CONSTRUCTOR";
+    FunctionKind["DEFAULT_BASE_CONSTRUCTOR"] = "DEFAULT_BASE_CONSTRUCTOR";
+    FunctionKind["DEFAULT_DERIVED_CONSTRUCTOR"] = "DEFAULT_DERIVED_CONSTRUCTOR";
+    FunctionKind["GETTER_FUNCTION"] = "GETTER_FUNCTION";
+    FunctionKind["SETTER_FUNCTION"] = "SETTER_FUNCTION";
+    FunctionKind["STATIC_GETTER_FUNCTION"] = "STATIC_GETTER_FUNCTION";
+    FunctionKind["STATIC_SETTER_FUNCTION"] = "STATIC_SETTER_FUNCTION";
 })(FunctionKind || (FunctionKind = {}));
 export var ArrowFunctionType;
 (function (ArrowFunctionType) {

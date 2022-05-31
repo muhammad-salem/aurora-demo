@@ -21,9 +21,9 @@ export class AbstractExpressionNode {
         return this.constructor;
     }
     toJSON(key) {
+        const type = this.getClass().type;
         const json = this.toJson(key);
-        json.type = Reflect.get(this.constructor, 'type');
-        return json;
+        return { type, ...json };
     }
     events() {
         const dependencyNodes = this.dependency();

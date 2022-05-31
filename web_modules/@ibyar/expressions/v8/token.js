@@ -190,6 +190,12 @@ export class Token {
     static isInRange(op, start, end) {
         return op >= start.precedence && op <= end.precedence;
     }
+    static isProperty(token) {
+        if (token instanceof Token) {
+            token = token.precedence;
+        }
+        return Token.isInRange(token, Token.PERIOD, Token.L_BRACKETS);
+    }
     static isBinary(token) {
         if (token instanceof Token) {
             token = token.precedence;
