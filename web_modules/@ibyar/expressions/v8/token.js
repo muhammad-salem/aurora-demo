@@ -1,3 +1,4 @@
+import { isSloppy } from './enums.js';
 export class Token {
     constructor(name, precedence) {
         this.name = name;
@@ -5,12 +6,12 @@ export class Token {
     }
     static isPair(token) {
         switch (token) {
-            case Token.L_PARENTHESES:
-            case Token.L_BRACKETS:
-            case Token.L_CURLY:
-            case Token.R_CURLY:
-            case Token.R_BRACKETS:
-            case Token.R_PARENTHESES:
+            case Token.LPAREN:
+            case Token.LBRACK:
+            case Token.LBRACE:
+            case Token.RBRACE:
+            case Token.RBRACK:
+            case Token.RPAREN:
                 return true;
             default:
                 return false;
@@ -18,9 +19,9 @@ export class Token {
     }
     static isOpenPair(token) {
         switch (token) {
-            case Token.L_PARENTHESES:
-            case Token.L_BRACKETS:
-            case Token.L_CURLY:
+            case Token.LPAREN:
+            case Token.LBRACK:
+            case Token.LBRACE:
                 return true;
             default:
                 return false;
@@ -28,9 +29,9 @@ export class Token {
     }
     static isClosePair(token) {
         switch (token) {
-            case Token.R_CURLY:
-            case Token.R_BRACKETS:
-            case Token.R_PARENTHESES:
+            case Token.RBRACE:
+            case Token.RBRACK:
+            case Token.RPAREN:
                 return true;
             default:
                 return false;
@@ -38,23 +39,23 @@ export class Token {
     }
     static openOf(token) {
         switch (token) {
-            case Token.R_CURLY:
-                return Token.L_CURLY;
-            case Token.R_BRACKETS:
-                return Token.L_BRACKETS;
-            case Token.R_PARENTHESES:
-                return Token.L_PARENTHESES;
+            case Token.RBRACE:
+                return Token.LBRACE;
+            case Token.RBRACK:
+                return Token.LBRACK;
+            case Token.RPAREN:
+                return Token.LPAREN;
         }
         return token;
     }
     static closeOf(token) {
         switch (token) {
-            case Token.L_CURLY:
-                return Token.R_CURLY;
-            case Token.L_BRACKETS:
-                return Token.R_BRACKETS;
-            case Token.L_PARENTHESES:
-                return Token.R_PARENTHESES;
+            case Token.LBRACE:
+                return Token.RBRACE;
+            case Token.LBRACK:
+                return Token.RBRACK;
+            case Token.LPAREN:
+                return Token.RPAREN;
         }
         return token;
     }
@@ -92,6 +93,7 @@ export class Token {
             case Token.BIGINT:
             case Token.STRING:
             case Token.REGEXP_LITERAL:
+                // case Token.SMI:
                 return true;
         }
         return false;
@@ -134,7 +136,7 @@ export class Token {
     static isAutoSemicolon(token) {
         switch (token) {
             case Token.SEMICOLON:
-            case Token.R_CURLY:
+            case Token.RBRACE:
             case Token.EOS:
                 return true;
         }
@@ -142,29 +144,47 @@ export class Token {
     }
     static isMember(token) {
         switch (token) {
-            case Token.TEMPLATE_LITERALS:
+            case Token.TEMPLATE_SPAN:
+            case Token.TEMPLATE_TAIL:
             case Token.PERIOD:
-            case Token.L_BRACKETS:
+            case Token.LBRACK:
                 return true;
         }
         return false;
     }
     static isTemplate(token) {
         switch (token) {
-            case Token.TEMPLATE_LITERALS:
+            case Token.TEMPLATE_SPAN:
+            case Token.TEMPLATE_TAIL:
                 return true;
         }
         return false;
     }
     static isNextLetKeyword(token) {
         switch (token) {
-            case Token.L_CURLY:
-            case Token.L_BRACKETS:
+            case Token.LBRACE:
+            case Token.LBRACK:
             case Token.IDENTIFIER:
             case Token.STATIC:
-            case Token.LET:
+            case Token.LET: // `let let;` is disallowed by static semantics, but the
+            // token must be first interpreted as a keyword in order
+            // for those semantics to apply. This ensures that ASI is
+            // not honored when a LineTerminator separates the tokens.
             case Token.YIELD:
             case Token.AWAIT:
+            case Token.GET:
+            case Token.SET:
+            case Token.ASYNC:
+                return true;
+            // case Token.FUTURE_STRICT_RESERVED_WORD:
+            // return is_sloppy(language_mode());
+            default:
+                return false;
+        }
+    }
+    static isInRangeIdentifierAndAsync(token) {
+        switch (token) {
+            case Token.IDENTIFIER:
             case Token.GET:
             case Token.SET:
             case Token.ASYNC:
@@ -175,11 +195,12 @@ export class Token {
     }
     static isPropertyOrCall(token) {
         switch (token) {
-            case Token.TEMPLATE_LITERALS:
+            case Token.TEMPLATE_SPAN:
+            case Token.TEMPLATE_TAIL:
             case Token.PERIOD:
-            case Token.L_BRACKETS:
+            case Token.LBRACK:
             case Token.QUESTION_PERIOD:
-            case Token.L_PARENTHESES:
+            case Token.LPAREN:
                 return true;
         }
         return false;
@@ -194,7 +215,7 @@ export class Token {
         if (token instanceof Token) {
             token = token.precedence;
         }
-        return Token.isInRange(token, Token.PERIOD, Token.L_BRACKETS);
+        return Token.isInRange(token, Token.PERIOD, Token.LBRACK);
     }
     static isBinary(token) {
         if (token instanceof Token) {
@@ -326,12 +347,20 @@ export class Token {
         }
         return false;
     }
-    static isValidIdentifier(token) {
-        if (Token.isInRange(token.precedence, Token.IDENTIFIER, Token.ASYNC))
+    static isValidIdentifier(token, mode, isGenerator, disallowAwait) {
+        if (Token.isInRangeIdentifierAndAsync(token))
             return true;
-        if (token == Token.AWAIT || token == Token.YIELD)
-            return false;
-        return Token.isStrictReservedWord(token) && false;
+        if (token == Token.AWAIT)
+            return !disallowAwait;
+        if (token == Token.YIELD)
+            return !isGenerator;
+        return Token.isStrictReservedWord(token) && isSloppy(mode);
+    }
+    static precedence(token, acceptIN) {
+        if (!acceptIN && Token.IN === token) {
+            return 0;
+        }
+        return token.getPrecedence();
     }
     getName() {
         return this.name;
@@ -339,74 +368,294 @@ export class Token {
     getPrecedence() {
         return this.precedence;
     }
+    equal(token) {
+        return this === token || this.name === token.name;
+    }
 }
+/**
+ * ___ ? ___ : ___
+ */
 Token.CONDITIONAL = new Token('?', 3);
+/**
+ * ___ ?? ___
+ */
 Token.NULLISH = new Token('??', 3);
+/**
+ * ___ |> ___ : ___ : ?
+ * ___ |> ___ ( ___, ___ , ?)
+ */
 Token.PIPELINE = new Token('|>', 3);
+/**
+ * ___ || ___
+ */
 Token.OR = new Token('||', 4);
+/**
+ * ___ && ___
+ */
 Token.AND = new Token('&&', 5);
+/**
+ * ___ | ___
+ */
 Token.BIT_OR = new Token('|', 6);
+/**
+ * ___ ^ ___
+ */
 Token.BIT_XOR = new Token('^', 7);
+/**
+ * ___ | ___
+ */
 Token.BIT_AND = new Token('&', 8);
+/**
+ * ___ << ___
+ */
 Token.SHL = new Token('<<', 11);
+/**
+ * ___ >> ___
+ */
 Token.SAR = new Token('>>', 11);
+/**
+ * ___ >>> ___
+ */
 Token.SHR = new Token('>>>', 11);
+/**
+ * ___ * ___
+ */
 Token.MUL = new Token('*', 13);
+/**
+ * ___ / ___
+ */
 Token.DIV = new Token('/', 13);
+/**
+ * ___ % ___
+ */
 Token.MOD = new Token('%', 13);
+/**
+ * ___ %% ___
+ */
 Token.MODULO = new Token('%%', 13);
+/**
+ * ___ > ___
+ */
 Token.LARGER = new Token('>?', 13);
+/**
+ * ___ > ___
+ */
 Token.SMALLER = new Token('<?', 13);
+/**
+ * ___ ** ___
+ */
 Token.EXP = new Token('**', 14);
+/**
+ * ___ + ___
+ */
 Token.ADD = new Token('+', 12);
+/**
+ * ___ - ___
+ */
 Token.SUB = new Token('-', 12);
+/**
+ * ! ___
+ */
 Token.NOT = new Token('!', 0);
+/**
+ * ~ ___
+ */
 Token.BIT_NOT = new Token('~', 0);
+/**
+ * ___ < ___
+ */
 Token.LT = new Token('<', 10);
+/**
+ * ___ > ___
+ */
 Token.GT = new Token('>', 10);
+/**
+ * ___++
+ *
+ * ++___
+ */
 Token.INC = new Token('++', 0);
+/**
+ * ___--
+ *
+ * --___
+ */
 Token.DEC = new Token('--', 0);
+/**
+ * ___ == ___
+ */
 Token.EQ = new Token('==', 9);
+/**
+ * ___ === ___
+ */
 Token.EQ_STRICT = new Token('===', 9);
+/**
+ * ___ != ___
+ */
 Token.NE = new Token('!=', 9);
+/**
+ * ___ !== ___
+ */
 Token.NE_STRICT = new Token('!==', 9);
+/**
+ * ___ <= ___
+ */
 Token.LTE = new Token('<=', 10);
+/**
+ * ___ >= ___
+ */
 Token.GTE = new Token('>=', 10);
+/**
+ * ___ <=> ___
+ */
 Token.SPACESHIP = new Token('<=>', 10);
+/**
+ * ___ = ___
+ */
 Token.ASSIGN = new Token('=', 2);
+/**
+ * ___ += ___
+ */
 Token.ADD_ASSIGN = new Token('+=', 2);
+/**
+ * ___ -= ___
+ */
 Token.SUB_ASSIGN = new Token('-=', 2);
+/**
+ * ___ *= ___
+ */
 Token.MUL_ASSIGN = new Token('*=', 2);
+/**
+ * ___ /= ___
+ */
 Token.DIV_ASSIGN = new Token('/=', 2);
+/**
+ * ___ %= ___
+ */
 Token.MOD_ASSIGN = new Token('%=', 2);
+/**
+ * ___ %% ___
+ */
 Token.MODULO_ASSIGN = new Token('%%=', 2);
+/**
+ * ___ > ___
+ */
 Token.LARGER_ASSIGN = new Token('>?=', 2);
+/**
+ * ___ > ___
+ */
 Token.SMALLER_ASSIGN = new Token('<?=', 2);
+/**
+ * ___ **= ___
+ */
 Token.EXP_ASSIGN = new Token('**=', 2);
+/**
+ * ___ ^= ___
+ */
 Token.BIT_XOR_ASSIGN = new Token('^=', 2);
+/**
+ * ___ &= ___
+ */
 Token.BIT_AND_ASSIGN = new Token('&=', 2);
+/**
+ * ___ |= ___
+ */
 Token.BIT_OR_ASSIGN = new Token('|=', 2);
+/**
+ * ___ &&= ___
+ */
 Token.AND_ASSIGN = new Token('&&=', 2);
+/**
+ * ___ ||= ___
+ */
 Token.OR_ASSIGN = new Token('||=', 2);
+/**
+ * ___ ??= ___
+ */
 Token.NULLISH_ASSIGN = new Token('??=', 2);
+/**
+ * ___ <<= ___
+ */
 Token.SHL_ASSIGN = new Token('<<=', 2);
+/**
+ * ___ >>= ___
+ */
 Token.SAR_ASSIGN = new Token('>>=', 2);
+/**
+ * ___ >>>= ___
+ */
 Token.SHR_ASSIGN = new Token('>>>=', 2);
+/**
+ * ___ . ___
+ */
 Token.PERIOD = new Token('.', 0);
+/**
+ * ___ ?. ___
+ *
+ *  ___?.[___]
+ *
+ *  ___?.()
+ */
 Token.QUESTION_PERIOD = new Token('?.', 0);
+/**
+ * ___ :: ___
+ */
 Token.BIND = new Token('::', 0);
+/**
+ * ___ ?:: ___
+ *
+ *  ___?::[___]
+ *
+ *  ___?::()
+ */
 Token.QUESTION_BIND = new Token('?::', 0);
-Token.L_PARENTHESES = new Token('(', 0);
-Token.R_PARENTHESES = new Token(')', 0);
-Token.L_BRACKETS = new Token('[', 0);
-Token.R_BRACKETS = new Token(']', 0);
-Token.L_CURLY = new Token('{', 0);
-Token.R_CURLY = new Token('}', 0);
+/**
+ * (
+ */
+Token.LPAREN = new Token('(', 0);
+/**
+ * )
+ */
+Token.RPAREN = new Token(')', 0);
+/**
+ * [
+ */
+Token.LBRACK = new Token('[', 0);
+/**
+ * ]
+ */
+Token.RBRACK = new Token(']', 0);
+/**
+ * {
+ */
+Token.LBRACE = new Token('{', 0);
+/**
+ * }
+ */
+Token.RBRACE = new Token('}', 0);
+/**
+ * :
+ */
 Token.COLON = new Token(':', 0);
+/**
+ * ...
+ */
 Token.ELLIPSIS = new Token('...', 0);
+/**
+ * ;
+ */
 Token.SEMICOLON = new Token(';', 0);
+/**
+ * end of source
+ */
 Token.EOS = new Token('EOS', 0);
+/**
+ * =>
+ */
 Token.ARROW = new Token('=>', 0);
+/**
+ * ___, ___, ___
+ */
 Token.COMMA = new Token(',', 1);
 Token.ASYNC = new Token('async', 0);
 Token.AWAIT = new Token('await', 0);
@@ -462,7 +711,20 @@ Token.NUMBER = new Token('NUMBER', 0);
 Token.BIGINT = new Token('BIGINT', 0);
 Token.STRING = new Token('STRING', 0);
 Token.IDENTIFIER = new Token('IDENTIFIER', 0);
-Token.TEMPLATE_LITERALS = new Token('TEMPLATE_LITERALS', 0);
+/**
+ * TEMPLATE_SPAN ::
+ *
+ * 		` LiteralChars* ${
+ * 		| } LiteralChars* ${
+ */
+Token.TEMPLATE_SPAN = new Token('TEMPLATE_SPAN', 0);
+/**
+ * TEMPLATE_TAIL ::
+ *
+ * 		` LiteralChars* `
+ * 		| } LiteralChar* `
+ */
+Token.TEMPLATE_TAIL = new Token('TEMPLATE_TAIL', 0);
 Token.ILLEGAL = new Token('ILLEGAL', 0);
 Token.ESCAPED_KEYWORD = new Token('ESCAPED_KEYWORD', 0);
 Token.WHITESPACE = new Token('WHITESPACE', 0);
@@ -482,7 +744,7 @@ export class TokenExpression {
         return this.token !== type;
     }
     test(func) {
-        return func(this.token);
+        return func(this.token, this.value);
     }
     toString() {
         return JSON.stringify(this);

@@ -5,14 +5,24 @@ export class NodeFactory {
         if (NodeFactory.Fragment === tagName.toLowerCase()) {
             return NodeFactory.createFragmentNode(...children);
         }
+        /**
+         * structural directive -- jsx support
+         *
+         * <if condition="element.show"> {'{{element.name}}'} </if>
+         * <div _if="element.show">{'{{element.name}}'} </div>
+         */
         if (directiveRegistry.has(tagName)) {
             return NodeFactory.createStructuralDirectiveNode(tagName, '', attrs, ...children);
         }
+        /**
+         * <directive *if="element.show" >{'{{element.name}}'}</directive>
+         */
         if (NodeFactory.DirectiveTag === tagName.toLocaleLowerCase() && attrs) {
             if (attrs) {
                 let directiveName = Object.keys(attrs).find(attrName => attrName.startsWith('*'));
                 let directiveValue;
                 if (directiveName) {
+                    // is directive
                     directiveValue = attrs[directiveName];
                     delete attrs.directiveName;
                     return NodeFactory.createStructuralDirectiveNode(directiveName, directiveValue, attrs, ...children);
@@ -30,9 +40,11 @@ export class NodeFactory {
                 return node;
             }
             else {
+                // return new CommentNode('empty directive');
                 return NodeFactory.createFragmentNode(...children);
             }
         }
+        // let node: ElementNode | DirectiveNode = new ElementNode(tagName, attrs?.is);
         if (attrs) {
             let node = NodeFactory.createElementNode(tagName, attrs, ...children);
             const attrKeys = Object.keys(attrs);
@@ -111,6 +123,7 @@ export class NodeFactory {
     }
     static handelAttribute(element, attrName, value) {
         if (attrName.startsWith('#') && element instanceof DomElementNode) {
+            // <app-tag #element-name="directiveName?" ></app-tag>
             attrName = attrName.substring(1);
             element.setTemplateRefName(attrName, value);
         }
@@ -119,41 +132,55 @@ export class NodeFactory {
             return;
         }
         else if (attrName.startsWith('[(')) {
+            // [(attr)]="modelProperty"
             attrName = attrName.substring(2, attrName.length - 2);
             element.addTwoWayBinding(attrName, value);
         }
         else if (attrName.startsWith('$') && typeof value === 'string' && value.startsWith('$')) {
+            // $attr="$viewProperty" 
             attrName = attrName.substring(1);
             value = value.substring(1);
             element.addTwoWayBinding(attrName, value);
         }
         else if (attrName.startsWith('[')) {
+            // [attr]="modelProperty"
             attrName = attrName.substring(1, attrName.length - 1);
             element.addInput(attrName, value);
         }
         else if (attrName.startsWith('$') && typeof value === 'string') {
+            // $attr="viewProperty" 
             attrName = attrName.substring(1);
             element.addInput(attrName, value);
         }
         else if (attrName.startsWith('$') && typeof value === 'object') {
+            // $attr={viewProperty} // as an object
             attrName = attrName.substring(1);
             element.addAttribute(attrName, value);
         }
         else if (typeof value === 'string' && value.startsWith('$')) {
+            // bad practice
+            // attr="$viewProperty" // as an object
+            // value = value.substring(1);
+            // element.addAttribute(attrName, value);
             return;
         }
         else if (typeof value === 'string' && (/^\{\{(.+\w*)*\}\}/g).test(value)) {
+            // attr="{{viewProperty}}" // just pass data
             value = value.substring(2, value.length - 2);
             element.addInput(attrName, value);
         }
         else if (typeof value === 'string' && (/\{\{(.+)\}\}/g).test(value)) {
+            // attr="any string{{viewProperty}}any text" // just pass data
             element.addTemplateAttr(attrName, value);
         }
         else if (attrName.startsWith('(')) {
+            // (elementAttr)="modelProperty()"
             attrName = attrName.substring(1, attrName.length - 1);
             element.addOutput(attrName, value);
         }
         else if (attrName.startsWith('on')) {
+            // onAttr="modelProperty()"
+            // onAttr={modelProperty} // as an function
             element.addOutput(attrName.substring(2), value);
         }
         else {

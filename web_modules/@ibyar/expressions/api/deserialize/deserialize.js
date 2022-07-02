@@ -12,6 +12,11 @@ export function getDeserializerType(target) {
 export function serializeNode(node) {
     return JSON.stringify(node);
 }
+/**
+ * convert from json expression `JSON.stringify(node)` or `serializeNode` to `ExpressionNode`
+ * @param node as type `NodeJsonType`
+ * @returns ExpressionNode
+ */
 export function deserialize(node) {
     const fromJSON = expressionTypes.get(node.type)?.fromJSON;
     if (fromJSON) {

@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 var AsyncPipe_1;
 import { __decorate } from "../../tslib/tslib.es6.js";
 import { AsyncPipeTransform, Pipe } from '../core/index.js';
@@ -27,8 +34,13 @@ class PromiseStrategy {
     onDestroy(subscription) { }
 }
 function isPromise(obj) {
+    // allow any Promise/A+ compliant thenable.
+    // It's up to the caller to ensure that obj.then conforms to the spec
     return !!obj && typeof obj.then === 'function';
 }
+/**
+ * Determine if the argument is a Subscribable
+ */
 function isSubscribable(obj) {
     return !!obj && typeof obj.subscribe === 'function';
 }

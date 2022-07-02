@@ -115,7 +115,7 @@ let VariableDeclarationNode = VariableDeclarationNode_1 = class VariableDeclarat
         return this.declarations.flatMap(declareVariable => declareVariable.dependencyPath(computed));
     }
     toString() {
-        return `${this.kind} ${this.declarations.map(v => v.toString()).join(', ')}`;
+        return `${this.kind} ${this.declarations.map(v => v.toString()).join(', ')};`;
     }
     toJson() {
         return {

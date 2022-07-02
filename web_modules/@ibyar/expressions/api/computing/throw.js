@@ -2,6 +2,10 @@ var ThrowStatement_1, CatchClauseNode_1, TryCatchNode_1;
 import { __decorate, __metadata } from "../../../../tslib/tslib.es6.js";
 import { AbstractExpressionNode } from '../abstract.js';
 import { Deserializer } from '../deserialize/deserialize.js';
+/**
+ * The expression whose value is to be returned.
+ * If omitted, undefined is returned instead.
+ */
 let ThrowStatement = ThrowStatement_1 = class ThrowStatement extends AbstractExpressionNode {
     constructor(argument) {
         super();

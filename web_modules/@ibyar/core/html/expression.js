@@ -3,7 +3,7 @@ import { expressionVisitor, Identifier, JavaScriptParser, MemberExpression } fro
 import { OneWayAssignmentExpression, TwoWayAssignmentExpression } from '../binding/binding.expressions.js';
 import { DirectiveExpressionParser } from '../directive/parser.js';
 import { ClassRegistryProvider } from '../providers/provider.js';
-const ThisTextContent = JavaScriptParser.parse('this.textContent');
+const ThisTextContent = JavaScriptParser.parseScript('this.textContent');
 function parseLiveText(text) {
     const textExpression = JavaScriptParser.parse(text.value);
     text.expression = new OneWayAssignmentExpression(ThisTextContent, textExpression);
@@ -16,6 +16,13 @@ function convertToMemberAccessStyle(source) {
     }
     return dashSplits[0] + dashSplits.splice(1).map(s => (s[0].toUpperCase() + s.substring(1))).join('');
 }
+/**
+ * warp js code with `()` if necessary
+ *
+ * `{name: 'alex'}` will be `({name: 'alex'})`
+ *
+ * @param params
+ */
 function checkAndValidateObjectSyntax(source) {
     if (source.startsWith('{')) {
         return `(${source})`;
@@ -24,8 +31,8 @@ function checkAndValidateObjectSyntax(source) {
 }
 function parseLiveAttribute(attr) {
     const elementSource = `this.${convertToMemberAccessStyle(attr.name)}`;
-    const elementExpression = JavaScriptParser.parse(elementSource);
-    const modelExpression = JavaScriptParser.parse(checkAndValidateObjectSyntax(attr.value));
+    const elementExpression = JavaScriptParser.parseScript(elementSource);
+    const modelExpression = JavaScriptParser.parseScript(checkAndValidateObjectSyntax(attr.value));
     if (elementExpression instanceof MemberExpression
         && (modelExpression instanceof MemberExpression || modelExpression instanceof Identifier)) {
         attr.expression = new TwoWayAssignmentExpression(elementExpression, modelExpression);
@@ -48,8 +55,8 @@ function getPipelineNames(modelExpression) {
 }
 function parseLiveAttributeUpdateElement(attr) {
     const elementSource = `this.${convertToMemberAccessStyle(attr.name)}`;
-    const elementExpression = JavaScriptParser.parse(elementSource);
-    const modelExpression = JavaScriptParser.parse(checkAndValidateObjectSyntax(attr.value));
+    const elementExpression = JavaScriptParser.parseScript(elementSource);
+    const modelExpression = JavaScriptParser.parseScript(checkAndValidateObjectSyntax(attr.value));
     if (elementExpression instanceof MemberExpression) {
         attr.expression = new OneWayAssignmentExpression(elementExpression, modelExpression);
     }
@@ -59,7 +66,7 @@ function parseLiveAttributeUpdateElement(attr) {
     attr.pipelineNames = getPipelineNames(modelExpression);
 }
 function parseOutputExpression(attr) {
-    attr.expression = JavaScriptParser.parse(attr.value);
+    attr.expression = JavaScriptParser.parseScript(attr.value);
 }
 function parseAttributeDirectives(directive) {
     directive.inputs?.forEach(parseLiveAttributeUpdateElement);
@@ -76,6 +83,7 @@ function parseBaseNode(base) {
 }
 function parseChild(child) {
     if (child instanceof DomElementNode) {
+        // DomElementNode
         parseBaseNode(child);
         parseDomParentNode(child);
     }
@@ -83,8 +91,10 @@ function parseChild(child) {
         let expressions = [];
         child.templateExpressions = expressions;
         if (child.value) {
+            // use shorthand syntax, possible mixed with input and outputs
             const info = DirectiveExpressionParser.parse(child.name.substring(1), child.value);
-            expressions.push(...info.templateExpressions.map(JavaScriptParser.parse));
+            expressions.push(...info.templateExpressions.map(template => JavaScriptParser.parseScript(template)));
+            // <div let-i="index">{{item}}</div>
             searchForLetAttributes(child, expressions);
             if (info.directiveInputs.size > 0) {
                 const ref = ClassRegistryProvider.getDirectiveRef(child.name);
@@ -102,6 +112,8 @@ function parseChild(child) {
         else {
             searchForLetAttributes(child, expressions);
         }
+        // DomDirectiveNode
+        // in case if add input/output support need to handle that here.
         parseChild(child.node);
         parseBaseNode(child);
     }
@@ -118,7 +130,7 @@ function searchForLetAttributes(child, expressions) {
         child.attributes.splice(child.attributes.indexOf(attr), 1);
         const attrName = convertToMemberAccessStyle(attr.name.split('-').slice(1));
         const expression = `let ${attrName} = ${(typeof attr.value == 'string') ? attr.value : '$implicit'}`;
-        expressions.push(JavaScriptParser.parse(expression));
+        expressions.push(JavaScriptParser.parseScript(expression));
     });
 }
 function parseDomParentNode(parent) {

@@ -15,7 +15,7 @@ VideoPlayer = __decorate([
         extend: 'video',
         encapsulation: 'shadow-dom',
         shadowDomMode: 'open',
-        shadowDomDelegatesFocus: true
+        shadowDomDelegatesFocus: true // will be ignored
     })
 ], VideoPlayer);
 export { VideoPlayer };

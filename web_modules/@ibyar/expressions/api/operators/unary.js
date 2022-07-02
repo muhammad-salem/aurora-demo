@@ -42,12 +42,15 @@ let UnaryExpression = UnaryExpression_1 = class UnaryExpression extends Abstract
             let propertyKey;
             const right = this.argument.getProperty();
             if (right instanceof MemberExpression) {
+                // [Symbol.asyncIterator]
                 propertyKey = this.argument.getProperty().get(stack);
             }
             else if (right instanceof Literal) {
+                // x[10], x['string'], x.name
                 propertyKey = right.getValue();
             }
             else {
+                // x[u == 3 ? 'y': 'n']
                 propertyKey = this.argument.getProperty().get(stack);
             }
             return scope.delete(propertyKey);

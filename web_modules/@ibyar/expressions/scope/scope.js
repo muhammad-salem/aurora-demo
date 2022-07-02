@@ -67,9 +67,11 @@ export class ReadOnlyScope extends Scope {
         return new ReadOnlyScope({}, propertyKeys);
     }
     set(propertyKey, value, receiver) {
+        // do nothing
         return false;
     }
     delete(propertyKey) {
+        // do nothing
         return false;
     }
     getClass() {
@@ -147,6 +149,9 @@ export class ValueChangeObserver {
         const subscriptionInfo = this.subscribers.get(propertyKey)?.get(subscription);
         subscriptionInfo && (subscriptionInfo.enable = true);
     }
+    /**
+     * clear subscription maps
+     */
     destroy() {
         this.subscribers.clear();
     }

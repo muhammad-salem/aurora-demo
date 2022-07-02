@@ -2,6 +2,10 @@ var ReturnStatement_1;
 import { __decorate, __metadata } from "../../../../tslib/tslib.es6.js";
 import { AbstractExpressionNode, ReturnValue } from '../abstract.js';
 import { Deserializer } from '../deserialize/deserialize.js';
+/**
+ * The expression whose value is to be returned.
+ * If omitted, undefined is returned instead.
+ */
 let ReturnStatement = ReturnStatement_1 = class ReturnStatement extends AbstractExpressionNode {
     constructor(argument) {
         super();
@@ -24,6 +28,7 @@ let ReturnStatement = ReturnStatement_1 = class ReturnStatement extends Abstract
     }
     get(stack) {
         return new ReturnValue(this.argument?.get(stack));
+        // nothing should be written after this operation in a function body.
     }
     dependency(computed) {
         return this.argument?.dependency(computed) || [];

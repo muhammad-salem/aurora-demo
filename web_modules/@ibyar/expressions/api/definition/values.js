@@ -1,7 +1,16 @@
-var Identifier_1, Literal_1, StringLiteral_1, NumberLiteral_1, BigIntLiteral_1, RegExpLiteral_1;
+var Identifier_1, Literal_1;
 import { __decorate, __metadata } from "../../../../tslib/tslib.es6.js";
 import { Deserializer } from '../deserialize/deserialize.js';
 import { AbstractExpressionNode } from '../abstract.js';
+/**
+ * An identifier is a sequence of characters in the code that identifies a variable, function, or property.
+ * In JavaScript, identifiers are case-sensitive and can contain Unicode letters, $, _, and digits (0-9),
+ * but may not start with a digit.
+ * An identifier differs from a string in that a string is data,
+ * while an identifier is part of the code. In JavaScript,
+ * there is no way to convert identifiers to strings,
+ * but sometimes it is possible to parse strings into identifiers.
+ */
 let Identifier = Identifier_1 = class Identifier extends AbstractExpressionNode {
     constructor(name) {
         super();
@@ -55,16 +64,47 @@ Identifier = Identifier_1 = __decorate([
     __metadata("design:paramtypes", [Object])
 ], Identifier);
 export { Identifier };
+let ThisExpression = class ThisExpression extends Identifier {
+    static fromJSON(node) {
+        return ThisNode;
+    }
+    constructor() {
+        super('this');
+    }
+};
+ThisExpression = __decorate([
+    Deserializer('ThisExpression'),
+    __metadata("design:paramtypes", [])
+], ThisExpression);
+export { ThisExpression };
 let Literal = Literal_1 = class Literal extends AbstractExpressionNode {
-    constructor(value) {
+    constructor(value, raw, regex, bigint) {
         super();
         this.value = value;
+        this.raw = raw;
+        this.regex = regex;
+        this.bigint = bigint;
     }
     static fromJSON(node) {
-        return new Literal_1(node.value);
+        if (node.bigint) {
+            return new Literal_1(BigInt(node.bigint), node.raw, undefined, node.bigint);
+        }
+        else if (node.regex) {
+            return new Literal_1(RegExp(node.regex.pattern, node.regex.flags), node.raw, node.regex);
+        }
+        return new Literal_1(node.value, node.raw);
     }
     getValue() {
         return this.value;
+    }
+    getRegex() {
+        return this.regex;
+    }
+    getBigint() {
+        return this.bigint;
+    }
+    geRaw() {
+        return this.raw;
     }
     shareVariables(scopeList) { }
     set() {
@@ -87,55 +127,32 @@ let Literal = Literal_1 = class Literal extends AbstractExpressionNode {
         return computed ? [{ computed: false, path: this.toString() }] : [];
     }
     toString() {
-        return String(this.value);
+        return this.raw ?? String(this.value);
     }
     toJson() {
-        return { value: this.value };
+        if (this.bigint) {
+            return {
+                bigint: this.bigint,
+                raw: this.raw,
+            };
+        }
+        else if (this.regex) {
+            return {
+                regex: { pattern: this.regex?.pattern, flags: this.regex?.flags },
+                raw: this.raw,
+            };
+        }
+        return {
+            value: this.value,
+            raw: this.raw,
+        };
     }
 };
 Literal = Literal_1 = __decorate([
     Deserializer('Literal'),
-    __metadata("design:paramtypes", [Object])
+    __metadata("design:paramtypes", [Object, String, Object, String])
 ], Literal);
 export { Literal };
-let StringLiteral = StringLiteral_1 = class StringLiteral extends Literal {
-    constructor(value, quote) {
-        super(value);
-        const firstChar = value.charAt(0);
-        if (quote) {
-            this.quote = quote;
-            this.value = value;
-        }
-        else if (firstChar === '"' || firstChar == `'` || firstChar === '`') {
-            this.quote = firstChar;
-            this.value = `"${value.substring(1, value.length - 1)}"`;
-        }
-        else {
-            this.quote = '';
-            this.value = value;
-        }
-    }
-    static fromJSON(node) {
-        return new StringLiteral_1(node.value, node.quote);
-    }
-    getQuote() {
-        return this.quote;
-    }
-    toString() {
-        return `${this.quote}${this.value}${this.quote}`;
-    }
-    toJson() {
-        return {
-            value: this.value,
-            quote: this.quote
-        };
-    }
-};
-StringLiteral = StringLiteral_1 = __decorate([
-    Deserializer('StringLiteral'),
-    __metadata("design:paramtypes", [String, String])
-], StringLiteral);
-export { StringLiteral };
 class TemplateArray extends Array {
     constructor(strings) {
         super(...strings);
@@ -229,117 +246,32 @@ TaggedTemplateExpression = __decorate([
     __metadata("design:paramtypes", [Object, Array, Array])
 ], TaggedTemplateExpression);
 export { TaggedTemplateExpression };
-let NumberLiteral = NumberLiteral_1 = class NumberLiteral extends Literal {
-    static fromJSON(node) {
-        return new NumberLiteral_1(node.value);
-    }
-    constructor(value) {
-        super(value);
-    }
-};
-NumberLiteral = NumberLiteral_1 = __decorate([
-    Deserializer('NumberLiteral'),
-    __metadata("design:paramtypes", [Number])
-], NumberLiteral);
-export { NumberLiteral };
-let BigIntLiteral = BigIntLiteral_1 = class BigIntLiteral extends Literal {
-    static fromJSON(node) {
-        return new BigIntLiteral_1(BigInt(String(node.value)));
-    }
-    toString() {
-        return `${this.value}n`;
-    }
-    toJson() {
-        return { value: this.value.toString() };
-    }
-};
-BigIntLiteral = BigIntLiteral_1 = __decorate([
-    Deserializer('BigIntLiteral')
-], BigIntLiteral);
-export { BigIntLiteral };
-let RegExpLiteral = RegExpLiteral_1 = class RegExpLiteral extends Literal {
-    static fromJSON(node) {
-        return new RegExpLiteral_1(new RegExp(node.regex.pattern, node.regex.flags));
-    }
-    toString() {
-        return `${this.value}n`;
-    }
-    toJson() {
-        return {
-            regex: {
-                pattern: this.value.source,
-                flags: this.value.flags
-            }
-        };
-        ;
-    }
-};
-RegExpLiteral = RegExpLiteral_1 = __decorate([
-    Deserializer('RegExpLiteral')
-], RegExpLiteral);
-export { RegExpLiteral };
+// @Deserializer('BigIntLiteral')
+// export class BigIntLiteral extends Literal<bigint> {
+// 	static fromJSON(node: BigIntLiteral): BigIntLiteral {
+// 		return new BigIntLiteral(BigInt(String(node.value)));
+// 	}
+// 	toString(): string {
+// 		return `${this.value}n`;
+// 	}
+// 	toJson(): object {
+// 		return { value: this.value.toString() };
+// 	}
+// }
 export const TRUE = String(true);
 export const FALSE = String(false);
-let BooleanLiteral = class BooleanLiteral extends Literal {
-    static fromJSON(node) {
-        switch (String(node.value)) {
-            case TRUE: return TrueNode;
-            case FALSE:
-            default:
-                return FalseNode;
-        }
-    }
-};
-BooleanLiteral = __decorate([
-    Deserializer('BooleanLiteral')
-], BooleanLiteral);
-export { BooleanLiteral };
 export const NULL = String(null);
 export const UNDEFINED = String(undefined);
-let NullishLiteral = class NullishLiteral extends Literal {
-    static fromJSON(node) {
-        switch (String(node.value)) {
-            case NULL: return NullNode;
-            case UNDEFINED:
-            default: return UndefinedNode;
-        }
-    }
-    toString() {
-        if (typeof this.value === 'undefined') {
-            return UNDEFINED;
-        }
-        return NULL;
-    }
-    toJson() {
-        return { value: this.toString() };
-    }
-};
-NullishLiteral = __decorate([
-    Deserializer('NullishLiteral')
-], NullishLiteral);
-export { NullishLiteral };
-let ThisExpression = class ThisExpression extends Identifier {
-    static fromJSON(node) {
-        return ThisNode;
-    }
-    constructor() {
-        super('this');
-    }
-};
-ThisExpression = __decorate([
-    Deserializer('ThisExpression'),
-    __metadata("design:paramtypes", [])
-], ThisExpression);
-export { ThisExpression };
-export const NullNode = Object.freeze(new NullishLiteral(null));
-export const UndefinedNode = Object.freeze(new NullishLiteral(undefined));
-export const TrueNode = Object.freeze(new BooleanLiteral(true));
-export const FalseNode = Object.freeze(new BooleanLiteral(false));
+export const NullNode = Object.freeze(new Literal(null));
+export const UndefinedNode = Object.freeze(new Literal(undefined));
+export const TrueNode = Object.freeze(new Literal(true));
+export const FalseNode = Object.freeze(new Literal(false));
 export const ThisNode = Object.freeze(new ThisExpression());
 export const GlobalThisNode = Object.freeze(new Identifier('globalThis'));
 export const SymbolNode = Object.freeze(new Identifier('Symbol'));
 export const OfNode = Object.freeze(new Identifier('of'));
 export const AsNode = Object.freeze(new Identifier('as'));
+export const DefaultNode = Object.freeze(new Identifier('default'));
 export const GetIdentifier = Object.freeze(new Identifier('get'));
 export const SetIdentifier = Object.freeze(new Identifier('set'));
 export const AsyncIdentifier = Object.freeze(new Identifier('async'));
@@ -348,4 +280,7 @@ export const ConstructorIdentifier = Object.freeze(new Identifier('constructor')
 export const NameIdentifier = Object.freeze(new Identifier('name'));
 export const EvalIdentifier = Object.freeze(new Identifier('eval'));
 export const ArgumentsIdentifier = Object.freeze(new Identifier('arguments'));
+export const YieldIdentifier = Object.freeze(new Identifier('yield'));
+export const SuperIdentifier = Object.freeze(new Identifier('super'));
+export const LetIdentifier = Object.freeze(new Identifier('let'));
 //# sourceMappingURL=values.js.map

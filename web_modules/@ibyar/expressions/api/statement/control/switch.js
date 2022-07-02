@@ -2,7 +2,7 @@ var SwitchCase_1, DefaultExpression_1, SwitchStatement_1;
 import { __decorate, __metadata } from "../../../../../tslib/tslib.es6.js";
 import { AbstractExpressionNode } from '../../abstract.js';
 import { Deserializer } from '../../deserialize/deserialize.js';
-import { BreakStatement } from './terminate.js';
+import { TerminateReturnType } from './terminate.js';
 import { Identifier } from '../../definition/values.js';
 let SwitchCase = SwitchCase_1 = class SwitchCase extends AbstractExpressionNode {
     constructor(test, consequent) {
@@ -85,6 +85,12 @@ DefaultExpression = DefaultExpression_1 = __decorate([
     __metadata("design:paramtypes", [Object])
 ], DefaultExpression);
 export { DefaultExpression };
+/**
+ * The switch statement evaluates an expression, matching the expression's value to a case clause,
+ * and executes statements associated with that case,
+ * as well as statements in cases that follow the matching case.
+ *
+ */
 let SwitchStatement = SwitchStatement_1 = class SwitchStatement extends AbstractExpressionNode {
     constructor(discriminant, cases) {
         super();
@@ -112,10 +118,13 @@ let SwitchStatement = SwitchStatement_1 = class SwitchStatement extends Abstract
         throw new Error(`SwitchStatement#set() has no implementation.`);
     }
     get(stack) {
+        // need to fix statements execution and support default case
+        // stack = stack.newStack();
         const result = this.discriminant.get(stack);
         const values = this.cases.map(item => item.getTest().get(stack));
         let startIndex = values.findIndex(item => result === item);
         if (startIndex === -1) {
+            // search for default statement
             startIndex = this.cases.findIndex(item => item instanceof DefaultExpression);
             if (startIndex === -1) {
                 return;
@@ -124,8 +133,13 @@ let SwitchStatement = SwitchStatement_1 = class SwitchStatement extends Abstract
         const caseBlock = stack.pushBlockScope();
         for (let index = startIndex; index < this.cases.length; index++) {
             const returnValue = this.cases[index].get(stack);
-            if (returnValue === BreakStatement.BreakSymbol) {
-                break;
+            if (result instanceof TerminateReturnType) {
+                if (result.type === 'continue') {
+                    continue;
+                }
+                else {
+                    break;
+                }
             }
         }
         stack.clearTo(caseBlock);

@@ -58,6 +58,11 @@ OneWayAssignmentExpression = __decorate([
     __metadata("design:paramtypes", [MemberExpression, Object])
 ], OneWayAssignmentExpression);
 export { OneWayAssignmentExpression };
+/**
+ * the default behavior is assign the right hand side to the left hand side.
+ *
+ *
+ */
 let TwoWayAssignmentExpression = class TwoWayAssignmentExpression extends InfixExpressionNode {
     constructor(left, right) {
         super(':=', left, right);
@@ -109,9 +114,11 @@ let TwoWayAssignmentExpression = class TwoWayAssignmentExpression extends InfixE
         return subscriptions;
     }
     subscribe(stack) {
+        // right to left
         const rightTuples = findReactiveScopeByEventMap(this.rightEvents, stack);
         const rtlAction = this.actionRTL(stack);
         const rtlSubscriptions = this.subscribeToEvents(stack, rightTuples, rtlAction);
+        // left to right 
         const leftTuples = findReactiveScopeByEventMap(this.leftEvents, stack);
         const ltrAction = this.actionLTR(stack);
         const ltrSubscriptions = this.subscribeToEvents(stack, leftTuples, ltrAction);

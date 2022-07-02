@@ -4,14 +4,17 @@ import { AbstractExpressionNode } from '../abstract.js';
 import { Deserializer } from '../deserialize/deserialize.js';
 import { RestElement } from '../computing/rest.js';
 let Property = Property_1 = class Property extends AbstractExpressionNode {
-    constructor(key, value, kind) {
+    constructor(key, value, kind, method, shorthand, computed) {
         super();
         this.key = key;
         this.value = value;
         this.kind = kind;
+        this.method = method;
+        this.shorthand = shorthand;
+        this.computed = computed;
     }
     static fromJSON(node, deserializer) {
-        return new Property_1(deserializer(node.key), deserializer(node.value), node.kind);
+        return new Property_1(deserializer(node.key), deserializer(node.value), node.kind, node.method, node.shorthand, node.computed);
     }
     static visit(node, visitNode) {
         visitNode(node.key);
@@ -63,7 +66,34 @@ let Property = Property_1 = class Property extends AbstractExpressionNode {
         return this.key.dependencyPath(computed).concat(this.value.dependencyPath(computed));
     }
     toString() {
-        return `${this.key.toString()}: ${this.value.toString()}`;
+        const key = this.computed ? `[${this.key.toString()}]` : this.key.toString();
+        if (this.shorthand) {
+            return key;
+        }
+        let value = '';
+        switch (this.kind) {
+            case 'get':
+            case 'set':
+                const expression = this.value;
+                value += this.kind;
+                value += ' ' + key;
+                value += expression.paramsAndBodyToString();
+                break;
+            case 'init':
+                if (this.method) {
+                    const expression = this.value;
+                    value += ' ' + key;
+                    value += expression.paramsAndBodyToString();
+                }
+                else {
+                    value += this.value.toString();
+                    return `${key}: ${value}`;
+                }
+                break;
+            default:
+                break;
+        }
+        return value;
     }
     toJson() {
         return {
@@ -75,7 +105,7 @@ let Property = Property_1 = class Property extends AbstractExpressionNode {
 };
 Property = Property_1 = __decorate([
     Deserializer('Property'),
-    __metadata("design:paramtypes", [Object, Object, String])
+    __metadata("design:paramtypes", [Object, Object, String, Boolean, Boolean, Boolean])
 ], Property);
 export { Property };
 let ObjectExpression = ObjectExpression_1 = class ObjectExpression extends AbstractExpressionNode {

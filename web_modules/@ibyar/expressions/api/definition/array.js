@@ -9,35 +9,35 @@ let ArrayExpression = ArrayExpression_1 = class ArrayExpression extends Abstract
         this.elements = elements;
     }
     static fromJSON(node, deserializer) {
-        return new ArrayExpression_1(node.elements.map(expression => deserializer(expression)));
+        return new ArrayExpression_1(node.elements.map(element => element ? deserializer(element) : null));
     }
     static visit(node, visitNode) {
-        node.elements.forEach(visitNode);
+        node.elements.forEach(element => element && visitNode(element));
     }
     getElements() {
         return this.elements;
     }
     shareVariables(scopeList) {
-        this.elements.forEach(item => item.shareVariables(scopeList));
+        this.elements.forEach(item => item?.shareVariables(scopeList));
     }
     set(stack) {
         throw new Error("ArrayExpression#set() has no implementation.");
     }
     get(stack) {
-        return this.elements.map(item => item.get(stack));
+        return this.elements.map(item => item?.get(stack));
     }
     dependency(computed) {
-        return this.elements.flatMap(item => item.dependency(computed));
+        return this.elements.filter(item => item).flatMap(item => item.dependency(computed));
     }
     dependencyPath(computed) {
-        return this.elements.flatMap(item => item.dependencyPath(computed));
+        return this.elements.filter(item => item).flatMap(item => item.dependencyPath(computed));
     }
     toString() {
-        return this.elements.map(item => item.toString()).toString();
+        return this.elements.map(item => item?.toString()).toString();
     }
     toJson() {
         return {
-            elements: this.elements.map(item => item.toJSON())
+            elements: this.elements.map(item => item?.toJSON())
         };
     }
 };
@@ -52,10 +52,10 @@ let ArrayPattern = ArrayPattern_1 = class ArrayPattern extends AbstractExpressio
         this.elements = elements;
     }
     static fromJSON(node, deserializer) {
-        return new ArrayPattern_1(node.elements.map(expression => deserializer(expression)));
+        return new ArrayPattern_1(node.elements.map(expression => expression ? deserializer(expression) : null));
     }
     static visit(node, visitNode) {
-        node.elements.forEach(visitNode);
+        node.elements.forEach(expression => expression && visitNode(expression));
     }
     getElements() {
         return this.elements;
@@ -78,6 +78,9 @@ let ArrayPattern = ArrayPattern_1 = class ArrayPattern extends AbstractExpressio
     declareVariableFromArray(stack, values) {
         for (let index = 0; index < this.elements.length; index++) {
             const elem = this.elements[index];
+            if (elem == null) {
+                continue;
+            }
             if (elem instanceof RestElement) {
                 const rest = values.slice(index);
                 elem.declareVariable(stack, rest);
@@ -94,6 +97,9 @@ let ArrayPattern = ArrayPattern_1 = class ArrayPattern extends AbstractExpressio
                 break;
             }
             const elem = this.elements[index++];
+            if (elem == null) {
+                continue;
+            }
             if (elem instanceof RestElement) {
                 const rest = [iteratorResult.value];
                 while (!iteratorResult.done) {
@@ -110,17 +116,17 @@ let ArrayPattern = ArrayPattern_1 = class ArrayPattern extends AbstractExpressio
         }
     }
     dependency(computed) {
-        return this.elements.flatMap(item => item.dependency(computed));
+        return this.elements.filter(item => item).flatMap(item => item.dependency(computed));
     }
     dependencyPath(computed) {
-        return this.elements.flatMap(item => item.dependencyPath(computed));
+        return this.elements.filter(item => item).flatMap(item => item.dependencyPath(computed));
     }
     toString() {
-        return this.elements.map(item => item.toString()).toString();
+        return this.elements.map(item => item?.toString()).toString();
     }
     toJson() {
         return {
-            elements: this.elements.map(item => item.toJSON())
+            elements: this.elements.map(item => item?.toJSON())
         };
     }
 };

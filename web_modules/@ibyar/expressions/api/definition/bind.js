@@ -2,6 +2,12 @@ var BindExpression_1;
 import { __decorate, __metadata } from "../../../../tslib/tslib.es6.js";
 import { Deserializer } from '../deserialize/deserialize.js';
 import { AbstractExpressionNode } from '../abstract.js';
+/**
+ * ```js
+ * const x = {method: function(){...}};
+ * const z = x::method;
+ * ```
+ */
 let BindExpression = BindExpression_1 = class BindExpression extends AbstractExpressionNode {
     constructor(object, property, computed, optional = false) {
         super();

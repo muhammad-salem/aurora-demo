@@ -2,6 +2,11 @@ import { getAllAttributes, isFormElement } from '../../elements/index.js';
 import { ToCamelCase } from '../utils/utils.js';
 import { baseFactoryView } from './base-view.js';
 import { baseFormFactoryView } from './form-view.js';
+/**
+ *
+ * @param modelClass
+ * @param componentRef
+ */
 export function initCustomElementView(modelClass, componentRef) {
     const htmlParent = componentRef.extend.classRef;
     let viewClass;
@@ -69,6 +74,7 @@ export function initCustomElementView(modelClass, componentRef) {
     const observedAttributes = componentRef.inputs.map(input => input.viewAttribute);
     Reflect.set(viewClass, 'observedAttributes', observedAttributes);
     Reflect.set(viewClass, 'allAttributes', defaultAttributes.concat(observedAttributes));
+    // https://html.spec.whatwg.org/multipage/custom-elements.html#custom-elements-face-example
     if (false) {
         Object.defineProperty(viewClass, 'formAssociated', {
             get() {

@@ -14,7 +14,7 @@ export class TemplateParser {
                 return node;
             }
         }
-        else {
+        else /* if (template.content.childNodes.length > 1)*/ {
             const children = Array.prototype.slice.call(template.content.childNodes)
                 .map(item => this.createComponent(item))
                 .flatMap(function (toFlat) {
@@ -36,6 +36,10 @@ export class TemplateParser {
             return new CommentNode(child.textContent || '');
         }
         else {
+            /**
+             * can't detect directives in template, as '*' not allowed as qualified attribute name
+             * also all attributes names will be 'lower case'
+             */
             const element = child;
             const node = new DomElementNode(element.tagName.toLowerCase(), element.attributes.getNamedItem('is')?.value);
             for (let i = 0; i < element.attributes.length; i++) {

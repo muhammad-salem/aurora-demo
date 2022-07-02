@@ -1,3 +1,6 @@
+/**
+ * @see https://html.spec.whatwg.org/multipage/indices.html#elements-3
+ */
 export const GlobalAttributes = [
     'class',
     'id',

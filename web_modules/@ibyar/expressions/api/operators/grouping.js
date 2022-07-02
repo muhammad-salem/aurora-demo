@@ -2,6 +2,13 @@ var GroupingExpression_1;
 import { __decorate, __metadata } from "../../../../tslib/tslib.es6.js";
 import { AbstractExpressionNode } from '../abstract.js';
 import { Deserializer } from '../deserialize/deserialize.js';
+/**
+ * The grouping operator consists of a pair of parentheses around
+ * an expression or sub-expression to override the normal operator
+ * precedence so that expressions with lower precedence can be evaluated
+ * before an expression with higher priority.
+ * As it sounds, it groups what's inside of the parentheses.
+ */
 let GroupingExpression = GroupingExpression_1 = class GroupingExpression extends AbstractExpressionNode {
     constructor(node) {
         super();

@@ -1,4 +1,21 @@
 import { JavaScriptParser, Stack } from '../../expressions/index.js';
+/**
+ * ```ts
+ * class View {
+ *
+ *	@HostListener('window:load', ['$event.target', '"load"'])
+ * 	@HostListener('click', ['$event.target', '"click"'])
+ * 	public onClick(target: any, type: string){
+ * 		console.log(target, type);
+ * 	}
+ * }
+ * ```
+ *
+ * window.addEventListener('load', $event => listener($event.target, 'load'));
+ *
+ * view.addEventListener('click', $event => listener($event.target, 'click'));
+ *
+ */
 export class HostListenerHandler {
     constructor(listenerRef, element, elementScope) {
         this.listenerRef = listenerRef;
@@ -19,7 +36,7 @@ export class HostListenerHandler {
     onInit() {
         const args = this.listenerRef.args ?? [];
         const array = `[${args.join(', ')}]`;
-        this.argumentsExpression = JavaScriptParser.parse(array);
+        this.argumentsExpression = JavaScriptParser.parseScript(array);
         if (this.listenerRef.eventName.includes(':')) {
             const [eventSource, eventName] = this.listenerRef.eventName.split(':', 2);
             this.eventName = eventName;

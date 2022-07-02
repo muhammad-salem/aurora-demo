@@ -1,6 +1,7 @@
 export * from './expression.js';
 export * from './abstract.js';
 export * from './deserialize/deserialize.js';
+export * from './program.js';
 export * from './definition/values.js';
 export * from './definition/array.js';
 export * from './definition/comment.js';
@@ -10,6 +11,7 @@ export * from './definition/bind.js';
 export * from './definition/object.js';
 export * from './definition/statement.js';
 export * from './computing/call.js';
+export * from './computing/debugger.js';
 export * from './computing/new.js';
 export * from './computing/return.js';
 export * from './computing/spread.js';

@@ -11,6 +11,7 @@ export class Injector {
         if (currentInstance)
             return currentInstance;
         const params = Reflect.getMetadata('design:paramtypes', constructor);
+        // We need to init each constructor function into it's instance
         if (params) {
             const argumentsInstances = params.map((paramter) => this.constructObject(paramter));
             currentInstance = new constructor(...argumentsInstances);

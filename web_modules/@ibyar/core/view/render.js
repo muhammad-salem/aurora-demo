@@ -41,10 +41,10 @@ export class ComponentRender {
             }
             let rootRef;
             if (this.componentRef.isShadowDom) {
-                if (this.view.shadowRoot) {
+                if (this.view.shadowRoot /* OPEN MODE */) {
                     rootRef = this.view.shadowRoot;
                 }
-                else {
+                else /* CLOSED MODE*/ {
                     rootRef = Reflect.get(this.view, '_shadowRoot');
                     Reflect.deleteProperty(this.view, '_shadowRoot');
                 }
@@ -106,6 +106,7 @@ export class ComponentRender {
             const stack = directiveStack.copyStack();
             const templateRef = new TemplateRefImpl(this, directive.node, stack, directive.templateExpressions ?? []);
             const viewContainerRef = new ViewContainerRefImpl(parentNode, comment);
+            // structural directive selector
             const StructuralDirectiveClass = directiveRef.modelClass;
             const structural = new StructuralDirectiveClass(templateRef, viewContainerRef, host);
             templateRef.host = structural;
@@ -123,6 +124,8 @@ export class ComponentRender {
             }
         }
         else {
+            // didn't find directive or it is not define yet.
+            // class registry should have 'when defined' callback
         }
     }
     createComment(node) {
@@ -151,6 +154,11 @@ export class ComponentRender {
         if (child instanceof DomElementNode) {
             if (this.isTemplateRefName(child)) {
                 const templateRefName = child.templateRefName;
+                // const oldRef = this.templateNameScope.get(templateRefName.name);
+                // if (oldRef) {
+                // 	return;
+                // }
+                // TODO: extract template expression
                 const templateRef = new TemplateRefImpl(this, new DomFragmentNode(child.children), contextStack.copyStack(), []);
                 this.templateNameScope.set(templateRefName.name, templateRef);
                 return;
@@ -193,9 +201,11 @@ export class ComponentRender {
             }
         }
         else if (isTagNameNative(node.tagName)) {
+            // native tags // and custom tags can be used her
             element = document.createElement(node.tagName, node.is ? { is: node.is } : undefined);
         }
         else {
+            // html unknown element
             element = document.createElement(node.tagName);
         }
         if (isHTMLComponent(element)) {
@@ -260,6 +270,9 @@ export class ComponentRender {
         const subscriptions = [];
         if (node.attributes?.length) {
             node.attributes.forEach(attr => {
+                /**
+                 * <input id="23" name="person-name" />
+                 */
                 const isAttr = hasAttr(element, attr.name);
                 if (isAttr) {
                     if (attr.value === false) {
@@ -298,6 +311,15 @@ export class ComponentRender {
         if (node.outputs?.length) {
             node.outputs.forEach(event => {
                 let listener;
+                /**
+                 * <a (click)="onLinkClick($event)"></a>
+                 * <a @click="onLinkClick($event)"></a>
+                 * <input [(value)]="person.name" />
+                 * <input (value)="person.name" />
+                 * <!-- <input (value)="person.name = $event" /> -->
+                 *
+                 * TODO: diff of event listener and back-way data binding
+                 */
                 if (typeof event.value === 'string') {
                     listener = ($event) => {
                         const stack = contextStack.copyStack();
@@ -307,7 +329,8 @@ export class ComponentRender {
                         stack.reattach();
                     };
                 }
-                else {
+                else /* if (typeof event.sourceHandler === 'function')*/ {
+                    // let eventName: keyof HTMLElementEventMap = event.eventName;
                     listener = event.value;
                 }
                 element.addEventListener(event.name, listener);
@@ -368,6 +391,8 @@ export class ComponentRender {
                 contextStack.reattach();
             });
         }
+        // TODO: 
+        // check host binding
         return subscriptions;
     }
 }

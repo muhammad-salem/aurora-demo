@@ -37,9 +37,11 @@ export class TemplateRefImpl extends TemplateRef {
         if (!this.templateExpressions?.length) {
             return;
         }
+        // init value
         this.templateExpressions.forEach(expression => {
             expression.get(sandBox);
         });
+        // subscribe to changes
         const scopeSubscriptions = [];
         this.templateExpressions.forEach(expression => {
             const events = expression.events();

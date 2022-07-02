@@ -15,11 +15,14 @@ export class Stack {
         if (resolver && moduleSource) {
             this.resolver = resolver;
             this.moduleSource = moduleSource;
+            // init module scope for import and export
             this.moduleScope = new ModuleScope(this.initModuleContext());
             this.pushScope(this.moduleScope);
+            // for the rest of module body
             this.pushReactiveScope();
         }
         else {
+            // not a module scope
             this.pushBlockScope();
         }
         finalizerRegister(this, this.onDestroyActions, this);
@@ -140,6 +143,7 @@ export class Stack {
     }
     importModule(source, importCallOptions) {
         if (!this.resolver || !this.moduleScope) {
+            // should o the parse and import the module
             throw new Error('Module Resolver is undefined');
         }
         return this.resolver.resolve(source, this.moduleScope, importCallOptions);
@@ -223,6 +227,8 @@ export class ModuleScopeResolver {
         }
         const webScope = new WebModuleScope();
         this.modules.push([source, webScope]);
+        // active later
+        // import(source, importCallOptions)
         import(source).then(module => {
             webScope.updateContext(module);
         });

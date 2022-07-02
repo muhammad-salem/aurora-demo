@@ -23,7 +23,7 @@ export function baseFactoryView(htmlElementType) {
                     delegatesFocus: componentRef.shadowDomDelegatesFocus
                 });
             }
-            const model = new modelClass();
+            const model = new modelClass( /* resolve dependency injection*/);
             this._model = model;
             const modelScope = ElementModelReactiveScope.for(model);
             this._proxyModel = modelScope.getContextProxy();
@@ -44,6 +44,7 @@ export function baseFactoryView(htmlElementType) {
                     elementScope.emit(input.viewAttribute, newValue, oldValue);
                 });
             });
+            // if property of the model has view decorator
             if (this._componentRef.view) {
                 Reflect.set(this._model, this._componentRef.view, this);
             }
@@ -175,8 +176,11 @@ export function baseFactoryView(htmlElementType) {
             if (isAfterContentChecked(this._model)) {
                 this._model.afterContentChecked.call(this._proxyModel);
             }
+            // do once
             if (this.childNodes.length === 0) {
+                // setup ui view
                 this._render.initView();
+                // init Host Listener events
                 this._render.initHostListener();
             }
             if (isAfterViewInit(this._model)) {
@@ -198,6 +202,7 @@ export function baseFactoryView(htmlElementType) {
             };
         }
         initOuterAttribute(attr) {
+            // [window, this] scop
             let elementAttr = attr.name;
             let modelProperty = attr.value;
             if (elementAttr.startsWith('[')) {
@@ -207,7 +212,9 @@ export function baseFactoryView(htmlElementType) {
                 }
             }
             else if (elementAttr.startsWith('(')) {
+                // (elementAttr)="modelProperty()"
                 elementAttr = elementAttr.substring(1, elementAttr.length - 1);
+                // this.handleEvent(element, elementAttr, viewProperty);
                 modelProperty = modelProperty.endsWith('()') ?
                     modelProperty.substring(0, modelProperty.length - 2) : modelProperty;
                 let callback = Reflect.get(window, modelProperty);
@@ -218,6 +225,7 @@ export function baseFactoryView(htmlElementType) {
             else if (elementAttr.startsWith('on')) {
                 const modelEvent = this.getEventEmitter(elementAttr.substring(2));
                 if (modelEvent) {
+                    // modelEvent.subscribe(listener);
                     modelProperty = modelProperty.endsWith('()') ?
                         modelProperty.substring(0, modelProperty.length - 2) : modelProperty;
                     let listener = Reflect.get(window, modelProperty);
@@ -231,16 +239,19 @@ export function baseFactoryView(htmlElementType) {
             }
         }
         adoptedCallback() {
+            // restart the process
             this.innerHTML = '';
             this.connectedCallback();
         }
         disconnectedCallback() {
+            // notify first, then call model.onDestroy func
             if (isOnDestroy(this._model)) {
                 this._model.onDestroy.call(this._proxyModel);
             }
             this.subscriptions.forEach(sub => sub.unsubscribe());
             this.subscriptions.splice(0, this.subscriptions.length);
         }
+        // events api
         addEventListener(eventName, listener, options) {
             if ('on' + eventName in this) {
                 super.addEventListener(eventName, (event) => {

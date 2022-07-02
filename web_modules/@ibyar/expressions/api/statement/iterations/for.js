@@ -2,7 +2,12 @@ var ForNode_1, ForOfNode_1, ForInNode_1, ForAwaitOfNode_1;
 import { __decorate, __metadata } from "../../../../../tslib/tslib.es6.js";
 import { AbstractExpressionNode, ReturnValue } from '../../abstract.js';
 import { Deserializer } from '../../deserialize/deserialize.js';
-import { BreakStatement, ContinueStatement } from '../control/terminate.js';
+import { TerminateReturnType } from '../control/terminate.js';
+/**
+ * The if statement executes a statement if a specified condition is truthy.
+ * If the condition is falsy, another statement can be executed.
+ *
+ */
 let ForNode = ForNode_1 = class ForNode extends AbstractExpressionNode {
     constructor(body, init, test, update) {
         super();
@@ -45,11 +50,15 @@ let ForNode = ForNode_1 = class ForNode extends AbstractExpressionNode {
         const forBlock = stack.pushBlockScope();
         for (this.init?.get(stack); this.test?.get(stack) ?? true; this.update?.get(stack)) {
             const result = this.body.get(stack);
-            if (ContinueStatement.ContinueSymbol === result) {
-                continue;
-            }
-            if (BreakStatement.BreakSymbol === result) {
-                break;
+            // useless case, as it at the end of for statement
+            // an array/block statement, should return last signal
+            if (result instanceof TerminateReturnType) {
+                if (result.type === 'continue') {
+                    continue;
+                }
+                else {
+                    break;
+                }
             }
             if (result instanceof ReturnValue) {
                 stack.clearTo(forBlock);
@@ -127,11 +136,15 @@ let ForOfNode = ForOfNode_1 = class ForOfNode extends AbstractExpressionNode {
             const forBlock = stack.pushBlockScope();
             this.left.declareVariable(stack, iterator);
             const result = this.body.get(stack);
-            if (ContinueStatement.ContinueSymbol === result) {
-                continue;
-            }
-            else if (BreakStatement.BreakSymbol === result) {
-                break;
+            // useless case, as it at the end of for statement
+            // an array/block statement, should return last signal
+            if (result instanceof TerminateReturnType) {
+                if (result.type === 'continue') {
+                    continue;
+                }
+                else {
+                    break;
+                }
             }
             else if (result instanceof ReturnValue) {
                 stack.clearTo(forBlock);
@@ -164,6 +177,7 @@ ForOfNode = ForOfNode_1 = __decorate([
 ], ForOfNode);
 export { ForOfNode };
 let ForInNode = ForInNode_1 = class ForInNode extends AbstractExpressionNode {
+    // variable of iterable
     constructor(left, right, body) {
         super();
         this.left = left;
@@ -200,11 +214,15 @@ let ForInNode = ForInNode_1 = class ForInNode extends AbstractExpressionNode {
             const forBlock = stack.pushBlockScope();
             this.left.declareVariable(stack, iterator);
             const result = this.body.get(stack);
-            if (ContinueStatement.ContinueSymbol === result) {
-                continue;
-            }
-            else if (BreakStatement.BreakSymbol === result) {
-                break;
+            // useless case, as it at the end of for statement
+            // an array/block statement, should return last signal
+            if (result instanceof TerminateReturnType) {
+                if (result.type === 'continue') {
+                    continue;
+                }
+                else {
+                    break;
+                }
             }
             else if (result instanceof ReturnValue) {
                 stack.clearTo(forBlock);
@@ -237,6 +255,7 @@ ForInNode = ForInNode_1 = __decorate([
 ], ForInNode);
 export { ForInNode };
 let ForAwaitOfNode = ForAwaitOfNode_1 = class ForAwaitOfNode extends AbstractExpressionNode {
+    // variable of iterable
     constructor(left, right, body) {
         super();
         this.left = left;

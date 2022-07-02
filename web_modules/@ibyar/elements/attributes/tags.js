@@ -14,6 +14,9 @@ function isMedia(name) {
     return name.includes('video') || name.includes('audio');
 }
 export const DefaultTag = Object.freeze({ classRef: HTMLElement });
+/**
+ * see https://html.spec.whatwg.org/multipage/indices.html#element-interfaces
+ */
 export const NativeTags = [
     { name: 'a', classRef: HTMLAnchorElement },
     { name: 'abbr', classRef: HTMLElement },
@@ -42,6 +45,7 @@ export const NativeTags = [
     { name: 'del', classRef: HTMLModElement },
     { name: 'details', classRef: HTMLDetailsElement },
     { name: 'dfn', classRef: HTMLElement },
+    // { name: 'dialog', classRef: window.HTMLDialogElement || HTMLElement },
     { name: 'div', classRef: HTMLDivElement },
     { name: 'dl', classRef: HTMLDListElement },
     { name: 'dt', classRef: HTMLElement },
@@ -326,6 +330,11 @@ export function findByTagName(tagName) {
 export function isTagNameNative(tagName) {
     return (tagName in HTMLElementTagNameMap) || (tagName in SVGElementTagNameMap);
 }
+/**
+ * see https://html.spec.whatwg.org/multipage/custom-elements.html#valid-custom-element-name
+ * see https://github.com/mathiasbynens/mothereff.in/blob/master/custom-element-name/vendor/is-potential-custom-element-name.js
+ * @param tagName
+ */
 export const CustomElementRegex = /^[a-z](?:[\-\.0-9_a-z\xB7\xC0-\xD6\xD8-\xF6\xF8-\u037D\u037F-\u1FFF\u200C\u200D\u203F\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]|[\uD800-\uDB7F][\uDC00-\uDFFF])*-(?:[\-\.0-9_a-z\xB7\xC0-\xD6\xD8-\xF6\xF8-\u037D\u037F-\u1FFF\u200C\u200D\u203F\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]|[\uD800-\uDB7F][\uDC00-\uDFFF])*$/;
 export function isValidCustomElementName(tagName) {
     return CustomElementRegex.test(tagName);

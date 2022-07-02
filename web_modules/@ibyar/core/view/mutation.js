@@ -111,6 +111,7 @@ export class ElementMutation {
                 switch (mut.type) {
                     case 'childList':
                         {
+                            // insert/remove events
                             if (mut.removedNodes.length > 0 && this.observables.has(mut.target)) {
                                 const observable = this.observables.get(mut.target);
                                 mut.removedNodes.forEach(node => observable.emitNodeRemove(node));

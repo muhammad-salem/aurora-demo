@@ -4,6 +4,18 @@ import { AbstractExpressionNode } from '../abstract.js';
 import { Deserializer } from '../deserialize/deserialize.js';
 import { SpreadElement } from '../computing/spread.js';
 import { MemberExpression } from '../definition/member.js';
+/**
+ * pipeline ('|>') operator support syntax:
+ *  param |> func
+ *  param |> func:arg1:arg2:arg3
+ *  param |> func:arg1:?:arg3
+ *  param |> func:arg1:?:arg3:?:arg5
+ *  param |> func:arg1:...?:arg3
+ *
+ *  param |> func(arg1, arg2, arg3)
+ *  param |> func(arg1, ?, arg3)
+ *  param |> func(arg1, ?, arg3, arg4, ?, arg6)
+ */
 let PipelineExpression = PipelineExpression_1 = class PipelineExpression extends AbstractExpressionNode {
     constructor(left, right, params = []) {
         super();

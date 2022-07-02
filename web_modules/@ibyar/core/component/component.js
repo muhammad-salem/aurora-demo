@@ -140,6 +140,7 @@ export class Components {
                 buildExpressionNodes(componentRef.template);
             }
             else {
+                // didn't find this template in 'index.html' document
             }
         }
         componentRef.inputs || (componentRef.inputs = []);

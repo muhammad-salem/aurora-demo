@@ -2,6 +2,7 @@ var ExpressionStatement_1;
 import { __decorate, __metadata } from "../../../../tslib/tslib.es6.js";
 import { AbstractExpressionNode } from '../abstract.js';
 import { Deserializer } from '../deserialize/deserialize.js';
+import { isDeclarationExpression } from '../utils.js';
 let ExpressionStatement = ExpressionStatement_1 = class ExpressionStatement extends AbstractExpressionNode {
     constructor(body) {
         super();
@@ -34,7 +35,10 @@ let ExpressionStatement = ExpressionStatement_1 = class ExpressionStatement exte
         return this.body.flatMap(node => node.dependencyPath(computed));
     }
     toString() {
-        return this.body.map(node => node.toString()).join('; ').concat(';');
+        return this.body
+            .map(node => ({ insert: !isDeclarationExpression(node), string: node.toString() }))
+            .map(ref => `${ref.string}${ref.insert ? ';' : ''}`)
+            .join('\n');
     }
     toJson() {
         return { body: this.body.map(exp => exp.toJSON()) };

@@ -2,7 +2,13 @@ var WhileNode_1, DoWhileNode_1;
 import { __decorate, __metadata } from "../../../../../tslib/tslib.es6.js";
 import { AbstractExpressionNode, ReturnValue } from '../../abstract.js';
 import { Deserializer } from '../../deserialize/deserialize.js';
-import { BreakStatement, ContinueStatement } from '../control/terminate.js';
+import { TerminateReturnType } from '../control/terminate.js';
+/**
+ * The while statement creates a loop that executes a specified
+ * statement as long as the test condition evaluates to true.
+ * The condition is evaluated before executing the statement.
+ *
+ */
 let WhileNode = WhileNode_1 = class WhileNode extends AbstractExpressionNode {
     constructor(test, body) {
         super();
@@ -34,11 +40,15 @@ let WhileNode = WhileNode_1 = class WhileNode extends AbstractExpressionNode {
         const whileBlock = stack.pushBlockScope();
         while (condition) {
             const result = this.body.get(stack);
-            if (ContinueStatement.ContinueSymbol === result) {
-                continue;
-            }
-            if (BreakStatement.BreakSymbol === result) {
-                break;
+            // useless case, as it at the end of for statement
+            // an array/block statement, should return last signal
+            if (result instanceof TerminateReturnType) {
+                if (result.type === 'continue') {
+                    continue;
+                }
+                else {
+                    break;
+                }
             }
             if (result instanceof ReturnValue) {
                 stack.clearTo(whileBlock);
@@ -99,11 +109,15 @@ let DoWhileNode = DoWhileNode_1 = class DoWhileNode extends AbstractExpressionNo
         const whileBlock = stack.pushBlockScope();
         do {
             const result = this.body.get(stack);
-            if (ContinueStatement.ContinueSymbol === result) {
-                continue;
-            }
-            if (BreakStatement.BreakSymbol === result) {
-                break;
+            // useless case, as it at the end of for statement
+            // an array/block statement, should return last signal
+            if (result instanceof TerminateReturnType) {
+                if (result.type === 'continue') {
+                    continue;
+                }
+                else {
+                    break;
+                }
             }
             if (result instanceof ReturnValue) {
                 stack.clearTo(whileBlock);

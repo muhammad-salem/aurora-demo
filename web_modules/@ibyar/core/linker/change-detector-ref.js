@@ -15,6 +15,9 @@ class ChangeDetectorRefImpl extends ChangeDetectorRef {
         this.changeDetectorRef.markForCheck();
     }
 }
+/**
+ * create a change Detector Reference by property key.
+ */
 export function createChangeDetectorRef(scope, propertyKey) {
     const changeDetectorRef = {
         detach() {

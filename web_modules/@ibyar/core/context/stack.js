@@ -1,6 +1,7 @@
 import { ReadOnlyScope, Stack } from '../../expressions/index.js';
 import { PipeProvider, AsyncPipeProvider } from '../pipe/pipe.js';
 const Constant = {
+    // math
     Math: {
         E: Math.E,
         LN10: Math.LN10,
@@ -46,13 +47,16 @@ const Constant = {
         fround: Math.fround,
         cbrt: Math.cbrt,
     },
+    // object
     Object,
+    // number
     parseFloat,
     parseInt,
     Infinity,
     NaN,
     isNaN,
     isFinite,
+    // array
     Array: {
         isArray: Array.isArray,
     },

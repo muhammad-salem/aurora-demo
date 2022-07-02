@@ -1,3 +1,8 @@
+/**
+ *  form-associated elements
+ * A number of the elements are form-associated elements, which means they can have a form owner.
+ * @param tagName
+ */
 export function isFormElement(tagName) {
     switch (tagName) {
         case 'button':
@@ -17,6 +22,11 @@ export function isFormElement(tagName) {
         default: return false;
     }
 }
+/**
+ * submittable elements
+ * Denotes elements that can be used for constructing the entry list when a form element is submitted.
+ * @param tagName
+ */
 export function isSubmittableElement(tagName) {
     switch (tagName) {
         case 'button':
@@ -28,6 +38,10 @@ export function isSubmittableElement(tagName) {
         default: return false;
     }
 }
+/**
+ * Resettable elements
+ * @param tagName
+ */
 export function isResettableElement(tagName) {
     switch (tagName) {
         case 'input':
@@ -38,6 +52,11 @@ export function isResettableElement(tagName) {
         default: return false;
     }
 }
+/**
+ * Autocapitalize-inheriting elements
+ * Denotes elements that inherit the autocapitalize attribute from their form owner.
+ * @param tagName
+ */
 export function isAutocapitalizeInheritingElement(tagName) {
     switch (tagName) {
         case 'button':
@@ -50,6 +69,14 @@ export function isAutocapitalizeInheritingElement(tagName) {
         default: return false;
     }
 }
+/**
+ * Labelable Elements
+ * Some elements, not all of them form-associated, are categorized as labelable elements.
+ * These are elements that can be associated with a label element.
+ *
+ * this function ignore the 'type' attribute of 'input' tage as '<input type="hidden" />' is consdered as not labled element
+ * @param tagName the tested tag name
+ */
 export function isFormLabelableElement(tagName) {
     switch (tagName) {
         case 'button':

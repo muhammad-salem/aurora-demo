@@ -58,6 +58,7 @@ export class ViewContainerRefImpl extends ViewContainerRef {
             this.detach(oldIndex);
         }
         else {
+            // should remove it from the container first
             viewRef.detach();
         }
         return this.insert(viewRef, newIndex);

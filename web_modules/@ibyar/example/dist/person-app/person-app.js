@@ -1,5 +1,10 @@
 import { __decorate, __metadata } from "../../../../tslib/tslib.es6.js";
 import { Component, Input, View, HostListener } from '../../../aurora/index.js';
+// import structural directives first
+// so it can register itself with the html parser as a node
+export * from '../directive/add-note.directive.js';
+export * from '../directive/notify-user.directive.js';
+export * from '../directive/time.directive.js';
 let PersonApp = class PersonApp {
     constructor() {
         this.appVersion = '2022.05.01';

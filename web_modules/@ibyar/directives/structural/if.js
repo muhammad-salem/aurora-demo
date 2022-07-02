@@ -13,6 +13,7 @@ let IfThenElseDirective = class IfThenElseDirective extends StructuralDirective 
     set thenTemplateRef(template) {
         this._thenTemplateRef = template;
         if (this._condition) {
+            // need to force rendering the new template in case of false condition
             this._lastCondition = null;
         }
         this._updateUI();
@@ -20,6 +21,7 @@ let IfThenElseDirective = class IfThenElseDirective extends StructuralDirective 
     set elseTemplateRef(template) {
         this._elseTemplateRef = template;
         if (!this._condition) {
+            // need to force rendering the new template in case of false condition
             this._lastCondition = null;
         }
         this._updateUI();

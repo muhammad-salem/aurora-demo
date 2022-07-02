@@ -2,6 +2,13 @@ var EmptyStatement_1;
 import { __decorate, __metadata } from "../../../../../tslib/tslib.es6.js";
 import { AbstractExpressionNode } from '../../abstract.js';
 import { Deserializer } from '../../deserialize/deserialize.js';
+/**
+ * The empty statement is a semicolon (;) indicating that no statement will be executed,
+ * even if JavaScript syntax requires one.
+ * The opposite behavior, where you want multiple statements,
+ * but JavaScript only allows a single one, is possible using a block statement,
+ * which combines several statements into a single one.
+ */
 let EmptyStatement = EmptyStatement_1 = class EmptyStatement extends AbstractExpressionNode {
     constructor() {
         super();

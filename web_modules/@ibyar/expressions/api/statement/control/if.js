@@ -2,6 +2,11 @@ var IfStatement_1;
 import { __decorate, __metadata } from "../../../../../tslib/tslib.es6.js";
 import { AbstractExpressionNode } from '../../abstract.js';
 import { Deserializer } from '../../deserialize/deserialize.js';
+/**
+ * The if statement executes a statement if a specified condition is truthy.
+ * If the condition is falsy, another statement can be executed.
+ *
+ */
 let IfStatement = IfStatement_1 = class IfStatement extends AbstractExpressionNode {
     constructor(test, consequent, alternate) {
         super();

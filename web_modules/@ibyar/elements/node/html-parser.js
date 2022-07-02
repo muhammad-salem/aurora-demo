@@ -45,7 +45,7 @@ export class NodeParser {
         }
         if (this.stackTrace.length > 0) {
             console.error(this.stackTrace);
-            throw new Error(`error parsing html, had ${this.stackTrace.length} element, with no closing tag`);
+            throw new Error(`error parsing html, had ${this.stackTrace.length} element, [${this.stackTrace.map(dom => dom.tagName).join(', ')}], with no closing tag`);
         }
         let stack = this.childStack;
         this.reset();
@@ -118,7 +118,7 @@ export class NodeParser {
         if (token === '>') {
             if (!isEmptyElement(this.currentNode.tagName)
                 && this.currentNode.tagName.trim().toLowerCase() !== this.tempText.trim().toLowerCase()) {
-                throw 'Wrong closed tag at char ' + this.index;
+                throw new Error(`Wrong closed tag at char ${this.index}, tag name: ${this.currentNode.tagName}`);
             }
             this.popElement();
             this.tempText = '';
@@ -358,6 +358,10 @@ export class NodeParser {
             }
         }
         if (sdName) {
+            // <div *for [forOf]="array" let-item [trackBy]="method" let-i="index" > {{item}} </div>
+            // <div *for="let item of array; let i = index; trackBy=method;" > {{item}} </div>
+            // <template #refName *if="isActive; else disabled" > ... </template>
+            // <template #disabled > ... </template>
             const temp = node.attributes.filter(attr => attr.name == sdName)[0];
             node.attributes.splice(node.attributes.indexOf(temp), 1);
             const isTemplate = node.tagName === 'template';
@@ -383,6 +387,7 @@ export class NodeParser {
             }
             return directive;
         }
+        // <for let-user [of]="users"></for>
         if (directiveRegistry.has('*' + node.tagName)) {
             const children = new DomFragmentNode(node.children);
             const directive = new DomStructuralDirectiveNode('*' + node.tagName, children);

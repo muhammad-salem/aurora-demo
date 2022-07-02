@@ -1,5 +1,6 @@
 function initPathExpressionEventMap(rootEventMap, path) {
     let lastMap = rootEventMap;
+    // let index = 0;
     for (const node of path) {
         const scopeName = node.path;
         let eventMap = lastMap[scopeName];
@@ -7,6 +8,10 @@ function initPathExpressionEventMap(rootEventMap, path) {
             lastMap = eventMap;
             continue;
         }
+        // if ((index++) === path.length - 1) {
+        // 	lastMap[scopeName] = undefined;
+        // 	continue;
+        // }
         lastMap = lastMap[scopeName] = {};
         if (node.computed) {
             node.computedPath.forEach(path => initPathExpressionEventMap(rootEventMap, path));
