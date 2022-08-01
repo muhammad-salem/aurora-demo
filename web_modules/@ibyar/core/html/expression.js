@@ -5,7 +5,7 @@ import { DirectiveExpressionParser } from '../directive/parser.js';
 import { ClassRegistryProvider } from '../providers/provider.js';
 const ThisTextContent = JavaScriptParser.parseScript('this.textContent');
 function parseLiveText(text) {
-    const textExpression = JavaScriptParser.parse(text.value);
+    const textExpression = JavaScriptParser.parseScript(text.value);
     text.expression = new OneWayAssignmentExpression(ThisTextContent, textExpression);
     text.pipelineNames = getPipelineNames(textExpression);
 }

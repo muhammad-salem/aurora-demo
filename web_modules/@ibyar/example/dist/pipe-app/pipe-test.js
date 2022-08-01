@@ -43,20 +43,18 @@ let PipeAppComponent = class PipeAppComponent {
             '--bs-gray-dark'
         ];
         this.currentColor = this.colors[0];
-        this.heightPX = 10;
     }
     onInit() {
         let index = 0;
-        this.subscription = this.observable.subscribe(() => {
+        this._subscription = this.observable.subscribe(() => {
             if (index === this.colors.length) {
                 index = 0;
             }
             this.currentColor = this.colors[index++];
-            this.heightPX += 10;
         });
     }
     onDestroy() {
-        this.subscription.unsubscribe();
+        this._subscription.unsubscribe();
     }
 };
 PipeAppComponent = __decorate([

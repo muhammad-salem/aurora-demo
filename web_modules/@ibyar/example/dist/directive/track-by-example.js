@@ -13,11 +13,11 @@ let TrackByComponent = class TrackByComponent {
             },
             {
                 "id": 3,
-                "title": "Aladdin"
+                "title": "Hulk"
             },
             {
                 "id": 4,
-                "title": "Downton Abbey"
+                "title": "Wolverine"
             }
         ];
     }
@@ -29,17 +29,18 @@ let TrackByComponent = class TrackByComponent {
     trackByTitle(index, hero) {
         return hero.title;
     }
-    changeIds() {
-        const heros = this.heros.map(h => Object.assign({}, h));
-        heros.forEach((h, i) => h.id += this.getRandomInt(0, 3));
-        this.heros = heros;
+    shuffle() {
+        let currentIndex = this.heros.length, randomIndex;
+        // While there remain elements to shuffle.
+        while (currentIndex != 0) {
+            // Pick a remaining element.
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+            // And swap it with the current element.
+            [this.heros[currentIndex], this.heros[randomIndex]] = [this.heros[randomIndex], this.heros[currentIndex]];
+        }
+        console.log('heros', this.heros);
     }
-    getRandomInt(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-    ;
 };
 TrackByComponent = __decorate([
     Component({
@@ -54,21 +55,21 @@ TrackByComponent = __decorate([
 					</div>
 				</div>
 				<div class="row p-2">
-					*for="const hero of heros; trackBy: trackByTitle; let i = index;"
-					<div *for="const hero of heros; trackBy: trackByTitle; let i = index;">
+					*for="const hero of heros; trackBy = (index, heroRef) => heroRef.id; let i = index;"
+					<div *for="const hero of heros; trackBy = (index, heroRef) => heroRef.id; let i = index;">
 						#{{i}} - {{hero.id}} - {{hero.title}}
 					</div>
 				</div>
 				<div class="row p-2">
-					*for="const hero of heros; trackBy = (index, heroRef) => heroRef.id; let i = index;"
-					<div *for="const hero of heros; trackBy = (index, heroRef) => heroRef.id; let i = index;">
+					*for="const hero of heros; trackBy: trackByTitle; let i = index;"
+					<div *for="const hero of heros; trackBy: trackByTitle; let i = index;">
 						#{{i}} - {{hero.id}} - {{hero.title}}
 					</div>
 				</div>
 			</div>
 			<div class="col-2">
 				<div class="btn-group-vertical">
-					<button type="button" class="btn btn-outline-primary" @click="changeIds()">Change IDS</button>
+					<button type="button" class="btn btn-outline-primary" @click="shuffle()">Shuffle IDS</button>
 				</div>
 			</div>
 		</div>

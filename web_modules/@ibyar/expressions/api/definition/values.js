@@ -34,10 +34,10 @@ let Identifier = Identifier_1 = class Identifier extends AbstractExpressionNode 
     }
     findScope(stack, scope) {
         if (scope) {
-            return scope.getScope(this.name);
+            return scope.getInnerScope(this.name);
         }
         scope = stack.findScope(this.name);
-        return scope.getScope(this.name);
+        return scope.getInnerScope(this.name);
     }
     declareVariable(stack, propertyValue) {
         return stack.declareVariable(this.name, propertyValue);
@@ -115,10 +115,10 @@ let Literal = Literal_1 = class Literal extends AbstractExpressionNode {
     }
     findScope(stack, scope) {
         if (scope) {
-            return scope.getScope(this.value);
+            return scope.getInnerScope(this.value);
         }
         scope = stack.findScope(this.value);
-        return scope.getScope(this.value);
+        return scope.getInnerScope(this.value);
     }
     dependency(computed) {
         return computed ? [this] : [];

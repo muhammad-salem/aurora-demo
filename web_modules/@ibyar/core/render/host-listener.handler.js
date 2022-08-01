@@ -22,12 +22,12 @@ export class HostListenerHandler {
         this.element = element;
         this.elementScope = elementScope;
         this.listener = (event) => {
-            const method = this.element._proxyModel[this.listenerRef.modelCallbackName];
-            if (typeof method === 'function') {
+            const callback = this.element._model[this.listenerRef.modelCallbackName];
+            if (typeof callback === 'function') {
                 const eventScope = this.stack.pushBlockScopeFor({ $event: event });
                 const params = this.argumentsExpression.get(this.stack);
                 this.stack.clearTo(eventScope);
-                method.apply(this.element._proxyModel, params);
+                this.element._zone.run(callback, this.element._model, params);
                 typeof event.preventDefault === 'function' && event.preventDefault();
             }
         };

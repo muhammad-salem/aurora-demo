@@ -1,30 +1,23 @@
-export class FunctionProxyHandler {
-    constructor(thisContext) {
-        this.thisContext = thisContext;
-    }
-    apply(targetFunc, targetThisArg, argArray) {
-        return targetFunc.apply(this.computeThisArg(targetThisArg), argArray);
-    }
-    computeThisArg(targetThisArg) {
-        switch (true) {
-            // exclude classes that have binding hook
-            case this.thisContext instanceof Map:
-            case this.thisContext instanceof Set:
-            case this.thisContext instanceof Date:
-            case this.thisContext instanceof WeakMap:
-            case this.thisContext instanceof WeakSet:
-            case this.thisContext instanceof Promise:
-            case this.thisContext instanceof HTMLElement:
-                return this.thisContext;
-            default:
-                return targetThisArg;
-        }
+export function hasBindingHook(ctx) {
+    switch (true) {
+        // exclude classes that have binding hook
+        case ctx instanceof Map:
+        case ctx instanceof Set:
+        case ctx instanceof Date:
+        case ctx instanceof WeakMap:
+        case ctx instanceof WeakSet:
+        case ctx instanceof Promise:
+        case HTMLElement && ctx instanceof HTMLElement:
+            return true;
+        default:
+            return false;
     }
 }
 /**
  * crete new proxy handler object as scoped context
  */
 export class ScopeProxyHandler {
+    // private functionHandler: FunctionProxyHandler<Function>;
     constructor(scope) {
         this.scope = scope;
     }
@@ -33,20 +26,14 @@ export class ScopeProxyHandler {
     }
     get(model, propertyKey, receiver) {
         const value = this.scope.get(propertyKey);
-        if (value == null) {
+        if (!(value && typeof value === 'object')) {
             return value;
         }
-        if (typeof value === 'object') {
-            const scope = this.scope.getScope(propertyKey);
-            if (scope) {
-                return new Proxy(value, new ScopeProxyHandler(scope));
-            }
+        const scope = this.scope.getInnerScope(propertyKey);
+        if (!scope) {
+            return value;
         }
-        else if (typeof value === 'function') {
-            return new Proxy(value, this.functionHandler
-                ?? (this.functionHandler = new FunctionProxyHandler(this.scope.getContext())));
-        }
-        return value;
+        return createProxyForContext(scope);
     }
     set(model, propertyKey, value, receiver) {
         return this.scope.set(propertyKey, value);

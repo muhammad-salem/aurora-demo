@@ -337,7 +337,7 @@ let ExportAllDeclaration = ExportAllDeclaration_1 = class ExportAllDeclaration e
         if (this.exported) {
             const exportedName = this.exported.get(stack);
             localModule.set(exportedName, {});
-            localModule = localModule.getScope(exportedName);
+            localModule = localModule.getInnerScope(exportedName);
         }
         const properties = Object.keys(sourceModule.getContext());
         properties.forEach(property => {

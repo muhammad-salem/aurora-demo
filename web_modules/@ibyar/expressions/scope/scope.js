@@ -1,67 +1,119 @@
 export class Scope {
-    constructor(context, propertyKeys) {
-        this.context = context;
-        this.scopeMap = new Map();
-        this.propertyKeys = propertyKeys;
-        if (Array.isArray(this.propertyKeys)) {
-            this.has = (propertyKey) => {
-                return this.propertyKeys.includes(propertyKey);
-            };
-        }
+    constructor(_ctx, _keys) {
+        this._ctx = _ctx;
+        this._keys = _keys;
+        this._inners = new Map();
     }
-    static for(context, propertyKeys) {
-        return new Scope(context, propertyKeys);
+    static for(ctx, propertyKeys) {
+        return new Scope(ctx, propertyKeys);
     }
     static blockScope(propertyKeys) {
         return new Scope({}, propertyKeys);
     }
-    get(propertyKey) {
-        return Reflect.get(this.context, propertyKey);
+    get(key) {
+        return Reflect.get(this._ctx, key);
     }
-    set(propertyKey, value, receiver) {
-        return Reflect.set(this.context, propertyKey, value);
+    set(key, value, receiver) {
+        return Reflect.set(this._ctx, key, value);
     }
-    has(propertyKey) {
-        return propertyKey in this.context;
+    has(key) {
+        return this._keys?.includes(key) ?? key in this._ctx;
     }
-    delete(propertyKey) {
-        return Reflect.deleteProperty(this.context, propertyKey);
+    delete(key) {
+        return Reflect.deleteProperty(this._ctx, key);
     }
     getContext() {
-        return this.context;
+        return this._ctx;
     }
-    getScope(propertyKey) {
-        const scopeContext = this.get(propertyKey);
-        let scope = this.scopeMap.get(propertyKey);
+    getInnerScope(key) {
+        const ctx = this.get(key);
+        let scope = this._inners.get(key);
         if (scope) {
-            scope.context = scopeContext;
+            scope._ctx = ctx;
             return scope;
         }
-        if (typeof scopeContext !== 'object') {
+        if (!(ctx && typeof ctx === 'object')) {
             return;
         }
-        scope = new (this.getClass())(scopeContext);
-        this.scopeMap.set(propertyKey, scope);
+        scope = new (this.getClass())(ctx, undefined, key, this);
+        this._inners.set(key, scope);
         return scope;
     }
-    getScopeOrCreat(propertyKey) {
-        const scopeContext = this.get(propertyKey);
-        let scope = this.scopeMap.get(propertyKey);
+    setInnerScope(key, scope) {
         if (scope) {
-            scope.context = scopeContext;
+            this._inners.set(key, scope);
             return scope;
         }
-        scope = new (this.getClass())(scopeContext);
-        this.scopeMap.set(propertyKey, scope);
+        const ctx = this.get(key);
+        scope = new (this.getClass())(ctx, undefined, key, this);
+        this._inners.set(key, scope);
         return scope;
     }
     getClass() {
         return Scope;
     }
 }
+/**
+ * a class scope used for class instance and private static properties
+ */
+export class ClassScope extends Scope {
+    constructor(context, propertyKeys, _pKeys) {
+        super(context, propertyKeys);
+        this._pKeys = _pKeys;
+        this._private = {};
+    }
+    static for(ctx, propertyKeys, privateKeys) {
+        return new ClassScope(ctx, propertyKeys, privateKeys);
+    }
+    static blockScope(propertyKeys, privateKeys) {
+        return new ClassScope({}, propertyKeys, privateKeys);
+    }
+    static readOnlyScopeForThis(ctx, propertyKeys, privateKeys) {
+        const thisScope = ClassScope.for(ctx, propertyKeys, privateKeys);
+        const thisCtx = {
+            'this': ctx,
+        };
+        const rootScope = ReadOnlyScope.for(thisCtx, ['this']);
+        rootScope.setInnerScope('this', thisScope);
+        return rootScope;
+    }
+    getPrivateContext() {
+        return this._private;
+    }
+    get(key) {
+        if (this.isPrivateKey(key)) {
+            return Reflect.get(this._private, key);
+        }
+        return super.get(key);
+    }
+    set(key, value, receiver) {
+        if (this.isPrivateKey(key)) {
+            return Reflect.set(this._private, key, value);
+        }
+        return super.set(key, value, receiver);
+    }
+    has(key) {
+        if (this.isPrivateKey(key)) {
+            return this._pKeys?.includes(key) ?? key in this._private;
+        }
+        return super.has(key);
+    }
+    delete(key) {
+        if (this.isPrivateKey(key)) {
+            return Reflect.deleteProperty(this._private, key);
+        }
+        return super.delete(key);
+    }
+    isPrivateKey(key) {
+        return typeof key === 'string' && key.startsWith('#');
+    }
+    getClass() {
+        return Scope;
+    }
+}
 export class ReadOnlyScope extends Scope {
-    static for(context, propertyKeys) {
-        return new ReadOnlyScope(context, propertyKeys);
+    static for(ctx, propertyKeys) {
+        return new ReadOnlyScope(ctx, propertyKeys);
     }
     static blockScope(propertyKeys) {
         return new ReadOnlyScope({}, propertyKeys);
@@ -95,18 +147,18 @@ export class ScopeSubscription {
 }
 export class ValueChangeObserver {
     constructor() {
-        this.subscribers = new Map();
-        this.propertiesLock = [];
+        this._subscribers = new Map();
+        this._lock = [];
     }
     emit(propertyKey, newValue, oldValue) {
-        if (this.propertiesLock.includes(propertyKey)) {
+        if (this._lock.includes(propertyKey)) {
             return;
         }
-        const subscribers = this.subscribers.get(propertyKey);
+        const subscribers = this._subscribers.get(propertyKey);
         if (!subscribers || subscribers.size == 0) {
             return;
         }
-        this.propertiesLock.push(propertyKey);
+        this._lock.push(propertyKey);
         subscribers?.forEach(subscriptionInfo => {
             if (!subscriptionInfo.enable) {
                 return;
@@ -118,54 +170,59 @@ export class ValueChangeObserver {
                 console.error(e);
             }
         });
-        if (this.propertiesLock.pop() !== propertyKey) {
+        if (this._lock.pop() !== propertyKey) {
             console.error('lock error');
         }
         ;
     }
     subscribe(propertyKey, callback) {
         const subscription = new ScopeSubscription(propertyKey, this);
-        let propertySubscribers = this.subscribers.get(propertyKey);
+        let propertySubscribers = this._subscribers.get(propertyKey);
         if (!propertySubscribers) {
             propertySubscribers = new Map();
-            this.subscribers.set(propertyKey, propertySubscribers);
+            this._subscribers.set(propertyKey, propertySubscribers);
         }
         propertySubscribers.set(subscription, { callback, enable: true });
         return subscription;
     }
     unsubscribe(propertyKey, subscription) {
         if (subscription) {
-            this.subscribers.get(propertyKey)?.delete(subscription);
+            this._subscribers.get(propertyKey)?.delete(subscription);
         }
         else {
-            this.subscribers.delete(propertyKey);
+            this._subscribers.delete(propertyKey);
         }
     }
     pause(propertyKey, subscription) {
-        const subscriptionInfo = this.subscribers.get(propertyKey)?.get(subscription);
+        const subscriptionInfo = this._subscribers.get(propertyKey)?.get(subscription);
         subscriptionInfo && (subscriptionInfo.enable = false);
     }
     resume(propertyKey, subscription) {
-        const subscriptionInfo = this.subscribers.get(propertyKey)?.get(subscription);
+        const subscriptionInfo = this._subscribers.get(propertyKey)?.get(subscription);
         subscriptionInfo && (subscriptionInfo.enable = true);
+    }
+    hasSubscribers(propertyKey) {
+        if (propertyKey) {
+            return (this._subscribers.get(propertyKey)?.size ?? 0) > 0;
+        }
+        return this._subscribers.size > 0;
     }
     /**
      * clear subscription maps
      */
     destroy() {
-        this.subscribers.clear();
+        this._subscribers.clear();
     }
 }
 export class ReactiveScope extends Scope {
-    constructor(context, name, parent, propertyKeys) {
-        super(context, Array.isArray(name) ? name : propertyKeys);
-        this.parent = parent;
-        this.observer = new ValueChangeObserver();
-        if (typeof name == 'string') {
-            this.name = name;
-        }
-        if (Array.isArray(name)) {
-            this.propertyKeys = name;
+    constructor(context, propertyKeys, _name, _parent) {
+        super(context, propertyKeys);
+        this._name = _name;
+        this._parent = _parent;
+        this._observer = new ValueChangeObserver();
+        this._clone = Object.assign({}, context);
+        if (HTMLElement && context instanceof HTMLElement) {
+            this._keys = [];
         }
     }
     static for(context, propertyKeys) {
@@ -174,64 +231,106 @@ export class ReactiveScope extends Scope {
     static blockScope(propertyKeys) {
         return new ReactiveScope({}, propertyKeys);
     }
+    static scopeForThis(ctx, propertyKeys) {
+        const thisScope = ReactiveScope.for(ctx, propertyKeys);
+        const thisCtx = {
+            'this': ctx,
+        };
+        const rootScope = Scope.for(thisCtx, ['this']);
+        rootScope.setInnerScope('this', thisScope);
+        return rootScope;
+    }
+    static readOnlyScopeForThis(ctx, propertyKeys) {
+        const thisScope = ReactiveScope.for(ctx, propertyKeys);
+        const thisCtx = {
+            'this': ctx,
+        };
+        const rootScope = ReadOnlyScope.for(thisCtx, ['this']);
+        rootScope.setInnerScope('this', thisScope);
+        return rootScope;
+    }
     set(propertyKey, newValue, receiver) {
-        const oldValue = Reflect.get(this.context, propertyKey);
-        const result = Reflect.set(this.context, propertyKey, newValue);
+        const oldValue = Reflect.get(this._ctx, propertyKey);
+        const result = Reflect.set(this._ctx, propertyKey, newValue);
         if (result) {
             this.emit(propertyKey, newValue, oldValue);
         }
         return result;
     }
     delete(propertyKey) {
-        const oldValue = Reflect.get(this.context, propertyKey);
-        const isDelete = Reflect.deleteProperty(this.context, propertyKey);
+        const oldValue = Reflect.get(this._ctx, propertyKey);
+        const isDelete = Reflect.deleteProperty(this._ctx, propertyKey);
         if (isDelete && oldValue !== undefined) {
             this.emit(propertyKey, undefined, oldValue);
         }
         return isDelete;
     }
-    getScope(propertyKey) {
-        const scopeContext = this.get(propertyKey);
-        let scope = this.scopeMap.get(propertyKey);
-        if (scope) {
-            scope.context = scopeContext;
-            return scope;
-        }
-        if (typeof scopeContext !== 'object') {
-            return;
-        }
-        scope = new ReactiveScope(scopeContext, propertyKey, this);
-        this.scopeMap.set(propertyKey, scope);
-        return scope;
-    }
-    getScopeOrCreat(propertyKey) {
-        const scopeContext = this.get(propertyKey);
-        let scope = this.scopeMap.get(propertyKey);
-        if (scope) {
-            scope.context = scopeContext;
-            return scope;
-        }
-        scope = new ReactiveScope(scopeContext, propertyKey, this);
-        this.scopeMap.set(propertyKey, scope);
-        return scope;
-    }
     emit(propertyKey, newValue, oldValue) {
-        this.observer.emit(propertyKey, newValue, oldValue);
-        this.parent?.emit(this.name, this.context);
+        this._observer.emit(propertyKey, newValue, oldValue);
+        this._parent?.emit(this._name, this._ctx);
     }
     subscribe(propertyKey, callback) {
-        return this.observer.subscribe(propertyKey, callback);
+        return this._observer.subscribe(propertyKey, callback);
     }
     unsubscribe(propertyKey, subscription) {
         if (propertyKey && subscription) {
-            this.observer.unsubscribe(propertyKey, subscription);
+            this._observer.unsubscribe(propertyKey, subscription);
         }
         else if (propertyKey) {
-            this.observer.unsubscribe(propertyKey);
+            this._observer.unsubscribe(propertyKey);
         }
         else {
-            this.observer.destroy();
+            this._observer.destroy();
         }
+    }
+    detectChanges() {
+        const previous = this._clone;
+        const current = this._ctx;
+        if ((!!!previous && !!current) || (!!previous && !!!current)) {
+            this._parent?.emit(this._name, current);
+            return;
+        }
+        const keys = this._keys ?? this.getPropertyKeys(previous, current);
+        keys.forEach(key => {
+            const pv = previous[key];
+            const cv = current[key];
+            const pt = typeof pv;
+            const ct = typeof cv;
+            if (pt === 'object') {
+                if (ct === 'object') {
+                    this.getInnerScope(key)?.detectChanges();
+                }
+                else if (cv != pv) {
+                    this.emit(key, cv, pv);
+                }
+            }
+            else if (ct === 'object') {
+                this.emit(key, cv, pv);
+            }
+            else if (pv != cv) {
+                this.emit(key, cv, pv);
+            }
+        });
+        this._clone = Object.assign({}, this._ctx);
+    }
+    getPropertyKeys(...objs) {
+        let keys = [];
+        objs.forEach(obj => {
+            keys.push(...Object.keys(obj));
+            keys.push(...Object.getOwnPropertySymbols(obj));
+        });
+        keys = Array.from(new Set(keys));
+        keys = keys.filter(key => {
+            switch (typeof key) {
+                case 'string':
+                    return !key.startsWith('_');
+                case 'symbol':
+                    return !key.toString().startsWith('Symbol(_');
+                default:
+                    return false;
+            }
+        });
+        return keys;
     }
     getClass() {
         return ReactiveScope;
@@ -240,8 +339,8 @@ export class ReactiveScope extends Scope {
 export class ReactiveScopeControl extends ReactiveScope {
     constructor() {
         super(...arguments);
-        this.attached = true;
-        this.marked = {};
+        this._attached = true;
+        this._marked = {};
     }
     static for(context, propertyKeys) {
         return new ReactiveScopeControl(context, propertyKeys);
@@ -249,35 +348,85 @@ export class ReactiveScopeControl extends ReactiveScope {
     static blockScope(propertyKeys) {
         return new ReactiveScopeControl({}, propertyKeys);
     }
+    static scopeForThis(ctx, propertyKeys) {
+        const thisScope = ReactiveScopeControl.for(ctx, propertyKeys);
+        const thisCtx = {
+            'this': ctx,
+        };
+        const rootScope = Scope.for(thisCtx, ['this']);
+        rootScope.setInnerScope('this', thisScope);
+        return rootScope;
+    }
+    static readOnlyScopeForThis(ctx, propertyKeys) {
+        const thisScope = ReactiveScopeControl.for(ctx, propertyKeys);
+        const thisCtx = {
+            'this': ctx,
+        };
+        const rootScope = ReadOnlyScope.for(thisCtx, ['this']);
+        rootScope.setInnerScope('this', thisScope);
+        return rootScope;
+    }
+    static reactiveScopeForThis(ctx, propertyKeys) {
+        const thisScope = ReactiveScope.for(ctx, propertyKeys);
+        const thisCtx = {
+            'this': ctx,
+        };
+        const rootScope = Scope.for(thisCtx, ['this']);
+        rootScope.setInnerScope('this', thisScope);
+        return rootScope;
+    }
     emit(propertyKey, newValue, oldValue) {
-        if (this.attached) {
+        if (this._attached) {
             super.emit(propertyKey, newValue, oldValue);
         }
+        else if (this._marked[propertyKey]) {
+            if (newValue == this._marked[propertyKey][1]) {
+                delete this._marked[propertyKey];
+            }
+            else {
+                this._marked[propertyKey][0] = newValue;
+            }
+        }
         else {
-            this.marked[propertyKey] = newValue;
+            this._marked[propertyKey] = [newValue, oldValue];
         }
     }
     isAttached() {
-        return this.attached;
+        return this._attached;
     }
     detach() {
-        this.attached = false;
+        this._attached = false;
     }
     reattach() {
-        this.attached = true;
+        this._attached = true;
         this.emitChanges();
     }
     emitChanges(propertyKey, propertyValue) {
         if (propertyKey) {
             super.emit(propertyKey, propertyValue);
-            Reflect.deleteProperty(this.marked, propertyKey);
+            Reflect.deleteProperty(this._marked, propertyKey);
             return;
         }
-        const latestChanges = this.marked;
-        this.marked = {};
-        Object.keys(latestChanges).forEach(propertyKey => {
-            super.emit(propertyKey, latestChanges[propertyKey]);
+        const latestChanges = this._marked;
+        this._marked = {};
+        const keys = this._keys ?? this.getPropertyKeys(latestChanges);
+        keys.forEach(propertyKey => {
+            this._observer.emit(propertyKey, latestChanges[propertyKey][0], latestChanges[propertyKey][1]);
         });
+        keys.length && this._parent?.emit(this._name, this._ctx);
+    }
+    detectChanges() {
+        this.detach();
+        super.detectChanges();
+        this.reattach();
+    }
+    checkNoChanges() {
+        this.detach();
+        super.detectChanges();
+        const keys = Object.keys(this._marked);
+        if (keys.length > 0) {
+            throw new Error(`Some Changes had been detected`);
+        }
     }
     getClass() {
         return ReactiveScopeControl;
@@ -288,7 +437,7 @@ export class ModuleScope extends ReactiveScope {
         super(context, propertyKeys);
     }
     importModule(propertyKey, scope) {
-        this.scopeMap.set(propertyKey, scope);
+        this._inners.set(propertyKey, scope);
     }
 }
 export class WebModuleScope extends ModuleScope {
@@ -296,7 +445,7 @@ export class WebModuleScope extends ModuleScope {
         super({});
     }
     updateContext(context) {
-        this.context = context;
+        this._ctx = context;
     }
 }
 //# sourceMappingURL=scope.js.map

@@ -12,14 +12,13 @@ __decorate([
 Editor = __decorate([
     Component({
         selector: 'text-editor',
-        template: `<input type="text" [(value)]="text" />`
+        template: `<input type="number" [(value)]="text" />`
     })
 ], Editor);
 export { Editor };
 let EditorApp = class EditorApp {
     constructor() {
-        this.model = { text: 'init 0' };
-        this.row = 'row';
+        this.model = { text: '25' };
     }
 };
 EditorApp = __decorate([
@@ -27,7 +26,7 @@ EditorApp = __decorate([
         selector: 'app-edit',
         template: `
 	<div>{{ model |> json }}</div>
-	<text-editor id="editor_0" [class]="row" [(text)]="model.text" ></text-editor>
+	<text-editor id="editor_0" [(text)]="model.text" ></text-editor>
 	<text-editor id="editor_1" [(text)]="model.text" *if="+model.text > 30"></text-editor>
 	`
     })

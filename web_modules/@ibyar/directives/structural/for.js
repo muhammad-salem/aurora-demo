@@ -63,34 +63,35 @@ export class AbstractForDirective extends StructuralDirective {
             return;
         }
         else if (PatchRoot === patchActions[0]) {
-            currentContext.forEach(context => {
-                this.viewContainerRef.createEmbeddedView(this.templateRef, { context });
-            });
+            const views = currentContext.map(context => this.viewContainerRef.createEmbeddedView(this.templateRef, { context, insert: false }));
+            this.viewContainerRef.updateViews(views);
         }
         else {
-            patchActions.forEach(action => {
-                switch (action.op) {
-                    case PatchOperation.REMOVE:
-                        this.viewContainerRef.remove(action.currentIndex);
-                        break;
-                    case PatchOperation.ADD:
-                        this.viewContainerRef.createEmbeddedView(this.templateRef, { context: action.item, index: action.nextIndex });
-                        break;
-                    default:
-                    case PatchOperation.KEEP:
-                    case PatchOperation.REPLACE:
-                    case PatchOperation.MOVE:
-                        const last = lastContext[action.nextIndex];
-                        if (last) {
-                            last.update(action.item);
-                        }
-                        else {
-                            this.viewContainerRef.createEmbeddedView(this.templateRef, { context: action.item, index: action.nextIndex });
-                        }
-                        break;
-                }
-            });
+            const views = patchActions
+                .map(patch => ({
+                index: patch.nextIndex,
+                view: this._getView(patch, lastContext),
+            }))
+                .filter(item => !!item.view)
+                .sort((a, b) => a.index - b.index)
+                .map(i => i.view);
+            views.forEach(view => view.detectChanges());
+            this.viewContainerRef.updateViews(views);
         }
+    }
+    _getView(patch, lastContext) {
+        if (PatchOperation.REMOVE === patch.op) {
+            return void 0;
+        }
+        if (PatchOperation.ADD === patch.op) {
+            return this.viewContainerRef.createEmbeddedView(this.templateRef, { context: patch.item, index: patch.nextIndex });
+        }
+        if (PatchOperation.KEEP === patch.op) {
+            lastContext[patch.nextIndex].update(patch.item);
+            return this.viewContainerRef.get(patch.nextIndex);
+        }
+        lastContext[patch.currentIndex].update(patch.item);
+        return this.viewContainerRef.get(patch.currentIndex);
     }
     onDestroy() {
         this.viewContainerRef.clear();

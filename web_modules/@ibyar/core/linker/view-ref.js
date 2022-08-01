@@ -1,18 +1,19 @@
-export class ViewRef {
+import { ChangeDetectorRef } from './change-detector-ref.js';
+export class ViewRef extends ChangeDetectorRef {
 }
 export class EmbeddedViewRef extends ViewRef {
 }
 export class EmbeddedViewRefImpl extends EmbeddedViewRef {
-    constructor(_context, _rootNodes, _subscriptions) {
+    constructor(_scope, _rootNodes, _subscriptions) {
         super();
-        this._context = _context;
+        this._scope = _scope;
         this._rootNodes = _rootNodes;
         this._subscriptions = _subscriptions;
         this._destroyed = false;
-        this.onDestroySubscribes = [];
+        this._onDestroySubscribes = [];
     }
     get context() {
-        return this._context;
+        return this._scope.getContext();
     }
     get rootNodes() {
         return this._rootNodes;
@@ -33,7 +34,7 @@ export class EmbeddedViewRefImpl extends EmbeddedViewRef {
             for (const node of this._rootNodes) {
                 node.remove();
             }
-            this.onDestroySubscribes.forEach(callback => {
+            this._onDestroySubscribes.forEach(callback => {
                 try {
                     callback();
                 }
@@ -62,14 +63,27 @@ export class EmbeddedViewRefImpl extends EmbeddedViewRef {
         for (const node of this._rootNodes) {
             node.remove();
         }
+        this._scope.detach();
+    }
+    reattach() {
+        this._scope.emitChanges();
+    }
+    markForCheck() {
+        this._scope.emitChanges();
+    }
+    detectChanges() {
+        this._scope.detectChanges();
+    }
+    checkNoChanges() {
+        this._scope.checkNoChanges();
     }
     onDestroy(callback) {
-        this.onDestroySubscribes.push(callback);
+        this._onDestroySubscribes.push(callback);
         return {
             unsubscribe: () => {
-                const index = this.onDestroySubscribes.indexOf(callback);
+                const index = this._onDestroySubscribes.indexOf(callback);
                 if (index > -1) {
-                    this.onDestroySubscribes.splice(index, 1);
+                    this._onDestroySubscribes.splice(index, 1);
                 }
             }
         };

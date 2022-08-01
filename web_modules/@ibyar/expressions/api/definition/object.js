@@ -55,7 +55,7 @@ let Property = Property_1 = class Property extends AbstractExpressionNode {
         return value;
     }
     declareVariable(stack, objectValue) {
-        const propertyName = this.key.get(stack);
+        const propertyName = this.shorthand ? this.key.getName() : this.key.get(stack);
         const propertyValue = objectValue[propertyName];
         this.value.declareVariable(stack, propertyValue);
     }

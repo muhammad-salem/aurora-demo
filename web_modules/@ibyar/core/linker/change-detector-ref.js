@@ -1,25 +1,10 @@
 export class ChangeDetectorRef {
 }
-class ChangeDetectorRefImpl extends ChangeDetectorRef {
-    constructor(changeDetectorRef) {
-        super();
-        this.changeDetectorRef = changeDetectorRef;
-    }
-    detach() {
-        this.changeDetectorRef.detach();
-    }
-    reattach() {
-        this.changeDetectorRef.reattach();
-    }
-    markForCheck() {
-        this.changeDetectorRef.markForCheck();
-    }
-}
 /**
  * create a change Detector Reference by property key.
  */
 export function createChangeDetectorRef(scope, propertyKey) {
-    const changeDetectorRef = {
+    return {
         detach() {
             scope.detach();
         },
@@ -28,8 +13,32 @@ export function createChangeDetectorRef(scope, propertyKey) {
         },
         markForCheck() {
             scope.emitChanges(propertyKey, scope.get(propertyKey));
-        }
+        },
+        detectChanges() {
+            scope.detectChanges();
+        },
+        checkNoChanges() {
+            scope.checkNoChanges();
+        },
     };
-    return new ChangeDetectorRefImpl(changeDetectorRef);
+}
+export function createModelChangeDetectorRef(resolver) {
+    return {
+        detach() {
+            resolver().detach();
+        },
+        reattach() {
+            resolver().reattach();
+        },
+        markForCheck() {
+            resolver().detectChanges();
+        },
+        detectChanges() {
+            resolver().detectChanges();
+        },
+        checkNoChanges() {
+            resolver().checkNoChanges();
+        },
+    };
 }
 //# sourceMappingURL=change-detector-ref.js.map

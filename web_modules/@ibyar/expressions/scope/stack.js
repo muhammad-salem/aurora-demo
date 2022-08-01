@@ -2,6 +2,7 @@ import { finalizerRegister } from './finalizer.js';
 import { ModuleScope, ReactiveScope, ReactiveScopeControl, Scope, WebModuleScope } from './scope.js';
 export class Stack {
     constructor(globals, resolver, moduleSource) {
+        this.awaitPromise = [];
         this.onDestroyActions = [];
         if (Array.isArray(globals)) {
             this.stack = globals;
@@ -138,8 +139,14 @@ export class Stack {
     reattach() {
         this.getReactiveScopeControls().forEach(scope => scope.reattach());
     }
+    detectChanges() {
+        this.getReactiveScope().forEach(scope => scope.detectChanges());
+    }
     getReactiveScopeControls() {
         return this.stack.filter(scope => scope instanceof ReactiveScopeControl);
+    }
+    getReactiveScope() {
+        return this.stack.filter(scope => scope instanceof ReactiveScope);
     }
     importModule(source, importCallOptions) {
         if (!this.resolver || !this.moduleScope) {

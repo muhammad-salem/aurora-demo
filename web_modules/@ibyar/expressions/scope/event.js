@@ -9,7 +9,7 @@ function visitInnerScope(eventNames, events, scope, scopeTuples) {
         if (!nextEvents.length) {
             return;
         }
-        const innerScope = scope.getScopeOrCreat(eventName);
+        const innerScope = scope.getInnerScope(eventName) ?? scope.setInnerScope(eventName);
         visitInnerScope(nextEvents, events[eventName], innerScope, scopeTuples);
     });
 }
@@ -23,7 +23,7 @@ export function findScopeByEventMap(events, stack) {
         if (!nextEvents.length) {
             return;
         }
-        const eventScope = scope.getScopeOrCreat(eventName);
+        const eventScope = scope.getInnerScope(eventName) ?? scope.setInnerScope(eventName);
         visitInnerScope(nextEvents, events[eventName], eventScope, scopeTuples);
     });
     return scopeTuples;

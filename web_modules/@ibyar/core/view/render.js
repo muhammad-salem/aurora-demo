@@ -94,7 +94,7 @@ export class ComponentRender {
     }
     addNativeEventListener(source, eventName, funcCallback) {
         source.addEventListener(eventName, (event) => {
-            funcCallback.call(this.view._proxyModel, event);
+            this.view._zone.run(funcCallback, this.view._model);
         });
     }
     getElementByName(name) {
@@ -110,7 +110,8 @@ export class ComponentRender {
             const StructuralDirectiveClass = directiveRef.modelClass;
             const structural = new StructuralDirectiveClass(templateRef, viewContainerRef, host);
             templateRef.host = structural;
-            stack.pushReactiveScopeFor({ 'this': structural });
+            const scope = ReactiveScope.readOnlyScopeForThis(structural);
+            stack.pushScope(scope);
             const dSubs = this.initStructuralDirective(structural, directive, stack);
             subscriptions.push(...dSubs);
             if (isOnInit(structural)) {
@@ -140,9 +141,7 @@ export class ComponentRender {
         contextStack.pushBlockScopeFor({ this: liveText });
         const textSubscriptions = textNode.expression.subscribe(contextStack, textNode.pipelineNames);
         subscriptions.push(...textSubscriptions);
-        contextStack.detach();
         textNode.expression.get(contextStack);
-        contextStack.reattach();
         return liveText;
     }
     createDocumentFragment(node, contextStack, parentNode, subscriptions, host) {
@@ -216,15 +215,16 @@ export class ComponentRender {
     createElement(node, contextStack, subscriptions, parentNode, host) {
         const element = this.createElementByTagName(node);
         const elementStack = contextStack.copyStack();
-        const elementScope = isHTMLComponent(element) ? element._viewScope : elementStack.pushReactiveScopeFor({ 'this': element });
+        const elementScope = isHTMLComponent(element)
+            ? element._viewScope
+            : ReactiveScope.readOnlyScopeForThis(element);
         elementStack.pushScope(elementScope);
         const attributesSubscriptions = this.initAttribute(element, node, elementStack);
         subscriptions.push(...attributesSubscriptions);
         const eventName = getInputEventName(element);
-        let listener;
         if (eventName) {
-            const inputScope = elementScope.getScopeOrCreat('this');
-            listener = (event) => inputScope.emit('value', element.value);
+            const inputScope = elementScope.getInnerScope('this');
+            const listener = (event) => inputScope.emit('value', element.value);
             element.addEventListener(eventName, listener);
         }
         const templateRefName = node.templateRefName;
@@ -294,18 +294,14 @@ export class ComponentRender {
             node.twoWayBinding.forEach(attr => {
                 const sub = attr.expression.subscribe(contextStack);
                 subscriptions.push(...sub);
-                contextStack.detach();
                 attr.expression.get(contextStack);
-                contextStack.reattach();
             });
         }
         if (node.inputs?.length) {
             node.inputs.forEach(attr => {
                 const sub = attr.expression.subscribe(contextStack, attr.pipelineNames);
                 subscriptions.push(...sub);
-                contextStack.detach();
                 attr.expression.get(contextStack);
-                contextStack.reattach();
             });
         }
         if (node.outputs?.length) {
@@ -324,9 +320,7 @@ export class ComponentRender {
                     listener = ($event) => {
                         const stack = contextStack.copyStack();
                         stack.pushBlockScopeFor({ $event });
-                        stack.detach();
-                        event.expression.get(stack);
-                        stack.reattach();
+                        this.view._zone.run(event.expression.get, event.expression, [stack]);
                     };
                 }
                 else /* if (typeof event.sourceHandler === 'function')*/ {
@@ -340,9 +334,7 @@ export class ComponentRender {
             node.templateAttrs.forEach(attr => {
                 const sub = attr.expression.subscribe(contextStack);
                 subscriptions.push(...sub);
-                contextStack.detach();
                 attr.expression.get(contextStack);
-                contextStack.reattach();
             });
         }
         return subscriptions;
@@ -356,18 +348,14 @@ export class ComponentRender {
             node.twoWayBinding.forEach(attr => {
                 const sub = attr.expression.subscribe(contextStack);
                 subscriptions.push(...sub);
-                contextStack.detach();
                 attr.expression.get(contextStack);
-                contextStack.reattach();
             });
         }
         if (node.inputs?.length) {
             node.inputs.forEach(attr => {
                 const sub = attr.expression.subscribe(contextStack, attr.pipelineNames);
                 subscriptions.push(...sub);
-                contextStack.detach();
                 attr.expression.get(contextStack);
-                contextStack.reattach();
             });
         }
         if (node.outputs?.length) {
@@ -375,9 +363,7 @@ export class ComponentRender {
                 const listener = ($event) => {
                     const stack = contextStack.copyStack();
                     stack.pushBlockScopeFor({ $event });
-                    stack.detach();
-                    event.expression.get(stack);
-                    stack.reattach();
+                    this.view._zone.run(event.expression.get, event.expression, [stack]);
                 };
                 directive[event.name].subscribe(listener);
             });
@@ -386,9 +372,7 @@ export class ComponentRender {
             node.templateAttrs.forEach(attr => {
                 const sub = attr.expression.subscribe(contextStack);
                 subscriptions.push(...sub);
-                contextStack.detach();
                 attr.expression.get(contextStack);
-                contextStack.reattach();
             });
         }
         // TODO: 

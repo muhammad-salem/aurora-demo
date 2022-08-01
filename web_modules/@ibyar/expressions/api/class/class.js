@@ -1,5 +1,6 @@
 var Super_1, MetaProperty_1, PrivateIdentifier_1, StaticBlock_1, MethodDefinition_1, PropertyDefinition_1, AccessorProperty_1, ClassBody_1, ClassDeclaration_1, ClassExpression_1;
 import { __decorate as __decorate_1, __metadata } from "../../../../tslib/tslib.es6.js";
+import { ClassScope } from '../../scope/scope.js';
 import { __decorate } from '../../../../tslib/tslib.es6.js';
 import { AbstractExpressionNode } from '../abstract.js';
 import { Deserializer } from '../deserialize/deserialize.js';
@@ -118,52 +119,19 @@ export { MetaProperty };
 /**
  * A private identifier refers to private class elements. For a private name `#a`, its name is `a`.
  */
-let PrivateIdentifier = PrivateIdentifier_1 = class PrivateIdentifier extends AbstractExpressionNode {
-    constructor(name) {
-        super();
-        this.name = name;
-    }
+let PrivateIdentifier = PrivateIdentifier_1 = class PrivateIdentifier extends Identifier {
     static fromJSON(node) {
         return new PrivateIdentifier_1(node.name);
     }
-    getName() {
-        return this.name;
+    get(stack) {
+        return stack.get(this.toString());
     }
-    set(stack, value) {
-        const privateScope = stack.findScope(PRIVATE_SYMBOL);
-        privateScope.getScope(PRIVATE_SYMBOL)?.set(this.name, value);
-    }
-    get(stack, thisContext) {
-        if (thisContext) {
-            return thisContext[PRIVATE_SYMBOL][this.name];
-        }
-        // return stack.get(this.name);
-        let privateObj = stack.get('this');
-        if (privateObj) {
-            return privateObj[PRIVATE_SYMBOL][this.name];
-        }
-        privateObj = stack.get(PRIVATE_SYMBOL);
-        return privateObj[this.name];
-    }
-    dependency(computed) {
-        return [];
-    }
-    dependencyPath(computed) {
-        return [];
-    }
-    shareVariables(scopeList) { }
     toString() {
         return `#${this.name}`;
     }
-    toJson() {
-        return {
-            name: this.name
-        };
-    }
 };
 PrivateIdentifier = PrivateIdentifier_1 = __decorate_1([
-    Deserializer('PrivateIdentifier'),
-    __metadata("design:paramtypes", [String])
+    Deserializer('PrivateIdentifier')
 ], PrivateIdentifier);
 export { PrivateIdentifier };
 /**
@@ -178,7 +146,16 @@ let StaticBlock = StaticBlock_1 = class StaticBlock extends BlockStatement {
     }
     get(stack, classConstructor) {
         const constructor = classConstructor;
-        constructor[STATIC_INITIALIZATION_BLOCK].push(() => super.get(stack));
+        constructor[STATIC_INITIALIZATION_BLOCK].push(() => {
+            const scope = new ClassScope(constructor);
+            stack.pushScope(scope);
+            try {
+                super.get(stack);
+            }
+            finally {
+                stack.clearTo(scope);
+            }
+        });
     }
     toString() {
         return `static ${super.toString()}`;
@@ -235,9 +212,11 @@ export class AbstractDefinition extends AbstractExpressionNode {
     }
     getKeyName(stack) {
         switch (true) {
-            case this.computed: return this.key.get(stack);
+            case this.computed:
+                return this.key.get(stack);
             case this.key instanceof Identifier:
-            case this.key instanceof PrivateIdentifier: return this.key.getName();
+            case this.key instanceof PrivateIdentifier:
+                return this.key.getName();
             default: return this.key.toString();
         }
     }
@@ -565,8 +544,7 @@ export class Class extends AbstractExpressionNode {
                         this[PRIVATE_SYMBOL] = Object.assign(this[PRIVATE_SYMBOL], TEMP[className][INSTANCE_PRIVATE_SYMBOL]);
                         this[STACK] = stack.copyStack();
                         const instanceStack = this[STACK];
-                        instanceStack.pushBlockScope();
-                        instanceStack.declareVariable('this', this);
+                        instanceStack.pushScope(ClassScope.readOnlyScopeForThis(this));
                         instanceStack.declareVariable(NEW_TARGET, new.target);
                         instanceStack.declareVariable(PRIVATE_SYMBOL, this[PRIVATE_SYMBOL]);
                         instanceStack.declareVariable(CALL_SUPER_Method, (name) => super[name]());

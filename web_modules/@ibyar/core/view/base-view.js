@@ -1,7 +1,8 @@
-import { ReactiveScope } from '../../expressions/index.js';
+import { ReactiveScope, ReactiveScopeControl } from '../../expressions/index.js';
 import { isAfterContentChecked, isAfterContentInit, isAfterViewChecked, isAfterViewInit, isDoCheck, isOnChanges, isOnDestroy, isOnInit } from '../component/lifecycle.js';
 import { ComponentRender } from './render.js';
-import { ElementModelReactiveScope } from '../component/provider.js';
+import { getCurrentZone } from '../zone/bootstrap.js';
+import { createModelChangeDetectorRef } from '../linker/change-detector-ref.js';
 const FACTORY_CACHE = new WeakMap();
 export function baseFactoryView(htmlElementType) {
     if (FACTORY_CACHE.has(htmlElementType)) {
@@ -11,9 +12,10 @@ export function baseFactoryView(htmlElementType) {
         constructor(componentRef, modelClass) {
             super();
             this.subscriptions = [];
+            this.onDestroyCalls = [];
             this.doBlockCallback = () => {
                 if (isDoCheck(this._model)) {
-                    this._model.doCheck.call(this._proxyModel);
+                    this._zone.run(this._model.doCheck, this._model);
                 }
             };
             this._componentRef = componentRef;
@@ -23,13 +25,18 @@ export function baseFactoryView(htmlElementType) {
                     delegatesFocus: componentRef.shadowDomDelegatesFocus
                 });
             }
-            const model = new modelClass( /* resolve dependency injection*/);
+            const args = []; /* resolve dependency injection*/
+            const detector = createModelChangeDetectorRef(() => this._modelScope);
+            args.push(detector);
+            this._zone = getCurrentZone(componentRef.zone).fork();
+            args.push(this._zone);
+            const model = new modelClass(...args);
             this._model = model;
-            const modelScope = ElementModelReactiveScope.for(model);
-            this._proxyModel = modelScope.getContextProxy();
+            const modelScope = ReactiveScopeControl.for(model);
+            modelScope.getContextProxy = () => model;
             this._modelScope = modelScope;
             this._viewScope = ReactiveScope.for({ 'this': this });
-            const elementScope = this._viewScope.getScopeOrCreat('this');
+            const elementScope = this._viewScope.getInnerScope('this');
             componentRef.inputs.forEach(input => {
                 elementScope.subscribe(input.viewAttribute, (newValue, oldValue) => {
                     if (newValue === oldValue) {
@@ -142,7 +149,7 @@ export function baseFactoryView(htmlElementType) {
                 return;
             }
             if (isOnChanges(this._model)) {
-                this._model.onChanges.call(this._proxyModel);
+                this._zone.run(this._model.onChanges, this._model);
             }
             this.doBlockCallback();
         }
@@ -151,6 +158,8 @@ export function baseFactoryView(htmlElementType) {
                 this.subscriptions.forEach(sub => sub.unsubscribe());
             }
             this.subscriptions.splice(0, this.subscriptions.length);
+            const cds = this._zone.onEmpty.subscribe(() => this._modelScope.detectChanges());
+            this.onDestroy(() => cds.unsubscribe());
             this._componentRef.inputs.forEach(input => {
                 const inputDefaultValue = this._model[input.modelProperty];
                 if (inputDefaultValue !== null && inputDefaultValue !== undefined) {
@@ -162,19 +171,19 @@ export function baseFactoryView(htmlElementType) {
                 attrs.forEach(attr => this.initOuterAttribute(attr));
             }
             if (isOnChanges(this._model)) {
-                this._model.onChanges.call(this._proxyModel);
+                this._zone.run(this._model.onChanges, this._model);
             }
             if (isOnInit(this._model)) {
-                this._model.onInit.call(this._proxyModel);
+                this._zone.run(this._model.onInit, this._model);
             }
             if (isDoCheck(this._model)) {
-                this._model.doCheck.call(this._proxyModel);
+                this._zone.run(this._model.doCheck, this._model);
             }
             if (isAfterContentInit(this._model)) {
-                this._model.afterContentInit.call(this._proxyModel);
+                this._zone.run(this._model.afterContentInit, this._model);
             }
             if (isAfterContentChecked(this._model)) {
-                this._model.afterContentChecked.call(this._proxyModel);
+                this._zone.run(this._model.afterContentChecked, this._model);
             }
             // do once
             if (this.childNodes.length === 0) {
@@ -184,20 +193,20 @@ export function baseFactoryView(htmlElementType) {
                 this._render.initHostListener();
             }
             if (isAfterViewInit(this._model)) {
-                this._model.afterViewInit.call(this._proxyModel);
+                this._zone.run(this._model.afterViewInit, this._model);
             }
             if (isAfterViewChecked(this._model)) {
-                this._model.afterViewChecked.call(this._proxyModel);
+                this._zone.run(this._model.afterViewChecked, this._model);
             }
             this.doBlockCallback = () => {
                 if (isDoCheck(this._model)) {
-                    this._model.doCheck.call(this._proxyModel);
+                    this._zone.run(this._model.doCheck, this._model);
                 }
                 if (isAfterContentChecked(this._model)) {
-                    this._model.afterContentChecked.call(this._proxyModel);
+                    this._zone.run(this._model.afterContentChecked, this._model);
                 }
                 if (isAfterViewChecked(this._model)) {
-                    this._model.afterViewChecked.call(this._proxyModel);
+                    this._zone.run(this._model.afterViewChecked, this._model);
                 }
             };
         }
@@ -238,6 +247,9 @@ export function baseFactoryView(htmlElementType) {
                 this.setInputValue(attr.name, attr.value);
             }
         }
+        onDestroy(callback) {
+            this.onDestroyCalls.push(callback);
+        }
         adoptedCallback() {
             // restart the process
             this.innerHTML = '';
@@ -246,10 +258,19 @@ export function baseFactoryView(htmlElementType) {
         disconnectedCallback() {
             // notify first, then call model.onDestroy func
             if (isOnDestroy(this._model)) {
-                this._model.onDestroy.call(this._proxyModel);
+                this._zone.run(this._model.onDestroy, this._model);
             }
             this.subscriptions.forEach(sub => sub.unsubscribe());
             this.subscriptions.splice(0, this.subscriptions.length);
+            this.onDestroyCalls.forEach(callback => {
+                try {
+                    callback();
+                }
+                catch (error) {
+                    console.error(error);
+                }
+            });
+            this.onDestroyCalls.splice(0, this.onDestroyCalls.length);
         }
         // events api
         addEventListener(eventName, listener, options) {

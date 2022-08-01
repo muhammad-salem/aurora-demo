@@ -14,7 +14,7 @@ export class PipeProvider extends ReadOnlyScope {
         super({});
     }
     has(pipeName) {
-        if (pipeName in this.context) {
+        if (pipeName in this._ctx) {
             return true;
         }
         const pipeRef = ClassRegistryProvider.getPipe(pipeName);
@@ -22,14 +22,14 @@ export class PipeProvider extends ReadOnlyScope {
     }
     get(pipeName) {
         let transformFunc;
-        if (transformFunc = this.context[pipeName]) {
+        if (transformFunc = this._ctx[pipeName]) {
             return transformFunc;
         }
         const pipeRef = ClassRegistryProvider.getPipe(pipeName);
         if (pipeRef !== undefined && !pipeRef.asynchronous) {
             const pipe = new pipeRef.modelClass();
             transformFunc = (value, ...args) => pipe.transform(value, ...args);
-            this.context[pipeRef.name] = transformFunc;
+            this._ctx[pipeRef.name] = transformFunc;
             return transformFunc;
         }
         return void 0;
@@ -81,7 +81,7 @@ export class AsyncPipeScope extends ReactiveScopeControl {
     }
     unsubscribe(propertyKey, subscription) {
         super.unsubscribe(propertyKey, subscription);
-        const pipe = this.context[propertyKey];
+        const pipe = this._ctx[propertyKey];
         pipe.onDestroy();
     }
     getClass() {

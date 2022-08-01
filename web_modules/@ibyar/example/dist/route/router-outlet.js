@@ -1,5 +1,5 @@
 import { __decorate, __metadata } from "../../../../tslib/tslib.es6.js";
-import { Directive, EmbeddedViewRefImpl, Input, StructuralDirective } from '../../../aurora/index.js';
+import { Directive, Input, StructuralDirective } from '../../../aurora/index.js';
 ;
 let RouterOutlet = class RouterOutlet extends StructuralDirective {
     set routeData(routeData) {
@@ -7,8 +7,7 @@ let RouterOutlet = class RouterOutlet extends StructuralDirective {
         if (!routeData) {
             return;
         }
-        const el = document.createElement(routeData.selector, { is: routeData.is });
-        this.viewContainerRef.insert(new EmbeddedViewRefImpl({}, [el]));
+        this.viewContainerRef.createComponent(routeData.selector);
     }
     onDestroy() {
         this.viewContainerRef.clear();

@@ -1,15 +1,6 @@
 import { __decorate, __metadata } from "../../../tslib/tslib.es6.js";
 import { AttributeDirective, Directive, Input } from '../../core/index.js';
 let StyleDirective = class StyleDirective extends AttributeDirective {
-    constructor() {
-        super(...arguments);
-        this.updater = this.updateStyle;
-    }
-    onInit() {
-        this.updater = typeof requestAnimationFrame == 'function'
-            ? this.requestStyleAnimationFrame
-            : this.updateStyle;
-    }
     set style(style) {
         if (typeof style === 'string') {
             const lines = style.split(/\s{0,};\s{0,}/).filter(str => str);
@@ -47,7 +38,7 @@ let StyleDirective = class StyleDirective extends AttributeDirective {
     _setStyle(nameAndUnit, value, priority) {
         const [name, unit] = nameAndUnit.split('.');
         value = value != null && unit ? `${value}${unit}` : value;
-        this.updater(name, value, priority);
+        this.updateStyle(name, value, priority);
     }
     updateStyle(property, value, priority) {
         if (value != null) {
@@ -56,9 +47,6 @@ let StyleDirective = class StyleDirective extends AttributeDirective {
         else {
             this.el.style.removeProperty(property);
         }
-    }
-    requestStyleAnimationFrame(property, value, priority) {
-        requestAnimationFrame(() => this.updateStyle(property, value, priority));
     }
 };
 __decorate([

@@ -10,6 +10,9 @@ let IfThenElseDirective = class IfThenElseDirective extends StructuralDirective 
         this._condition = condition;
         this._updateUI();
     }
+    get ifCondition() {
+        return this._condition;
+    }
     set thenTemplateRef(template) {
         this._thenTemplateRef = template;
         if (this._condition) {
@@ -17,6 +20,9 @@ let IfThenElseDirective = class IfThenElseDirective extends StructuralDirective 
             this._lastCondition = null;
         }
         this._updateUI();
+    }
+    get thenTemplateRef() {
+        return this._thenTemplateRef;
     }
     set elseTemplateRef(template) {
         this._elseTemplateRef = template;

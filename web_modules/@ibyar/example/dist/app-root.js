@@ -3,6 +3,7 @@ import { Component } from '../../aurora/index.js';
 let AppRoot = class AppRoot {
     constructor() {
         this.selectedComponent = null;
+        this.appName = '';
         this.appList = [
             {
                 title: 'Track By Example',
@@ -40,16 +41,21 @@ let AppRoot = class AppRoot {
     }
     lazyLoad(app) {
         this.selectedApp = app;
+        this.appName = app.title;
         app.load().then(component => this.selectedComponent = app.component = component);
     }
     onInit() {
-        this.lazyLoad(this.appList.at(-1));
+        this.appName = 'APP NAME';
+        setTimeout(() => {
+            this.lazyLoad(this.appList.at(-1));
+        }, 1000);
     }
 };
 AppRoot = __decorate([
     Component({
         selector: 'app-root',
         template: `
+	<h3>{{appName}}</h3>
 	<div class="container-fluid w-100 h-100">
 		<nav class="nav nav-pills nav-fill">
 			<template *forOf="let app of appList">

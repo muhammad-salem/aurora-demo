@@ -1,14 +1,16 @@
-import { __decorate } from "../../../../tslib/tslib.es6.js";
-import { Component } from '../../../aurora/index.js';
+import { __decorate, __metadata } from "../../../../tslib/tslib.es6.js";
+import { ChangeDetectorRef, Component, } from '../../../aurora/index.js';
 let FetchApp = class FetchApp {
-    constructor() {
+    constructor(_cd) {
+        this._cd = _cd;
         this.list = [];
         this.selected = 1;
     }
     onInit() {
         fetch('https://raw.githubusercontent.com/ibyar/aurora/dev/example/src/fetch/data.json')
             .then(response => response.json())
-            .then((list) => this.list = list.map(i => +i));
+            .then((list) => this.list = list.map(i => +i))
+            .then(() => this._cd.markForCheck());
     }
     move(index, direction) {
         if (!this.list) {
@@ -36,6 +38,7 @@ let FetchApp = class FetchApp {
 FetchApp = __decorate([
     Component({
         selector: 'fetch-app',
+        zone: 'manual',
         template: `	<div class="row gx-5">
 		<div class="col">
 			<ul class="list-group">
@@ -53,7 +56,8 @@ FetchApp = __decorate([
 			<button type="button" class="btn btn-link" @click="appendItem()">APPEND</button>
 		</div>
 	</div>`
-    })
+    }),
+    __metadata("design:paramtypes", [ChangeDetectorRef])
 ], FetchApp);
 export { FetchApp };
 //# sourceMappingURL=fetch-app.js.map

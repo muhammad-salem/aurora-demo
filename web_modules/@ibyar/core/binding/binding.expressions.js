@@ -41,11 +41,7 @@ let OneWayAssignmentExpression = class OneWayAssignmentExpression extends InfixE
             hasAsync && stack.pushScope(asyncPipeScope);
         }
         const tuples = findReactiveScopeByEventMap(this.rightEvents, stack);
-        const callback = (newValue, oldValue) => {
-            stack.detach();
-            this.get(stack);
-            stack.reattach();
-        };
+        const callback = () => this.get(stack);
         tuples.forEach(tuple => {
             const subscription = tuple[1].subscribe(tuple[0], callback);
             subscriptions.push(subscription);
@@ -84,11 +80,7 @@ let TwoWayAssignmentExpression = class TwoWayAssignmentExpression extends InfixE
         return rv;
     }
     actionRTL(stack) {
-        return (newValue, oldValue) => {
-            stack.detach();
-            this.getRTL(stack);
-            stack.reattach();
-        };
+        return () => this.getRTL(stack);
     }
     setLTR(stack, value) {
         return this.right.set(stack, value);
@@ -99,11 +91,7 @@ let TwoWayAssignmentExpression = class TwoWayAssignmentExpression extends InfixE
         return lv;
     }
     actionLTR(stack) {
-        return (newValue, oldValue) => {
-            stack.detach();
-            this.getLTR(stack);
-            stack.reattach();
-        };
+        return () => this.getLTR(stack);
     }
     subscribeToEvents(stack, tuples, actionCallback) {
         const subscriptions = [];

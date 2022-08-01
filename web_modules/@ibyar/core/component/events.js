@@ -28,9 +28,7 @@ export class EventEmitter {
             }
             catch (error) {
                 try {
-                    if (subscribe.error) {
-                        subscribe.error(error);
-                    }
+                    subscribe.error?.(error);
                 }
                 catch (error) {
                     console.error('error: handling event', error);
@@ -38,9 +36,7 @@ export class EventEmitter {
             }
             finally {
                 try {
-                    if (subscribe.complete) {
-                        subscribe.complete();
-                    }
+                    subscribe.complete?.();
                 }
                 catch (error) {
                     console.error('error: handling event', error);

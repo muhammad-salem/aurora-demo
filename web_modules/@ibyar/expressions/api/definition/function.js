@@ -144,7 +144,7 @@ let FunctionExpression = FunctionExpression_1 = class FunctionExpression extends
             for (const statement of statements) {
                 statement.shareVariables(innerScopes);
                 returnValue = statement.get(stack);
-                if (stack.awaitPromise.length > 0) {
+                if (stack.awaitPromise?.length > 0) {
                     for (const awaitRef of stack.awaitPromise) {
                         const awaitValue = await awaitRef.promise;
                         if (awaitRef.declareVariable) {
@@ -178,9 +178,9 @@ let FunctionExpression = FunctionExpression_1 = class FunctionExpression extends
                     returnValue = returnValue.value;
                     if (returnValue instanceof AwaitPromise) {
                         returnValue = await returnValue.promise;
-                        self.clearFunctionScope(stack, innerScopes);
-                        return returnValue;
                     }
+                    self.clearFunctionScope(stack, innerScopes);
+                    return returnValue;
                 }
             }
             self.clearFunctionScope(stack, innerScopes);
@@ -222,7 +222,7 @@ let FunctionExpression = FunctionExpression_1 = class FunctionExpression extends
             for (const statement of statements) {
                 statement.shareVariables(innerScopes);
                 returnValue = statement.get(stack);
-                if (stack.awaitPromise.length > 0) {
+                if (stack.awaitPromise?.length > 0) {
                     for (const awaitRef of stack.awaitPromise) {
                         const awaitValue = await awaitRef.promise;
                         if (awaitRef.declareVariable) {
@@ -409,7 +409,7 @@ let ArrowFunctionExpression = ArrowFunctionExpression_1 = class ArrowFunctionExp
             for (const state of statements) {
                 state.shareVariables(innerScopes);
                 returnValue = state.get(stack);
-                if (stack.awaitPromise.length > 0) {
+                if (stack.awaitPromise?.length > 0) {
                     for (const awaitRef of stack.awaitPromise) {
                         const awaitValue = await awaitRef.promise;
                         if (awaitRef.declareVariable) {
