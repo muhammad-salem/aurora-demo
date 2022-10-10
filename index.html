@@ -1,26 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 
 <head>
 	<meta charset="utf-8" />
-	<title>@Ibyar Aurora</title>
-	<link rel="icon" type="image/png" href="./favicon.png" />
+	<title>@Ibyar Aurora Webpack Demo</title>
+	<link rel="icon" type="image/png" href="./feceb8d66e00c16a2fc7.png" />
 	<base href="/aurora-demo/" />
 	<meta name="description" content="Ibyar Aurora Example" />
-	<meta content="width=device-width, initial-scale=1" name="viewport" />
-	<!-- <link href="/test/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" /> -->
-	<link rel="preload" as="style" href="./web_modules/bootstrap/dist/css/bootstrap.min.css" />
-	<link rel="modulepreload" href="./web_modules/@ibyar/example/dist/index.js" />
+	<meta content="width=device-width,initial-scale=1" name="viewport" />
+	<link rel="icon" href="./favicon.png">
+	<script defer="defer" src="./bundle.js"></script>
+	<link href="./main.css" rel="stylesheet">
 </head>
 
-<body class="container-fluid py-3">
-
-
-	<div id="root"></div>
-	<app-root></app-root>
-
-
-	<script type="module" src="./web_modules/@ibyar/example/dist/index.js"></script>
+<body class="container-fluid">
+	<hello-app class="m-2"></hello-app>
+	<app-root id="app-root" class="m-2"></app-root>
 	<script type="text/javascript">
 		window.onload = function () {
 			const time = window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart;;
