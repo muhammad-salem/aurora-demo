@@ -1,0 +1,40 @@
+{
+	"name": "aurora-demo",
+	"private": true,
+	"license": "MIT",
+	"workspaces": [
+		"example",
+		"bundles/*"
+	],
+	"dependencies": {
+		"tslib": "^2.7.0",
+		"zone.js": "~0.15.0"
+	},
+	"devDependencies": {
+		"@ibyar/esmpack": "^1.0.0",
+		"@types/node": "22.5.5",
+		"lerna": "^8.1.7",
+		"typescript": "^5.6.2"
+	},
+	"scripts": {
+		"clean": "tsc -b --clean example/",
+		"build:src": "npm run clean && tsc --build -v",
+		"build:directives": "cd src/directives && tsc -b --clean && npx ibyar  -b -v && cd ../..",
+		"build:forms": "cd src/forms && tsc -b --clean && npx ibyar -b -v && cd ../..",
+		"fix-permission": "npx rimraf ./node_modules/.bin/ibyar && npm i && npx ibyar -v",
+		"build": "npm run build:src && npm run fix-permission && npm run build:directives && npm run build:forms",
+		"build:w": "npm run clean && tsc --build -v -w",
+		"ibyar": "npm run clean && ibyar --build -v -w",
+		"ibyar:w": "npm run clean && ibyar --build -v -w",
+		"build:example": "npm run clean && tsc -b -v example/",
+		"build:example:w": "npm run clean && tsc -b -v -w example/",
+		"ibyar:example": "npm run clean && ibyar -b -v example/",
+		"ibyar:example:w": "npm run clean && ibyar -b -v -w example/",
+		"test262": "node test/expressions/test262.mjs",
+		"do:publish-no-git": "npm run build && lerna publish --force-publish --no-git-tag-version --no-push",
+		"do:publish-no-tag": "npm run build && lerna publish --force-publish --no-git-tag-version",
+		"do:publish-no-push": "npm run build && lerna publish --force-publish --no-push",
+		"do:publish": "npm run build && lerna publish --force-publish",
+		"docs": "npx typedoc --tsconfig ./tsconfig.json"
+	}
+}

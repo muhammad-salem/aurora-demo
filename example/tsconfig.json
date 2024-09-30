@@ -1,0 +1,36 @@
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"outDir": "dist",
+		"rootDir": "src",
+		"sourceMap": true,
+		"declaration": true,
+		"importHelpers": true,
+		"inlineSources": true,
+		"declarationMap": true,
+		"noImplicitAny": true,
+		"noImplicitThis": true,
+		"noImplicitReturns": true,
+		"strictBindCallApply": true,
+		"downlevelIteration": true,
+		"moduleResolution": "Node",
+		"target": "ES2022",
+		"module": "ES2022",
+		"lib": [
+			"ES2022",
+			"dom"
+		],
+		"strict": true,
+		"strictPropertyInitialization": false,
+		"strictBuiltinIteratorReturn": true,
+		"removeComments": false
+	},
+	"include": [
+		"src/**/*.ts",
+		"src/**/*.tsx"
+	],
+	"files": [
+		"src/index.ts"
+	],
+	"compileOnSave": true
+}
