@@ -7,14 +7,14 @@
 		"bundles/*"
 	],
 	"dependencies": {
-		"tslib": "^2.7.0",
+		"tslib": "^2.8.1",
 		"zone.js": "~0.15.0"
 	},
 	"devDependencies": {
 		"@ibyar/esmpack": "^1.0.0",
 		"@types/node": "22.5.5",
 		"lerna": "^8.1.7",
-		"typescript": "^5.6.2"
+		"typescript": "^5.7.3"
 	},
 	"scripts": {
 		"clean": "tsc -b --clean example/",
