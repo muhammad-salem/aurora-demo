@@ -14,7 +14,7 @@
 		"@ibyar/esmpack": "^1.0.0",
 		"@types/node": "22.5.5",
 		"lerna": "^8.1.7",
-		"typescript": "^5.7.3"
+		"typescript": "^5.8.2"
 	},
 	"scripts": {
 		"clean": "tsc -b --clean example/",
