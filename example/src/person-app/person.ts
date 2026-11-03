@@ -1,11 +1,11 @@
 import {
 	Component, HostBinding, HostListener,
-	Injectable, input, OnInit, output,
+	Service, input, OnInit, output,
 	view, inject, viewChild,
 } from '@ibyar/aurora';
 
 
-@Injectable({})
+@Service()
 export class LogService {
 
 	info(message: string) {
@@ -139,7 +139,7 @@ export class PersonView implements OnInit {
 	}
 
 	addOneYear() {
-		this.person.get().age++;
+		this.person.update(person => (person.age++, person));
 	}
 }
 

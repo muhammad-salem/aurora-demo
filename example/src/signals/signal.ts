@@ -1,11 +1,11 @@
 import {
-	Component, Injectable, OnDestroy,
+	Component, Service, OnDestroy,
 	OnInit, computed, effect, inject,
 	input, lazy, output, signal, untracked
 } from '@ibyar/aurora';
 
 
-@Injectable({})
+@Service()
 export class SignalScopeService {
 
 	date = signal(new Date());
@@ -46,8 +46,7 @@ export class SignalScopeService {
 			<div class="row">
 				<div class="col-4">
 					<div class="form-check">
-						<input class="form-check-input" type="checkbox" id="a"
-							[checked]="a" (change)="a = $event.target.checked">
+						<input class="form-check-input" type="checkbox" id="a" [(checked)]="a">
 						<label class="form-check-label" for="a">A</label>
 					</div>
 				</div>
