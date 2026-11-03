@@ -1,6 +1,5 @@
 {
 	"compilerOptions": {
-		"baseUrl": ".",
 		"outDir": "dist",
 		"rootDir": "src",
 		"sourceMap": true,
@@ -12,12 +11,11 @@
 		"noImplicitThis": true,
 		"noImplicitReturns": true,
 		"strictBindCallApply": true,
-		"downlevelIteration": true,
-		"moduleResolution": "Node",
-		"target": "ES2022",
+		"moduleResolution": "bundler",
+		"target": "ES2025",
 		"module": "ES2022",
 		"lib": [
-			"ES2022",
+			"ES2025",
 			"dom"
 		],
 		"strict": true,
