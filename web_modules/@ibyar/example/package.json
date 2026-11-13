@@ -1,0 +1,38 @@
+{
+	"name": "@ibyar/example",
+	"version": "5.1.0",
+	"description": "Aurora test, all the test apps, used while building this lib",
+	"license": "MIT",
+	"homepage": "https://github.com/ibyar/aurora",
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"type": "module",
+	"files": [
+		"dist"
+	],
+	"private": true,
+	"publishConfig": {
+		"access": "restricted"
+	},
+	"dependencies": {
+		"@ibyar/aurora": "^5.0.0",
+		"@ibyar/forms": "^5.0.0",
+		"@ibyar/types": "^0.3.0",
+		"@popperjs/core": "^2.11.8",
+		"bootstrap": "^5.3.8",
+		"rxjs": "^7.8.2",
+		"tslib": "^2.9.1"
+	},
+	"devDependencies": {
+		"@ibyar/cli": "^5.0.0",
+		"typescript": "^7.0.2"
+	},
+	"scripts": {
+		"build": "npx tsc --build --verbose",
+		"ibyar": "npx ibyar --build --verbose",
+		"build:watch": "npx tsc --build --verbose --watch",
+		"ibyar:watch": "npx ibyar --build --watch --verbose",
+		"esmpack:watch": "npx @ibyar/esmpack -w"
+	}
+}

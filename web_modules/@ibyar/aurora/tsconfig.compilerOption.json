@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"sourceMap": true,
+		"declaration": true,
+		"importHelpers": true,
+		"inlineSources": true,
+		"declarationMap": true,
+		"noImplicitAny": true,
+		"noImplicitThis": true,
+		"noImplicitReturns": true,
+		"strictBindCallApply": true,
+		"moduleResolution": "bundler",
+		"target": "es2025",
+		"module": "es2022",
+		"lib": [
+			"ES2025",
+			"dom"
+		],
+		"strict": true,
+		"strictPropertyInitialization": false,
+		"removeComments": false
+	}
+}

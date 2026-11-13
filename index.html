@@ -1,26 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 	<meta charset="utf-8" />
-	<title>@Ibyar Aurora Webpack Demo</title>
+	<title>@Ibyar Aurora</title>
 	<link rel="icon" type="image/png" href="/favicon.png" />
 	<base href="/aurora-demo/" />
 	<meta name="description" content="Ibyar Aurora Example" />
 	<meta content="width=device-width, initial-scale=1" name="viewport" />
-	<script defer="defer" src="./dist/bundle.js"></script>
-	<link href="./dist/bundle.css" rel="stylesheet">
+	<meta http-equiv="refresh" content="0; URL=https://muhammad-salem.github.io/aurora-demo/">
+	<link rel="canonical" href="https://muhammad-salem.github.io/aurora-demo/">
+	<link rel="preload" as="style" href="/web_modules/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="modulepreload" href="/web_modules/@ibyar/example/dist/index.js" />
 </head>
 
-<body class="container-fluid" data-bs-theme="dark">
-	<hello-app class="m-2"></hello-app>
-	<app-root id="app-root" class="m-2"></app-root>
+<body class="container-fluid py-3" data-bs-theme="dark">
+
+
+	<div id="root"></div>
+	<app-root id="app-root" name="root-component" (test)="testFunction" @eventTest="testFunction()"
+		ontest="testFunction"></app-root>
+
 	<script type="text/javascript">
+		window.testFunction = function (params) {
+			console.log('params', params);
+		};
 		window.onload = function () {
-			const time = window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart;
+			const time = window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart;;
 			console.log("Time until everything loaded: ", time);
 		};
 	</script>
+	<script type="module" src="/web_modules/@ibyar/example/dist/index.js"></script>
+
 </body>
 
 </html>

@@ -1,0 +1,84 @@
+{
+	"name": "@ibyar/aurora",
+	"version": "5.1.0",
+	"description": "Create and define a usable 'custom elements', that compatible with other frameworks, using Typescript",
+	"license": "MIT",
+	"homepage": "https://github.com/ibyar/aurora",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ibyar/aurora.git",
+		"directory": "packages/aurora"
+	},
+	"bugs": {
+		"url": "https://github.com/ibyar/aurora/issues"
+	},
+	"author": "The Ibyar Authors (https://github.com/ibyar/aurora/graphs/contributors)",
+	"contributors": [
+		{
+			"name": "Muhammad Salem",
+			"email": "salem.ebo@gmail.com",
+			"url": "https://github.com/muhammad-salem"
+		}
+	],
+	"main": "./index.js",
+	"module": "./index.js",
+	"types": "./index.d.ts",
+	"type": "module",
+	"exports": {
+		".": "./index.js"
+	},
+	"files": [
+		"*"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"dependencies": {
+		"@ibyar/core": "^5.0.0",
+		"@ibyar/decorators": "^5.0.0",
+		"@ibyar/directives": "^5.0.0",
+		"@ibyar/elements": "^5.0.0",
+		"@ibyar/expressions": "^5.0.0",
+		"@ibyar/forms": "^5.0.0",
+		"@ibyar/pipes": "^5.0.0",
+		"@ibyar/platform": "^5.0.0",
+		"@ibyar/router": "^5.0.0",
+		"tslib": "^2.9.1"
+	},
+	"peerDependencies": {
+		"zone.js": "~0.16.3"
+	},
+	"devDependencies": {
+		"typescript": "^7.0.2"
+	},
+	"scripts": {
+		"build": "tsc --build --verbose",
+		"docs": "npx typedoc --tsconfig ../../src/aurora/tsconfig.json"
+	},
+	"keywords": [
+		"aurora",
+		"ibyar",
+		"custom-elements",
+		"dependency-injection",
+		"services",
+		"component",
+		"directive",
+		"pipes",
+		"forms",
+		"template-syntax",
+		"template-expression",
+		"http-client",
+		"http",
+		"html-parser",
+		"parser",
+		"router",
+		"js-parser",
+		"elements-info",
+		"element",
+		"interceptor",
+		"shadow-dom",
+		"typescript",
+		"front-end"
+	],
+	"gitHead": "c0e54a3bb5807191ee8d18c55835f4dee535d78d"
+}

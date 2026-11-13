@@ -1,0 +1,22 @@
+{
+	"references": [
+		{
+			"path": "../tsconfig.json"
+		}
+	],
+	"extends": "../tsconfig.compilerOption.json",
+	"compilerOptions": {
+		"outDir": "dist",
+		"rootDir": "src",
+		"composite": true,
+		"tsBuildInfoFile": "./tsBuild.info"
+	},
+	"include": [
+		"src/**/*.ts",
+		"src/**/*.tsx"
+	],
+	"files": [
+		"src/index.ts"
+	],
+	"compileOnSave": true
+}

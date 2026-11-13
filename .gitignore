@@ -113,6 +113,5 @@ docs
 **/*/tsBuild.info
 .idea
 .verdaccio
-**/web_modules/
 yarn.lock
 package-lock.json
