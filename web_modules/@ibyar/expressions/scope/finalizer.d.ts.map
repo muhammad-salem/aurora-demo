@@ -1,0 +1,1 @@
+{"version":3,"file":"finalizer.d.ts","sourceRoot":"","sources":["../../../src/expressions/scope/finalizer.ts"],"names":[],"mappings":"AAAA,KAAK,OAAO,GAAG,CAAC,MAAM,IAAI,CAAC,EAAE,CAAC;AAM9B,wBAAgB,iBAAiB,CAAC,MAAM,EAAE,MAAM,EAAE,OAAO,EAAE,OAAO,EAAE,eAAe,CAAC,EAAE,MAAM,GAAG,IAAI,CAElG;AAGD,wBAAgB,mBAAmB,CAAC,eAAe,EAAE,MAAM,GAAG,IAAI,CAEjE"}

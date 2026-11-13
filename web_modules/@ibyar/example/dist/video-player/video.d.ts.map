@@ -1,0 +1,1 @@
+{"version":3,"file":"video.d.ts","sourceRoot":"","sources":["../../src/video-player/video.ts"],"names":[],"mappings":"AAAA,OAAO,EAAa,MAAM,EAAQ,MAAM,eAAe,CAAC;AAExD,qBAMa,WAAY,YAAW,MAAM;IAEzC,MAAM,mBAAiB;IAEvB,MAAM;CAGN;AAED,qBAea,aAAa;IAEzB,SAAS,UAAQ;IAEjB,KAAK,EAAE,MAAM,EAAE,CAEb;IACF,IAAI,EAAE,MAAM,GAAG,SAAS,CAAa;IAErC,SAAS,CAAC,QAAQ,EAAE,MAAM;CAK1B"}

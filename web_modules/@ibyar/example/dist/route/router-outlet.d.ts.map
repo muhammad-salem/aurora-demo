@@ -1,0 +1,1 @@
+{"version":3,"file":"router-outlet.d.ts","sourceRoot":"","sources":["../../src/route/router-outlet.ts"],"names":[],"mappings":"AAAA,OAAO,EAAoB,SAAS,EAAE,mBAAmB,EAAE,MAAM,eAAe,CAAC;AAGjF,MAAM,WAAW,SAAS;IAAG,QAAQ,EAAE,MAAM,CAAC;IAAC,EAAE,CAAC,EAAE,MAAM,CAAA;CAAE;AAE5D,qBAGa,YAAa,SAAQ,mBAAoB,YAAW,SAAS;IAEzE,IAAI,0EAKD;IAEH,SAAS;CAIT"}

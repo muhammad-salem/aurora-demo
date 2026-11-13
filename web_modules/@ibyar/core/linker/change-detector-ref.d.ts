@@ -1,0 +1,31 @@
+import { ReactiveControlScope, Context } from '@ibyar/expressions';
+export declare abstract class ChangeDetectorRef {
+    /**
+     * used when want to update ui-view like, you want to replace an array with another
+     * without reflect changes on view until reattached again.
+     */
+    abstract detach(): void;
+    /**
+     * apply all the not emitted changes, and continue emit changes now.
+     */
+    abstract reattach(): void;
+    /**
+     * apply changes now,
+     * will not effect the state of the detector wither if attached ot not.
+     */
+    abstract markForCheck(): void;
+    /**
+     * apply change detection
+     */
+    abstract detectChanges(): void;
+    /**
+     * throw error if any changes has been made
+     */
+    abstract checkNoChanges(): void;
+}
+/**
+ * create a change Detector Reference by property key.
+ */
+export declare function createChangeDetectorRef(scope: ReactiveControlScope<any>, propertyKey: keyof Context): ChangeDetectorRef;
+export declare function createModelChangeDetectorRef(resolver: () => ReactiveControlScope<any>): ChangeDetectorRef;
+//# sourceMappingURL=change-detector-ref.d.ts.map

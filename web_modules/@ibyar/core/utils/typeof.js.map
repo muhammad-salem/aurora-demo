@@ -1,0 +1,1 @@
+{"version":3,"file":"typeof.js","sourceRoot":"","sources":["../../../src/core/utils/typeof.ts"],"names":[],"mappings":"","sourcesContent":["/**\n * send the class itself, not instance\n */\nexport interface Type<T> extends Function {\n\tnew(...values: any): T;\n\t[key: PropertyKey]: any;\n}\n\nexport interface AbstractType<T> extends Function {\n\tprototype: T;\n}\n"]}

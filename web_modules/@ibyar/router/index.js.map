@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../src/router/index.ts"],"names":[],"mappings":"AACA,cAAc,kCAAkC,CAAC;AACjD,cAAc,6BAA6B,CAAC;AAC5C,cAAc,2BAA2B,CAAC","sourcesContent":["\nexport * from './components/component-outlet.js';\nexport * from './components/lazy-outlet.js';\nexport * from './routes/router-outlet.js';"]}
