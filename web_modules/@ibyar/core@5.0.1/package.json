@@ -1,0 +1,82 @@
+{
+	"name": "@ibyar/core",
+	"version": "5.0.1",
+	"description": "Ibyar core, Implements Aurora's core functionality, low-level services, and utilities",
+	"license": "MIT",
+	"homepage": "https://github.com/ibyar/aurora/tree/dev/packages/core",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ibyar/aurora.git",
+		"directory": "packages/core"
+	},
+	"bugs": {
+		"url": "https://github.com/ibyar/aurora/issues"
+	},
+	"author": "The Ibyar Authors (https://github.com/ibyar/aurora/graphs/contributors)",
+	"contributors": [
+		{
+			"name": "Muhammad Salem",
+			"email": "salem.ebo@gmail.com",
+			"url": "https://github.com/muhammad-salem"
+		}
+	],
+	"main": "./index.js",
+	"module": "./index.js",
+	"types": "./index.d.ts",
+	"type": "module",
+	"exports": {
+		".": "./index.js",
+		"./node": "./node.js",
+		"./node.js": "./node.js"
+	},
+	"files": [
+		"*"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"dependencies": {
+		"@ibyar/decorators": "^5.0.1",
+		"@ibyar/elements": "^5.0.1",
+		"@ibyar/expressions": "^5.0.1",
+		"tslib": "^2.9.1"
+	},
+	"peerDependencies": {
+		"zone.js": "~0.16.3"
+	},
+	"devDependencies": {
+		"typescript": "^7.0.2"
+	},
+	"scripts": {
+		"build": "tsc --build --verbose",
+		"docs": "npx typedoc --tsconfig ../../src/core/tsconfig.json"
+	},
+	"keywords": [
+		"aurora",
+		"ibyar",
+		"custom-elements",
+		"web-components",
+		"webcomponents",
+		"shadow-dom",
+		"shadowdom",
+		"dependency-injection",
+		"services",
+		"component",
+		"directive",
+		"pipes",
+		"forms",
+		"template-syntax",
+		"template-expression",
+		"http-client",
+		"http",
+		"html-parser",
+		"parser",
+		"routers",
+		"js-parser",
+		"elements-info",
+		"element",
+		"interceptor",
+		"typescript",
+		"front-end"
+	]
+}
